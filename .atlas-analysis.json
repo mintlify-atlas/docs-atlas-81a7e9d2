@@ -1,0 +1,272 @@
+{
+  "projectType": "frontend",
+  "projectName": "Nuxt UI",
+  "projectDescription": "A comprehensive Vue UI component library with 120+ accessible components built on Reka UI, Tailwind CSS, and Tailwind Variants.",
+  "theme": "palm",
+  "primaryColor": "#00DC82",
+  "lightColor": null,
+  "darkColor": null,
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "introduction",
+              "quickstart",
+              "installation/nuxt",
+              "installation/vue"
+            ]
+          },
+          {
+            "group": "Theme",
+            "pages": [
+              "theme/design-system",
+              "theme/css-variables",
+              "theme/components",
+              "theme/customization"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/icons",
+              "guides/fonts",
+              "guides/color-mode",
+              "guides/internationalization",
+              "guides/forms-validation",
+              "guides/ssr"
+            ]
+          },
+          {
+            "group": "Migration",
+            "pages": [
+              "migration/v4",
+              "migration/v3"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Components",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "components/index"
+            ]
+          },
+          {
+            "group": "Layout",
+            "pages": [
+              "components/app",
+              "components/container",
+              "components/card",
+              "components/separator"
+            ]
+          },
+          {
+            "group": "Navigation",
+            "pages": [
+              "components/breadcrumb",
+              "components/pagination",
+              "components/tabs"
+            ]
+          },
+          {
+            "group": "Forms",
+            "pages": [
+              "components/form",
+              "components/form-field",
+              "components/input",
+              "components/input-menu",
+              "components/textarea",
+              "components/select",
+              "components/select-menu",
+              "components/checkbox",
+              "components/checkbox-group",
+              "components/radio",
+              "components/radio-group",
+              "components/toggle",
+              "components/range-calendar",
+              "components/calendar",
+              "components/color-picker"
+            ]
+          },
+          {
+            "group": "Buttons",
+            "pages": [
+              "components/button",
+              "components/button-group"
+            ]
+          },
+          {
+            "group": "Data Display",
+            "pages": [
+              "components/table",
+              "components/avatar",
+              "components/avatar-group",
+              "components/badge",
+              "components/chip",
+              "components/kbd",
+              "components/progress",
+              "components/meter"
+            ]
+          },
+          {
+            "group": "Overlays",
+            "pages": [
+              "components/modal",
+              "components/sheet",
+              "components/drawer",
+              "components/popover",
+              "components/tooltip",
+              "components/context-menu",
+              "components/dropdown-menu",
+              "components/command-palette"
+            ]
+          },
+          {
+            "group": "Feedback",
+            "pages": [
+              "components/alert",
+              "components/toast",
+              "components/skeleton"
+            ]
+          },
+          {
+            "group": "Disclosure",
+            "pages": [
+              "components/accordion",
+              "components/collapsible"
+            ]
+          },
+          {
+            "group": "Content",
+            "pages": [
+              "components/carousel",
+              "components/banner"
+            ]
+          },
+          {
+            "group": "Dashboard",
+            "pages": [
+              "components/dashboard-navbar",
+              "components/dashboard-sidebar",
+              "components/dashboard-panel",
+              "components/dashboard-toolbar",
+              "components/dashboard-search"
+            ]
+          },
+          {
+            "group": "Special",
+            "pages": [
+              "components/auth-form",
+              "components/editor",
+              "components/chat-messages"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Composables",
+        "groups": [
+          {
+            "group": "Utilities",
+            "pages": [
+              "composables/overview",
+              "composables/use-toast",
+              "composables/use-shortcuts",
+              "composables/use-locale",
+              "composables/use-color-mode"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Resources",
+        "groups": [
+          {
+            "group": "Community",
+            "pages": [
+              "resources/templates",
+              "resources/contributing",
+              "resources/changelog"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "120+ production-ready Vue components",
+    "Built on Reka UI for accessibility",
+    "Tailwind CSS and Tailwind Variants theming",
+    "TypeScript support with excellent DX",
+    "Works with Nuxt and plain Vue apps",
+    "Comprehensive form validation support",
+    "Dark mode with color-mode integration",
+    "Keyboard shortcuts and navigation",
+    "Command palette and search components",
+    "Dashboard layout components"
+  ],
+  "publicApiSurface": [
+    "Accordion",
+    "Alert",
+    "Avatar",
+    "AvatarGroup",
+    "Badge",
+    "Banner",
+    "Breadcrumb",
+    "Button",
+    "ButtonGroup",
+    "Calendar",
+    "Card",
+    "Carousel",
+    "Checkbox",
+    "CheckboxGroup",
+    "Chip",
+    "Collapsible",
+    "ColorPicker",
+    "CommandPalette",
+    "Container",
+    "ContextMenu",
+    "DashboardNavbar",
+    "DashboardSidebar",
+    "DashboardPanel",
+    "DashboardToolbar",
+    "Drawer",
+    "DropdownMenu",
+    "Editor",
+    "Form",
+    "FormField",
+    "Input",
+    "InputMenu",
+    "Kbd",
+    "Meter",
+    "Modal",
+    "Pagination",
+    "Popover",
+    "Progress",
+    "Radio",
+    "RadioGroup",
+    "RangeCalendar",
+    "Select",
+    "SelectMenu",
+    "Separator",
+    "Sheet",
+    "Skeleton",
+    "Table",
+    "Tabs",
+    "Textarea",
+    "Toast",
+    "Toggle",
+    "Tooltip",
+    "useToast",
+    "useShortcuts",
+    "useLocale",
+    "useColorMode"
+  ]
+}
