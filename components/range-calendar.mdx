@@ -1,0 +1,96 @@
+---
+title: 'RangeCalendar'
+description: 'Calendar component for selecting date ranges.'
+icon: 'calendar-range'
+---
+
+<Note>
+  The RangeCalendar functionality is built into the **Calendar** component. Use the `range` prop to enable range selection.
+</Note>
+
+## See Also
+
+<Card title="Calendar" icon="calendar" href="/components/calendar">
+  Use the Calendar component with the `range` prop to select date ranges.
+</Card>
+
+## Quick Example
+
+```vue
+<template>
+  <UCalendar v-model="dateRange" range />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { getLocalTimeZone, today } from '@internationalized/date'
+
+const dateRange = ref({
+  start: today(getLocalTimeZone()),
+  end: today(getLocalTimeZone()).add({ days: 7 })
+})
+</script>
+```
+
+## Features
+
+When using the Calendar component with `range` prop:
+
+- **Start and end dates**: Users can select a range by clicking two dates
+- **Visual feedback**: The range between selected dates is highlighted
+- **Keyboard navigation**: Navigate through dates using arrow keys
+- **Customizable**: Control appearance with colors, sizes, and variants
+- **Month/year navigation**: Built-in controls for browsing dates
+
+## Common Use Cases
+
+- **Booking systems**: Select check-in and check-out dates
+- **Date filters**: Filter data by a date range
+- **Event planning**: Choose event start and end dates
+- **Report generation**: Select date ranges for reports
+- **Availability selection**: Mark available date ranges
+
+## Working with Date Ranges
+
+The Calendar component with range mode returns a `DateRange` object:
+
+```typescript
+interface DateRange {
+  start: DateValue
+  end: DateValue
+}
+```
+
+## Advanced Example
+
+```vue
+<template>
+  <div>
+    <UCalendar
+      v-model="dateRange"
+      range
+      color="primary"
+      size="lg"
+    />
+    <div v-if="dateRange" class="mt-4">
+      <p>Selected range:</p>
+      <p>From: {{ formatDate(dateRange.start) }}</p>
+      <p>To: {{ formatDate(dateRange.end) }}</p>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { getLocalTimeZone, today } from '@internationalized/date'
+
+const dateRange = ref({
+  start: today(getLocalTimeZone()),
+  end: today(getLocalTimeZone()).add({ days: 7 })
+})
+
+const formatDate = (date) => {
+  return date.toDate(getLocalTimeZone()).toLocaleDateString()
+}
+</script>
+```

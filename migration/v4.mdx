@@ -1,0 +1,369 @@
+---
+title: Migrating to v4
+description: Learn how to migrate from Nuxt UI v3 to v4.
+---
+
+## Overview
+
+Nuxt UI v4 is a major release that brings compatibility with Nuxt 4, imports `@nuxt/ui-pro` components into the main library, and introduces several breaking changes to improve consistency and developer experience.
+
+<Note>
+  Nuxt UI v4 requires **Nuxt 4** for compatibility. Ensure you've upgraded your Nuxt version before migrating.
+</Note>
+
+## Breaking Changes
+
+### Nuxt 4 Compatibility
+
+The most significant change in v4 is the update to support Nuxt 4. This means v4 is **not compatible** with Nuxt 3.
+
+<Steps>
+  <Step>
+    ### Update Nuxt to v4
+    
+    First, upgrade your Nuxt application to version 4:
+    
+    ```bash
+    npm install nuxt@^4.0.0
+    ```
+  </Step>
+  
+  <Step>
+    ### Update Nuxt UI to v4
+    
+    ```bash
+    npm install @nuxt/ui@^4.0.0
+    ```
+  </Step>
+</Steps>
+
+### Component Renames and Removals
+
+#### FieldGroup (formerly ButtonGroup)
+
+The `ButtonGroup` component has been renamed to `FieldGroup` to better reflect its purpose in form layouts.
+
+**Before (v3):**
+```vue
+<UButtonGroup>
+  <UButton>First</UButton>
+  <UButton>Second</UButton>
+</UButtonGroup>
+```
+
+**After (v4):**
+```vue
+<UFieldGroup>
+  <UButton>First</UButton>
+  <UButton>Second</UButton>
+</UFieldGroup>
+```
+
+#### Marquee (formerly PageMarquee)
+
+The `PageMarquee` component has been simplified and renamed to `Marquee`.
+
+**Before (v3):**
+```vue
+<UPageMarquee :items="items" />
+```
+
+**After (v4):**
+```vue
+<UMarquee :items="items" />
+```
+
+#### PageAccordion Removed
+
+The `PageAccordion` component has been removed in favor of the standard `Accordion` component.
+
+**Before (v3):**
+```vue
+<UPageAccordion :items="items" />
+```
+
+**After (v4):**
+```vue
+<UAccordion :items="items" />
+```
+
+### AI SDK v5 Upgrade
+
+If you're using AI-related components, they now use `ai-sdk` v5, which includes breaking changes to the AI SDK API.
+
+<Warning>
+  Review the [Vercel AI SDK v5 migration guide](https://sdk.vercel.ai/docs/upgrading/upgrading-to-v5) for details on API changes.
+</Warning>
+
+### Model Modifiers
+
+The `nullify` modifier has been renamed to `nullable`, and a new `optional` modifier has been added.
+
+**Before (v3):**
+```vue
+<UInput v-model.nullify="value" />
+```
+
+**After (v4):**
+```vue
+<UInput v-model.nullable="value" />
+<!-- Or use optional if you want undefined instead of null -->
+<UInput v-model.optional="value" />
+```
+
+### Form Validation Changes
+
+Support for `joi` and `yup` has been removed in favor of the `@standard-schema/spec` interface. This means you should migrate to validation libraries that support the standard schema spec.
+
+**Before (v3):**
+```ts
+import * as yup from 'yup'
+
+const schema = yup.object({
+  email: yup.string().email().required()
+})
+```
+
+**After (v4):**
+```ts
+import { z } from 'zod'
+
+const schema = z.object({
+  email: z.string().email()
+})
+```
+
+<Note>
+  Zod and Valibot are recommended alternatives that support the standard schema specification.
+</Note>
+
+### Form State Transformation
+
+The Form component no longer mutates the form state when transformations are enabled. This prevents unwanted side effects.
+
+**Migration:**
+- If you rely on the form state being transformed, you'll need to handle transformations manually in your submit handler.
+- Consider using the `transform` prop with a separate transformed state variable.
+
+### Table Select Event
+
+The arguments order in the `@select` event has been standardized for consistency.
+
+**Before (v3):**
+```vue
+<UTable @select="(item, selected) => handleSelect(item, selected)" />
+```
+
+**After (v4):**
+```vue
+<UTable @select="(selected, item) => handleSelect(selected, item)" />
+```
+
+### CommandPalette Children Icon
+
+The `trailing-icon` prop in the input is now separate from the `children-icon` prop.
+
+**Before (v3):**
+```vue
+<UCommandPalette trailing-icon="i-heroicons-chevron-down" />
+```
+
+**After (v4):**
+```vue
+<UCommandPalette 
+  trailing-icon="i-heroicons-search" 
+  children-icon="i-heroicons-chevron-down" 
+/>
+```
+
+### Consistent Exposed Refs
+
+Component refs have been standardized across all components. Some components now expose different ref names.
+
+**Migration:**
+- Check your template refs if you're accessing component internals
+- Refer to the component documentation for the new exposed ref structure
+
+### Composables Export
+
+Composables are now properly exported from the module, which may affect your import statements.
+
+**Before (v3):**
+```ts
+import { useToast } from '#imports'
+```
+
+**After (v4):**
+```ts
+import { useToast } from '@nuxt/ui'
+```
+
+## New Features
+
+### Nuxt UI Pro Components Integrated
+
+All components from `@nuxt/ui-pro` have been integrated into the main `@nuxt/ui` package. You no longer need to install `@nuxt/ui-pro` separately.
+
+<Steps>
+  <Step>
+    ### Remove @nuxt/ui-pro
+    
+    ```bash
+    npm uninstall @nuxt/ui-pro
+    ```
+  </Step>
+  
+  <Step>
+    ### Update imports
+    
+    All pro components are now available from `@nuxt/ui`:
+    
+    ```vue
+    <template>
+      <UDashboardPanel>
+        <UDashboardNavbar />
+        <UDashboardSidebar />
+      </UDashboardPanel>
+    </template>
+    ```
+  </Step>
+</Steps>
+
+### Icon Component Enhancement
+
+The Icon component now allows passing a component instead of just a name string.
+
+```vue
+<template>
+  <UIcon :name="CustomIconComponent" />
+</template>
+```
+
+### New Components
+
+#### Editor Component
+
+A new rich text editor component with full WYSIWYG capabilities.
+
+```vue
+<template>
+  <UEditor v-model="content" />
+</template>
+```
+
+#### Theme Component
+
+A new component for managing theme configurations.
+
+```vue
+<template>
+  <UTheme />
+</template>
+```
+
+#### Empty Component
+
+A dedicated component for displaying empty states.
+
+```vue
+<template>
+  <UEmpty 
+    title="No results found" 
+    description="Try adjusting your search criteria"
+  />
+</template>
+```
+
+#### InputDate and InputTime
+
+New date and time input components for better form handling.
+
+```vue
+<template>
+  <UInputDate v-model="date" />
+  <UInputTime v-model="time" />
+</template>
+```
+
+#### ScrollArea Component
+
+A new component for creating custom scrollable areas with better styling control.
+
+```vue
+<template>
+  <UScrollArea>
+    <!-- Long content -->
+  </UScrollArea>
+</template>
+```
+
+## Deprecations
+
+### useOverlay Changes
+
+The `unmount` function has been renamed from `unmont` (fixing the typo).
+
+**Before (v3):**
+```ts
+const { unmont } = useOverlay()
+```
+
+**After (v4):**
+```ts
+const { unmount } = useOverlay()
+```
+
+## Migration Checklist
+
+<Steps>
+  <Step>
+    ### Update dependencies
+    - [ ] Upgrade Nuxt to v4
+    - [ ] Upgrade @nuxt/ui to v4
+    - [ ] Remove @nuxt/ui-pro if installed
+  </Step>
+  
+  <Step>
+    ### Update component names
+    - [ ] Replace `UButtonGroup` with `UFieldGroup`
+    - [ ] Replace `UPageMarquee` with `UMarquee`
+    - [ ] Replace `UPageAccordion` with `UAccordion`
+  </Step>
+  
+  <Step>
+    ### Update validation schemas
+    - [ ] Migrate from joi/yup to zod or valibot
+    - [ ] Update form schemas to use @standard-schema/spec
+  </Step>
+  
+  <Step>
+    ### Update model modifiers
+    - [ ] Replace `.nullify` with `.nullable` or `.optional`
+  </Step>
+  
+  <Step>
+    ### Update event handlers
+    - [ ] Fix Table `@select` event argument order
+  </Step>
+  
+  <Step>
+    ### Update composable imports
+    - [ ] Import composables directly from '@nuxt/ui'
+  </Step>
+  
+  <Step>
+    ### Test your application
+    - [ ] Run `npm run dev` and check for errors
+    - [ ] Test all forms and validation
+    - [ ] Test all UI components
+    - [ ] Run type checking with `npm run typecheck`
+  </Step>
+</Steps>
+
+## Need Help?
+
+If you encounter issues during migration:
+
+- Check the [GitHub Discussions](https://github.com/nuxt/ui/discussions)
+- Review the [Changelog](https://github.com/nuxt/ui/blob/main/CHANGELOG.md)
+- Open an issue on [GitHub](https://github.com/nuxt/ui/issues)

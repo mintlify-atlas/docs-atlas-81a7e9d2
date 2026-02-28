@@ -1,0 +1,287 @@
+---
+title: useToast
+description: Manage toast notifications in your Nuxt UI application with add, update, remove, and clear operations.
+---
+
+The `useToast` composable provides a programmatic way to manage toast notifications in your application. It returns methods to add, update, remove, and clear toasts.
+
+## Usage
+
+```vue
+<script setup>
+const toast = useToast()
+
+function saveData() {
+  // Save logic here
+  toast.add({
+    title: 'Success',
+    description: 'Your changes have been saved',
+    color: 'success',
+    icon: 'i-lucide-check-circle'
+  })
+}
+</script>
+```
+
+## Return Value
+
+The `useToast()` composable returns an object with the following properties and methods:
+
+<ParamField path="toasts" type="Ref<Toast[]>">
+  Reactive array of all current toast notifications.
+</ParamField>
+
+<ParamField path="add" type="(toast: Partial<Toast>) => Toast">
+  Add a new toast notification. Returns the created toast object with its generated ID.
+</ParamField>
+
+<ParamField path="update" type="(id: string | number, toast: Omit<Partial<Toast>, 'id'>) => void">
+  Update an existing toast by its ID.
+</ParamField>
+
+<ParamField path="remove" type="(id: string | number) => void">
+  Remove a toast by its ID.
+</ParamField>
+
+<ParamField path="clear" type="() => void">
+  Clear all toast notifications.
+</ParamField>
+
+## Toast Interface
+
+```ts
+interface Toast {
+  id: string | number
+  title?: string | VNode
+  description?: string | VNode
+  icon?: string
+  avatar?: AvatarProps
+  color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
+  duration?: number
+  close?: boolean | Omit<ButtonProps, LinkPropsKeys>
+  closeIcon?: string
+  actions?: ButtonProps[]
+  progress?: boolean | Pick<ProgressProps, 'color' | 'ui'>
+  orientation?: 'vertical' | 'horizontal'
+  open?: boolean
+  onClick?: (toast: Toast) => void
+  onClose?: () => void
+  onOpenChange?: (open: boolean) => void
+}
+```
+
+## Examples
+
+### Basic Toast
+
+```vue
+<script setup>
+const toast = useToast()
+
+toast.add({
+  title: 'Hello World',
+  description: 'This is a basic toast notification'
+})
+</script>
+```
+
+### Success Toast
+
+```vue
+<script setup>
+const toast = useToast()
+
+toast.add({
+  title: 'Success',
+  description: 'Operation completed successfully',
+  color: 'success',
+  icon: 'i-lucide-check-circle',
+  duration: 3000
+})
+</script>
+```
+
+### Error Toast
+
+```vue
+<script setup>
+const toast = useToast()
+
+toast.add({
+  title: 'Error',
+  description: 'Something went wrong. Please try again.',
+  color: 'error',
+  icon: 'i-lucide-circle-x',
+  duration: 5000
+})
+</script>
+```
+
+### Toast with Actions
+
+```vue
+<script setup>
+const toast = useToast()
+
+toast.add({
+  title: 'File uploaded',
+  description: 'Your file has been uploaded successfully',
+  color: 'success',
+  actions: [
+    {
+      label: 'View',
+      onClick: () => {
+        console.log('View clicked')
+      }
+    },
+    {
+      label: 'Dismiss',
+      color: 'neutral',
+      variant: 'ghost',
+      onClick: () => {
+        console.log('Dismissed')
+      }
+    }
+  ]
+})
+</script>
+```
+
+### Update Toast
+
+```vue
+<script setup>
+const toast = useToast()
+
+const loadingToast = toast.add({
+  id: 'upload-toast',
+  title: 'Uploading...',
+  description: 'Please wait while we upload your file',
+  color: 'info',
+  duration: Infinity
+})
+
+// Later, update the toast
+setTimeout(() => {
+  toast.update(loadingToast.id, {
+    title: 'Upload complete',
+    description: 'Your file has been uploaded',
+    color: 'success',
+    duration: 3000
+  })
+}, 2000)
+</script>
+```
+
+### Remove Toast
+
+```vue
+<script setup>
+const toast = useToast()
+
+const myToast = toast.add({
+  title: 'This will disappear',
+  description: 'Click the button to remove this toast'
+})
+
+function removeToast() {
+  toast.remove(myToast.id)
+}
+</script>
+```
+
+### Clear All Toasts
+
+```vue
+<script setup>
+const toast = useToast()
+
+function clearAllToasts() {
+  toast.clear()
+}
+</script>
+```
+
+### Toast with Avatar
+
+```vue
+<script setup>
+const toast = useToast()
+
+toast.add({
+  title: 'New message',
+  description: 'You have a new message from John Doe',
+  avatar: {
+    src: '/avatars/john.jpg',
+    alt: 'John Doe'
+  },
+  duration: 5000
+})
+</script>
+```
+
+### Horizontal Orientation
+
+```vue
+<script setup>
+const toast = useToast()
+
+toast.add({
+  title: 'Settings saved',
+  description: 'Your preferences have been updated',
+  orientation: 'horizontal',
+  color: 'success'
+})
+</script>
+```
+
+### Custom Duration
+
+```vue
+<script setup>
+const toast = useToast()
+
+// Persist indefinitely
+toast.add({
+  title: 'Important notice',
+  description: 'This will stay until manually closed',
+  duration: Infinity
+})
+
+// Custom duration in milliseconds
+toast.add({
+  title: 'Quick message',
+  duration: 1000
+})
+</script>
+```
+
+## Configuration
+
+The maximum number of toasts displayed at once can be configured using the injection key:
+
+```vue
+<script setup>
+import { provide } from 'vue'
+import { toastMaxInjectionKey } from '#ui'
+
+// Limit to 3 toasts
+provide(toastMaxInjectionKey, ref(3))
+</script>
+```
+
+By default, a maximum of 5 toasts are displayed. When the limit is reached, the oldest toast is removed to make room for the new one.
+
+## TypeScript
+
+```ts
+import type { Toast } from '#ui'
+import { useToast } from '#ui'
+
+const toast = useToast()
+
+const myToast: Toast = toast.add({
+  title: 'TypeScript example',
+  description: 'Fully typed toast notifications'
+})
+```

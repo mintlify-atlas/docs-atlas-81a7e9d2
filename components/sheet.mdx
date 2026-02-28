@@ -1,0 +1,40 @@
+---
+title: 'Sheet'
+description: 'Alternative drawer/slide-in overlay component'
+icon: 'layout-panel-left'
+---
+
+## Overview
+
+The Sheet component is an alternative implementation for slide-in overlay panels. 
+
+<Note>
+  **Note**: The Sheet component source file was not found in the Nuxt UI codebase. You may want to use the [Drawer](/components/drawer) component instead, which provides similar slide-in overlay functionality.
+</Note>
+
+## Alternative: Use Drawer
+
+For slide-in overlay panels from screen edges, use the Drawer component:
+
+```vue
+<template>
+  <UDrawer v-model:open="isOpen" title="Drawer Title">
+    <template #default>
+      <UButton>Open Drawer</UButton>
+    </template>
+    <template #body>
+      <p>Drawer content goes here</p>
+    </template>
+  </UDrawer>
+</template>
+
+<script setup>
+const isOpen = ref(false)
+</script>
+```
+
+## Related Components
+
+- [Drawer](/components/drawer) - Slide-in overlay from screen edges (recommended alternative)
+- [Modal](/components/modal) - Centered dialog overlays
+- [Popover](/components/popover) - Floating content containers

@@ -1,0 +1,417 @@
+---
+title: Component Theming
+description: Learn how Nuxt UI components are themed with Tailwind Variants and how to customize them.
+---
+
+Nuxt UI uses [Tailwind Variants](https://www.tailwind-variants.org/) to provide a powerful, type-safe theming system for all components. This allows you to customize components at multiple levels while maintaining consistency.
+
+## Theme Structure
+
+Each component theme is defined in `src/theme/*.ts` and follows this structure:
+
+```ts
+export default (options: Required<ModuleOptions>) => ({
+  slots: { /* Component parts */ },
+  variants: { /* Style variations */ },
+  compoundVariants: [ /* Combined variant styles */ ],
+  defaultVariants: { /* Default values */ }
+})
+```
+
+### Slots
+
+Slots define the different parts of a component. Each slot can have its own styling:
+
+```ts [src/theme/button.ts]
+slots: {
+  base: ['rounded-md font-medium inline-flex items-center'],
+  label: 'truncate',
+  leadingIcon: 'shrink-0',
+  trailingIcon: 'shrink-0'
+}
+```
+
+In the component template, slots are identified with `data-slot` attributes:
+
+```vue
+<button data-slot="base">
+  <Icon data-slot="leadingIcon" />
+  <span data-slot="label">Click me</span>
+</button>
+```
+
+### Variants
+
+Variants define the different visual styles and sizes:
+
+```ts [src/theme/badge.ts]
+variants: {
+  color: {
+    primary: '',
+    secondary: '',
+    neutral: ''
+  },
+  variant: {
+    solid: '',
+    outline: '',
+    soft: '',
+    subtle: ''
+  },
+  size: {
+    xs: { base: 'text-[8px]/3 px-1 py-0.5 gap-1 rounded-sm' },
+    sm: { base: 'text-[10px]/3 px-1.5 py-1 gap-1 rounded-sm' },
+    md: { base: 'text-xs px-2 py-1 gap-1 rounded-md' },
+    lg: { base: 'text-sm px-2 py-1 gap-1.5 rounded-md' },
+    xl: { base: 'text-base px-2.5 py-1 gap-1.5 rounded-md' }
+  }
+}
+```
+
+### Compound Variants
+
+Compound variants apply styles when multiple variant conditions are met:
+
+```ts [src/theme/button.ts]
+compoundVariants: [
+  {
+    color: 'primary',
+    variant: 'solid',
+    class: 'text-inverted bg-primary hover:bg-primary/75'
+  },
+  {
+    color: 'primary',
+    variant: 'outline',
+    class: 'ring ring-inset ring-primary/50 text-primary hover:bg-primary/10'
+  }
+]
+```
+
+This pattern is used extensively to generate styles for all color aliases dynamically:
+
+```ts
+compoundVariants: [
+  // Generate for all configured colors
+  ...(options.theme.colors || []).map((color: string) => ({
+    color,
+    variant: 'solid',
+    class: `bg-${color} text-inverted`
+  })),
+  // Neutral color variant
+  {
+    color: 'neutral',
+    variant: 'solid',
+    class: 'text-inverted bg-inverted'
+  }
+]
+```
+
+### Default Variants
+
+Set the default variant values:
+
+```ts
+defaultVariants: {
+  color: 'primary',
+  variant: 'solid',
+  size: 'md'
+}
+```
+
+## Common Patterns
+
+### Color Generation
+
+Components dynamically generate color variants based on `theme.colors` from your config:
+
+```ts [src/theme/alert.ts]
+variants: {
+  color: {
+    ...Object.fromEntries((options.theme.colors || []).map((color: string) => [color, ''])),
+    neutral: ''
+  }
+}
+```
+
+This creates a `color` variant for each configured color alias (`primary`, `secondary`, `success`, etc.).
+
+### Field Group Variant
+
+Form components use the `fieldGroupVariant` pattern for consistent form layouts:
+
+```ts [src/theme/input.ts]
+import { fieldGroupVariantWithRoot } from './field-group'
+
+export default (options: Required<ModuleOptions>) => ({
+  slots: {
+    root: 'relative inline-flex items-center',
+    base: 'w-full rounded-md border-0 appearance-none',
+    leading: 'absolute inset-y-0 start-0 flex items-center',
+    trailing: 'absolute inset-y-0 end-0 flex items-center'
+  },
+  variants: {
+    ...fieldGroupVariantWithRoot,
+    // Component-specific variants
+  }
+})
+```
+
+### Conditional Transitions
+
+Components respect the global `transitions` setting:
+
+```ts
+slots: {
+  base: [
+    'rounded-md inline-flex items-center',
+    options.theme.transitions && 'transition-colors'
+  ]
+}
+```
+
+### Size-Based Slots
+
+Different slots can have different styles per size:
+
+```ts [src/theme/input.ts]
+variants: {
+  size: {
+    sm: {
+      base: 'px-2.5 py-1.5 text-sm/4 gap-1.5',
+      leading: 'ps-2.5',
+      trailing: 'pe-2.5',
+      leadingIcon: 'size-4',
+      trailingIcon: 'size-4'
+    },
+    md: {
+      base: 'px-2.5 py-1.5 text-base/5 gap-1.5',
+      leading: 'ps-2.5',
+      trailing: 'pe-2.5',
+      leadingIcon: 'size-5',
+      trailingIcon: 'size-5'
+    }
+  }
+}
+```
+
+## Customizing Components
+
+You can customize component themes at runtime using `app.config.ts`:
+
+```ts [app.config.ts]
+export default defineAppConfig({
+  ui: {
+    button: {
+      slots: {
+        base: 'font-bold' // Make all buttons bold
+      },
+      variants: {
+        size: {
+          xl: {
+            base: 'px-4 py-3 text-lg gap-3' // Custom XL size
+          }
+        }
+      }
+    },
+    badge: {
+      defaultVariants: {
+        variant: 'soft' // Change default variant
+      }
+    }
+  }
+})
+```
+
+### Per-Instance Customization
+
+You can also customize individual component instances using the `class` prop:
+
+```vue
+<template>
+  <UButton
+    :class="{
+      base: 'shadow-lg',
+      label: 'font-semibold'
+    }"
+  >
+    Custom Button
+  </UButton>
+</template>
+```
+
+<Note>
+The `class` prop accepts either a string for the base slot or an object mapping slot names to class strings.
+</Note>
+
+## Real-World Examples
+
+### Custom Alert Component
+
+Customize the Alert component to have a different default style:
+
+```ts [app.config.ts]
+export default defineAppConfig({
+  ui: {
+    alert: {
+      slots: {
+        root: 'border-l-4' // Add left border
+      },
+      defaultVariants: {
+        variant: 'subtle',
+        orientation: 'vertical'
+      },
+      compoundVariants: [
+        {
+          color: 'primary',
+          variant: 'subtle',
+          class: {
+            root: 'border-l-primary' // Color the left border
+          }
+        }
+      ]
+    }
+  }
+})
+```
+
+### Custom Input Styles
+
+Create a more prominent focus state for inputs:
+
+```ts [app.config.ts]
+export default defineAppConfig({
+  ui: {
+    input: {
+      compoundVariants: [
+        {
+          color: 'primary',
+          variant: 'outline',
+          class: 'focus-visible:ring-4 focus-visible:ring-primary/20'
+        }
+      ]
+    }
+  }
+})
+```
+
+### Themed Button Group
+
+Create a custom button set with consistent styling:
+
+```vue
+<script setup lang="ts">
+const buttonTheme = {
+  base: 'rounded-full',
+  label: 'uppercase tracking-wide'
+}
+</script>
+
+<template>
+  <div class="flex gap-2">
+    <UButton :class="buttonTheme" variant="solid">Save</UButton>
+    <UButton :class="buttonTheme" variant="outline">Cancel</UButton>
+    <UButton :class="buttonTheme" variant="ghost">Reset</UButton>
+  </div>
+</template>
+```
+
+## Type Safety
+
+Nuxt UI automatically generates TypeScript types for component themes. This provides autocomplete and type checking:
+
+```ts
+import type { button } from '#build/ui'
+
+// Fully typed theme override
+const customTheme: typeof button = {
+  slots: {
+    base: 'custom-class'
+  }
+}
+```
+
+## Generated Theme Files
+
+During build, Nuxt UI generates theme files in `.nuxt/ui/`:
+
+```
+.nuxt/
+└── ui/
+    ├── button.ts
+    ├── badge.ts
+    ├── input.ts
+    └── index.ts
+```
+
+These files include:
+- Your module configuration
+- Default variant overrides
+- Tailwind prefix application
+- Type definitions
+
+## Component Detection (Experimental)
+
+Enable automatic tree-shaking to only include themes for components you use:
+
+```ts [nuxt.config.ts]
+export default defineNuxtConfig({
+  ui: {
+    experimental: {
+      componentDetection: true
+    }
+  }
+})
+```
+
+This scans your codebase and only generates theme files for detected components, reducing bundle size.
+
+### Including Dynamic Components
+
+If you use dynamic components, specify them explicitly:
+
+```ts [nuxt.config.ts]
+export default defineNuxtConfig({
+  ui: {
+    experimental: {
+      componentDetection: ['Modal', 'Dropdown', 'Toast']
+    }
+  }
+})
+```
+
+## Best Practices
+
+<Steps>
+  <Step title="Use app.config.ts for global changes">
+    Define theme overrides in `app.config.ts` to apply them across your entire application.
+  </Step>
+
+  <Step title="Use class prop for one-offs">
+    For component-specific customizations, use the `class` prop instead of creating global overrides.
+  </Step>
+
+  <Step title="Extend, don't replace">
+    When customizing themes, extend existing styles rather than replacing them entirely to maintain consistency.
+  </Step>
+
+  <Step title="Leverage compound variants">
+    Use compound variants to create complex style combinations without duplicating code.
+  </Step>
+
+  <Step title="Test with all variants">
+    When creating custom themes, test with all size, color, and variant combinations to ensure consistency.
+  </Step>
+</Steps>
+
+## Related
+
+<CardGroup cols={3}>
+  <Card title="Design System" icon="palette" href="/theme/design-system">
+    Understand Nuxt UI's design system architecture
+  </Card>
+  <Card title="Customization" icon="wrench" href="/theme/customization">
+    Learn advanced customization techniques
+  </Card>
+  <Card title="CSS Variables" icon="code" href="/theme/css-variables">
+    Reference for design tokens and CSS variables
+  </Card>
+</CardGroup>

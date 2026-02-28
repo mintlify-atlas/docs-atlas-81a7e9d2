@@ -1,0 +1,399 @@
+---
+title: 'Calendar'
+description: 'A date picker component that allows users to select single dates or date ranges.'
+icon: 'calendar'
+---
+
+## Usage
+
+The Calendar component allows users to select dates. It supports single date selection, multiple dates, and date ranges.
+
+```vue
+<template>
+  <UCalendar v-model="date" />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { getLocalTimeZone, today } from '@internationalized/date'
+
+const date = ref(today(getLocalTimeZone()))
+</script>
+```
+
+## Date Range Selection
+
+Enable range selection by setting the `range` prop:
+
+```vue
+<template>
+  <UCalendar v-model="dateRange" range />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { getLocalTimeZone, today } from '@internationalized/date'
+
+const dateRange = ref({
+  start: today(getLocalTimeZone()),
+  end: today(getLocalTimeZone()).add({ days: 7 })
+})
+</script>
+```
+
+## Multiple Date Selection
+
+Allow selecting multiple individual dates:
+
+```vue
+<template>
+  <UCalendar v-model="dates" multiple />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { getLocalTimeZone, today } from '@internationalized/date'
+
+const dates = ref([
+  today(getLocalTimeZone()),
+  today(getLocalTimeZone()).add({ days: 3 })
+])
+</script>
+```
+
+## Sizes
+
+```vue
+<template>
+  <div class="space-y-8">
+    <UCalendar v-model="date" size="sm" />
+    <UCalendar v-model="date" size="md" />
+    <UCalendar v-model="date" size="lg" />
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { getLocalTimeZone, today } from '@internationalized/date'
+
+const date = ref(today(getLocalTimeZone()))
+</script>
+```
+
+## Colors
+
+```vue
+<template>
+  <div class="space-y-8">
+    <UCalendar v-model="date" color="primary" />
+    <UCalendar v-model="date" color="success" />
+    <UCalendar v-model="date" color="warning" />
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { getLocalTimeZone, today } from '@internationalized/date'
+
+const date = ref(today(getLocalTimeZone()))
+</script>
+```
+
+## Variants
+
+```vue
+<template>
+  <div class="space-y-8">
+    <UCalendar v-model="date" variant="solid" />
+    <UCalendar v-model="date" variant="outline" />
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { getLocalTimeZone, today } from '@internationalized/date'
+
+const date = ref(today(getLocalTimeZone()))
+</script>
+```
+
+## Disabled Dates
+
+```vue
+<template>
+  <UCalendar
+    v-model="date"
+    :is-date-disabled="isDateDisabled"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { getLocalTimeZone, today } from '@internationalized/date'
+
+const date = ref(today(getLocalTimeZone()))
+
+const isDateDisabled = (date) => {
+  // Disable weekends
+  const dayOfWeek = date.toDate(getLocalTimeZone()).getDay()
+  return dayOfWeek === 0 || dayOfWeek === 6
+}
+</script>
+```
+
+## Min and Max Dates
+
+```vue
+<template>
+  <UCalendar
+    v-model="date"
+    :min-value="minDate"
+    :max-value="maxDate"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { getLocalTimeZone, today } from '@internationalized/date'
+
+const date = ref(today(getLocalTimeZone()))
+const minDate = today(getLocalTimeZone())
+const maxDate = today(getLocalTimeZone()).add({ months: 3 })
+</script>
+```
+
+## Week Numbers
+
+Display week numbers in the calendar:
+
+```vue
+<template>
+  <UCalendar v-model="date" week-numbers />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { getLocalTimeZone, today } from '@internationalized/date'
+
+const date = ref(today(getLocalTimeZone()))
+</script>
+```
+
+## Control Visibility
+
+Customize which navigation controls are shown:
+
+```vue
+<template>
+  <UCalendar
+    v-model="date"
+    :month-controls="true"
+    :year-controls="false"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { getLocalTimeZone, today } from '@internationalized/date'
+
+const date = ref(today(getLocalTimeZone()))
+</script>
+```
+
+## Custom Icons
+
+```vue
+<template>
+  <UCalendar
+    v-model="date"
+    next-month-icon="i-heroicons-arrow-right"
+    prev-month-icon="i-heroicons-arrow-left"
+    next-year-icon="i-heroicons-chevron-double-right"
+    prev-year-icon="i-heroicons-chevron-double-left"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { getLocalTimeZone, today } from '@internationalized/date'
+
+const date = ref(today(getLocalTimeZone()))
+</script>
+```
+
+## Slots
+
+Customize the calendar display with slots:
+
+```vue
+<template>
+  <UCalendar v-model="date">
+    <template #heading="{ value }">
+      <span class="font-bold text-xl">{{ value }}</span>
+    </template>
+    <template #day="{ day }">
+      <span>{{ day.day }}</span>
+    </template>
+    <template #week-day="{ day }">
+      <span class="text-xs uppercase">{{ day }}</span>
+    </template>
+  </UCalendar>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { getLocalTimeZone, today } from '@internationalized/date'
+
+const date = ref(today(getLocalTimeZone()))
+</script>
+```
+
+## Props
+
+<ParamField path="modelValue" type="DateValue | DateRange | DateValue[]">
+  The controlled value of the calendar. Can be bound with `v-model`.
+</ParamField>
+
+<ParamField path="defaultValue" type="DateValue | DateRange | DateValue[]">
+  The value of the calendar when initially rendered.
+</ParamField>
+
+<ParamField path="range" type="boolean" default="false">
+  Whether or not a range of dates can be selected.
+</ParamField>
+
+<ParamField path="multiple" type="boolean" default="false">
+  Whether or not multiple dates can be selected.
+</ParamField>
+
+<ParamField path="color" type="string" default="primary">
+  The color theme of the calendar.
+</ParamField>
+
+<ParamField path="variant" type="string" default="solid">
+  The visual variant of the calendar.
+</ParamField>
+
+<ParamField path="size" type="string" default="md">
+  The size of the calendar. Options: `sm`, `md`, `lg`.
+</ParamField>
+
+<ParamField path="monthControls" type="boolean" default="true">
+  Show month navigation controls.
+</ParamField>
+
+<ParamField path="yearControls" type="boolean" default="true">
+  Show year navigation controls.
+</ParamField>
+
+<ParamField path="weekNumbers" type="boolean" default="false">
+  Display week numbers in the calendar.
+</ParamField>
+
+<ParamField path="nextYearIcon" type="string">
+  The icon to use for the next year control. Defaults to `appConfig.ui.icons.chevronDoubleRight`.
+</ParamField>
+
+<ParamField path="nextYear" type="object">
+  Configure the next year button properties.
+</ParamField>
+
+<ParamField path="nextMonthIcon" type="string">
+  The icon to use for the next month control. Defaults to `appConfig.ui.icons.chevronRight`.
+</ParamField>
+
+<ParamField path="nextMonth" type="object">
+  Configure the next month button properties.
+</ParamField>
+
+<ParamField path="prevYearIcon" type="string">
+  The icon to use for the previous year control. Defaults to `appConfig.ui.icons.chevronDoubleLeft`.
+</ParamField>
+
+<ParamField path="prevYear" type="object">
+  Configure the prev year button properties.
+</ParamField>
+
+<ParamField path="prevMonthIcon" type="string">
+  The icon to use for the previous month control. Defaults to `appConfig.ui.icons.chevronLeft`.
+</ParamField>
+
+<ParamField path="prevMonth" type="object">
+  Configure the prev month button properties.
+</ParamField>
+
+<ParamField path="minValue" type="DateValue">
+  The minimum date that can be selected.
+</ParamField>
+
+<ParamField path="maxValue" type="DateValue">
+  The maximum date that can be selected.
+</ParamField>
+
+<ParamField path="isDateDisabled" type="(date: DateValue) => boolean">
+  Function to determine if a date should be disabled.
+</ParamField>
+
+<ParamField path="isDateUnavailable" type="(date: DateValue) => boolean">
+  Function to determine if a date should be marked as unavailable.
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  Whether the calendar is disabled.
+</ParamField>
+
+<ParamField path="readonly" type="boolean">
+  Whether the calendar is readonly.
+</ParamField>
+
+<ParamField path="fixedWeeks" type="boolean" default="true">
+  Whether to always display 6 weeks in the calendar.
+</ParamField>
+
+<ParamField path="numberOfMonths" type="number" default="1">
+  The number of months to display.
+</ParamField>
+
+<ParamField path="pagedNavigation" type="boolean">
+  Whether to navigate by page (numberOfMonths) or by single month.
+</ParamField>
+
+<ParamField path="weekdayFormat" type="string" default="short">
+  The format for weekday labels. Options: `narrow`, `short`, `long`.
+</ParamField>
+
+<ParamField path="as" type="any" default="div">
+  The element or component this component should render as.
+</ParamField>
+
+<ParamField path="class" type="any">
+  Additional CSS classes to apply to the root element.
+</ParamField>
+
+<ParamField path="ui" type="object">
+  UI customization object for styling different parts of the calendar.
+</ParamField>
+
+## Events
+
+<ParamField path="@update:modelValue" type="(date: DateValue | DateRange | DateValue[]) => void">
+  Emitted when the selected date(s) change.
+</ParamField>
+
+<ParamField path="@update:startValue" type="(date: DateValue) => void">
+  Emitted when the start date changes (range mode only).
+</ParamField>
+
+## Slots
+
+<ParamField path="heading" type="{ value: string }">
+  Customize the calendar heading (month/year display).
+</ParamField>
+
+<ParamField path="day" type="{ day: DateValue }">
+  Customize the day cell content.
+</ParamField>
+
+<ParamField path="week-day" type="{ day: string }">
+  Customize the weekday header content.
+</ParamField>

@@ -1,0 +1,340 @@
+---
+title: 'Card'
+description: 'Display content in a structured card with header, body, and footer sections'
+icon: 'square'
+---
+
+## Overview
+
+The Card component provides a flexible container for displaying content with distinct header, body, and footer sections. It supports multiple visual variants and is perfect for organizing information in a structured, visually appealing way.
+
+## Usage
+
+Use the `header`, `default`, and `footer` slots to add content:
+
+```vue
+<template>
+  <UCard>
+    <template #header>
+      <h3 class="text-lg font-semibold">Card Title</h3>
+    </template>
+    
+    <p>This is the main content of the card.</p>
+    
+    <template #footer>
+      <button>Action</button>
+    </template>
+  </UCard>
+</template>
+```
+
+### Simple card with body only
+
+```vue
+<template>
+  <UCard>
+    <p>Just some content without header or footer.</p>
+  </UCard>
+</template>
+```
+
+### Card with header and body
+
+```vue
+<template>
+  <UCard>
+    <template #header>
+      <div class="flex items-center justify-between">
+        <h3 class="font-semibold">Profile Settings</h3>
+        <span class="text-sm text-gray-500">Updated 2h ago</span>
+      </div>
+    </template>
+    
+    <div class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium">Name</label>
+        <input type="text" class="mt-1 w-full" />
+      </div>
+    </div>
+  </UCard>
+</template>
+```
+
+## Props
+
+<ParamField path="as" type="string | Component" default="'div'">
+  The element or component this component should render as.
+</ParamField>
+
+<ParamField path="variant" type="'solid' | 'outline' | 'soft' | 'subtle'" default="'outline'">
+  The visual style variant of the card.
+  
+  - **solid**: Inverted background with inverted text
+  - **outline**: Default background with ring border and dividers
+  - **soft**: Elevated background with semi-transparent overlay
+  - **subtle**: Elevated background with ring border and dividers
+</ParamField>
+
+<ParamField path="class" type="any">
+  Additional CSS classes to apply to the card root element.
+</ParamField>
+
+<ParamField path="ui" type="object">
+  Override the default styling for specific card slots.
+  
+  <Expandable title="properties">
+    <ResponseField name="root" type="string">
+      Custom classes for the card root element.
+    </ResponseField>
+    <ResponseField name="header" type="string">
+      Custom classes for the header section.
+    </ResponseField>
+    <ResponseField name="body" type="string">
+      Custom classes for the body section.
+    </ResponseField>
+    <ResponseField name="footer" type="string">
+      Custom classes for the footer section.
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+## Slots
+
+<ParamField path="header">
+  Content to display in the card header section. Typically used for titles, actions, or metadata.
+</ParamField>
+
+<ParamField path="default">
+  The main content of the card displayed in the body section.
+</ParamField>
+
+<ParamField path="footer">
+  Content to display in the card footer section. Typically used for actions or additional metadata.
+</ParamField>
+
+## Variants
+
+<Tabs>
+  <Tab title="outline">
+    Default variant with a subtle border:
+
+    ```vue
+    <template>
+      <UCard variant="outline">
+        <template #header>Header</template>
+        <p>Content with outline border</p>
+        <template #footer>Footer</template>
+      </UCard>
+    </template>
+    ```
+  </Tab>
+  <Tab title="solid">
+    High-contrast variant with inverted colors:
+
+    ```vue
+    <template>
+      <UCard variant="solid">
+        <template #header>Header</template>
+        <p>Content with solid background</p>
+        <template #footer>Footer</template>
+      </UCard>
+    </template>
+    ```
+  </Tab>
+  <Tab title="soft">
+    Subtle elevated appearance:
+
+    ```vue
+    <template>
+      <UCard variant="soft">
+        <template #header>Header</template>
+        <p>Content with soft background</p>
+        <template #footer>Footer</template>
+      </UCard>
+    </template>
+    ```
+  </Tab>
+  <Tab title="subtle">
+    Elevated with border:
+
+    ```vue
+    <template>
+      <UCard variant="subtle">
+        <template #header>Header</template>
+        <p>Content with subtle styling</p>
+        <template #footer>Footer</template>
+      </UCard>
+    </template>
+    ```
+  </Tab>
+</Tabs>
+
+## Theming
+
+The Card component uses the following theme structure:
+
+```typescript
+{
+  slots: {
+    root: 'rounded-lg overflow-hidden',
+    header: 'p-4 sm:px-6',
+    body: 'p-4 sm:p-6',
+    footer: 'p-4 sm:px-6'
+  },
+  variants: {
+    variant: {
+      solid: {
+        root: 'bg-inverted text-inverted'
+      },
+      outline: {
+        root: 'bg-default ring ring-default divide-y divide-default'
+      },
+      soft: {
+        root: 'bg-elevated/50 divide-y divide-default'
+      },
+      subtle: {
+        root: 'bg-elevated/50 ring ring-default divide-y divide-default'
+      }
+    }
+  },
+  defaultVariants: {
+    variant: 'outline'
+  }
+}
+```
+
+### Semantic color classes
+
+The theme uses semantic color tokens:
+- `bg-default`: Default background color
+- `bg-inverted`: Inverted background color
+- `bg-elevated`: Elevated surface background
+- `text-inverted`: Inverted text color
+- `ring-default`: Default ring/border color
+- `divide-default`: Default divider color
+
+## Customization
+
+<Tabs>
+  <Tab title="Global theme">
+    Customize cards globally via `app.config.ts`:
+
+    ```typescript app.config.ts
+    export default defineAppConfig({
+      ui: {
+        card: {
+          slots: {
+            root: 'rounded-xl shadow-md',
+            header: 'p-6',
+            body: 'p-6',
+            footer: 'p-6 bg-gray-50'
+          }
+        }
+      }
+    })
+    ```
+  </Tab>
+  <Tab title="Per instance">
+    Override styling for a specific card:
+
+    ```vue
+    <template>
+      <UCard :ui="{ 
+        root: 'border-2 border-blue-500',
+        header: 'bg-blue-50 p-6',
+        body: 'p-8'
+      }">
+        <template #header>Custom styled header</template>
+        <p>Custom styled content</p>
+      </UCard>
+    </template>
+    ```
+  </Tab>
+</Tabs>
+
+## Examples
+
+### Product card
+
+```vue
+<template>
+  <UCard>
+    <template #header>
+      <img src="/product.jpg" alt="Product" class="w-full h-48 object-cover" />
+    </template>
+    
+    <h3 class="text-lg font-semibold mb-2">Product Name</h3>
+    <p class="text-gray-600 mb-4">Product description goes here.</p>
+    <p class="text-2xl font-bold">$99.99</p>
+    
+    <template #footer>
+      <div class="flex gap-2">
+        <button class="flex-1 bg-blue-600 text-white py-2 rounded">Add to Cart</button>
+        <button class="px-4 border border-gray-300 rounded">♥</button>
+      </div>
+    </template>
+  </UCard>
+</template>
+```
+
+### Stats card
+
+```vue
+<template>
+  <UCard variant="soft">
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-sm text-gray-600">Total Revenue</p>
+        <p class="text-3xl font-bold mt-1">$45,231</p>
+      </div>
+      <div class="text-green-600 text-right">
+        <p class="text-sm">+12.5%</p>
+        <p class="text-xs">vs last month</p>
+      </div>
+    </div>
+  </UCard>
+</template>
+```
+
+### User profile card
+
+```vue
+<template>
+  <UCard>
+    <template #header>
+      <div class="flex items-center gap-4">
+        <img src="/avatar.jpg" alt="User" class="w-16 h-16 rounded-full" />
+        <div>
+          <h3 class="font-semibold">John Doe</h3>
+          <p class="text-sm text-gray-500">@johndoe</p>
+        </div>
+      </div>
+    </template>
+    
+    <p class="text-gray-700">
+      Software engineer passionate about building great user experiences.
+    </p>
+    
+    <template #footer>
+      <div class="flex gap-4 text-sm">
+        <span><strong>1.2k</strong> Followers</span>
+        <span><strong>856</strong> Following</span>
+      </div>
+    </template>
+  </UCard>
+</template>
+```
+
+## Best practices
+
+<Tip>
+  Use consistent card variants throughout your application to maintain visual hierarchy and improve user experience.
+</Tip>
+
+<Note>
+  The card automatically handles dividers between sections, so you don't need to add them manually.
+</Note>
+
+<Info>
+  Card sections (header, body, footer) are only rendered if their corresponding slots have content, keeping the DOM clean.
+</Info>

@@ -1,0 +1,328 @@
+---
+title: DashboardSearch
+description: A command palette search component for dashboards with keyboard shortcuts and theme switching.
+---
+
+## Usage
+
+The DashboardSearch component provides a searchable command palette for dashboards, built on top of the CommandPalette component.
+
+```vue
+<template>
+  <UDashboardSearch
+    v-model:open="searchOpen"
+    :groups="searchGroups"
+  />
+</template>
+
+<script setup lang="ts">
+const searchOpen = ref(false)
+
+const searchGroups = [
+  {
+    id: 'actions',
+    label: 'Actions',
+    items: [
+      { label: 'New Project', icon: 'i-heroicons-folder-plus', to: '/projects/new' },
+      { label: 'Settings', icon: 'i-heroicons-cog-6-tooth', to: '/settings' },
+      { label: 'Help', icon: 'i-heroicons-question-mark-circle', to: '/help' }
+    ]
+  }
+]
+</script>
+```
+
+## Keyboard Shortcut
+
+The search opens with `Cmd+K` (Mac) or `Ctrl+K` (Windows/Linux) by default.
+
+```vue
+<UDashboardSearch
+  :groups="searchGroups"
+  shortcut="meta_k"
+/>
+```
+
+Customize the shortcut:
+
+```vue
+<UDashboardSearch
+  :groups="searchGroups"
+  shortcut="ctrl_p"
+/>
+```
+
+## Search Groups
+
+Organize search items into groups.
+
+```vue
+<UDashboardSearch :groups="searchGroups" />
+
+<script setup lang="ts">
+const searchGroups = [
+  {
+    id: 'pages',
+    label: 'Pages',
+    items: [
+      { label: 'Dashboard', icon: 'i-heroicons-home', to: '/dashboard' },
+      { label: 'Projects', icon: 'i-heroicons-folder', to: '/projects' },
+      { label: 'Team', icon: 'i-heroicons-user-group', to: '/team' }
+    ]
+  },
+  {
+    id: 'actions',
+    label: 'Actions',
+    items: [
+      { label: 'New Project', icon: 'i-heroicons-plus', onSelect: () => createProject() },
+      { label: 'Upload File', icon: 'i-heroicons-arrow-up-tray', onSelect: () => uploadFile() }
+    ]
+  }
+]
+
+function createProject() {
+  console.log('Creating new project...')
+}
+
+function uploadFile() {
+  console.log('Uploading file...')
+}
+</script>
+```
+
+## Fuzzy Search
+
+Configure fuzzy search options using the `fuse` prop.
+
+```vue
+<UDashboardSearch
+  :groups="searchGroups"
+  :fuse="{
+    fuseOptions: {
+      threshold: 0.3,
+      keys: ['label', 'description']
+    }
+  }"
+/>
+```
+
+## Color Mode Switcher
+
+The component includes a built-in theme switcher. Disable it if needed:
+
+```vue
+<UDashboardSearch
+  :groups="searchGroups"
+  :color-mode="false"
+/>
+```
+
+## Size Variants
+
+Control the modal size.
+
+```vue
+<UDashboardSearch
+  :groups="searchGroups"
+  size="lg"
+/>
+```
+
+## Loading State
+
+Show a loading indicator while fetching results.
+
+```vue
+<UDashboardSearch
+  :groups="searchGroups"
+  :loading="isLoading"
+  loading-icon="i-heroicons-arrow-path"
+/>
+
+<script setup lang="ts">
+const isLoading = ref(false)
+</script>
+```
+
+## Custom Placeholder
+
+```vue
+<UDashboardSearch
+  :groups="searchGroups"
+  placeholder="Search for pages, actions, or settings..."
+/>
+```
+
+## Without Close Button
+
+```vue
+<UDashboardSearch
+  :groups="searchGroups"
+  :close="false"
+/>
+```
+
+## Custom Slots
+
+Customize the appearance using slots.
+
+```vue
+<UDashboardSearch :groups="searchGroups">
+  <template #item="{ item }">
+    <div class="flex items-center gap-2">
+      <UIcon v-if="item.icon" :name="item.icon" />
+      <span class="font-medium">{{ item.label }}</span>
+      <UBadge v-if="item.badge" :label="item.badge" size="xs" />
+    </div>
+  </template>
+</UDashboardSearch>
+```
+
+## Programmatic Control
+
+Control the search programmatically.
+
+```vue
+<template>
+  <div>
+    <UButton label="Open Search" @click="searchOpen = true" />
+    
+    <UDashboardSearch
+      v-model:open="searchOpen"
+      v-model:search-term="searchTerm"
+      :groups="searchGroups"
+    />
+  </div>
+</template>
+
+<script setup lang="ts">
+const searchOpen = ref(false)
+const searchTerm = ref('')
+</script>
+```
+
+## Props
+
+<ParamField path="size" type="string" default="'md'">
+  The size of the modal.
+</ParamField>
+
+<ParamField path="icon" type="string" default="appConfig.ui.icons.search">
+  The icon displayed in the input.
+</ParamField>
+
+<ParamField path="placeholder" type="string" default="t('commandPalette.placeholder')">
+  The placeholder text for the input.
+</ParamField>
+
+<ParamField path="autofocus" type="boolean" default="true">
+  Automatically focus the input when component is mounted.
+</ParamField>
+
+<ParamField path="loading" type="boolean" default="false">
+  Display a loading icon.
+</ParamField>
+
+<ParamField path="loadingIcon" type="string" default="appConfig.ui.icons.loading">
+  The icon when loading is true.
+</ParamField>
+
+<ParamField path="close" type="boolean | ButtonProps" default="true">
+  Display a close button in the input.
+</ParamField>
+
+<ParamField path="closeIcon" type="string" default="appConfig.ui.icons.close">
+  The icon displayed in the close button.
+</ParamField>
+
+<ParamField path="shortcut" type="string" default="'meta_k'">
+  Keyboard shortcut to open the search.
+</ParamField>
+
+<ParamField path="groups" type="CommandPaletteGroup[]">
+  Array of search groups and items.
+</ParamField>
+
+<ParamField path="fuse" type="UseFuseOptions" default="{}">
+  Options for fuzzy search passed to useFuse.
+</ParamField>
+
+<ParamField path="colorMode" type="boolean" default="true">
+  Include the theme switcher in the search results.
+</ParamField>
+
+<ParamField path="title" type="string">
+  Modal title.
+</ParamField>
+
+<ParamField path="description" type="string">
+  Modal description.
+</ParamField>
+
+<ParamField path="overlay" type="boolean">
+  Show overlay behind modal.
+</ParamField>
+
+<ParamField path="transition" type="boolean">
+  Enable transition animation.
+</ParamField>
+
+<ParamField path="dismissible" type="boolean">
+  Allow dismissing the modal.
+</ParamField>
+
+<ParamField path="fullscreen" type="boolean" default="false">
+  Display in fullscreen mode.
+</ParamField>
+
+<ParamField path="modal" type="boolean">
+  Enable modal behavior.
+</ParamField>
+
+<ParamField path="portal" type="boolean">
+  Render in a portal.
+</ParamField>
+
+<ParamField path="class" type="any">
+  Custom class to apply to the root element.
+</ParamField>
+
+<ParamField path="ui" type="Partial<typeof theme>">
+  Override default theme classes.
+</ParamField>
+
+## Models
+
+<ParamField path="v-model:open" type="boolean" default="false">
+  Controls whether the search modal is open.
+</ParamField>
+
+<ParamField path="v-model:searchTerm" type="string" default="''">
+  The current search term.
+</ParamField>
+
+## Slots
+
+Inherits all slots from CommandPalette component:
+
+<ParamField path="content" type="{ close }">
+  Customize the entire modal content.
+</ParamField>
+
+<ParamField path="item" type="{ item, active }">
+  Customize individual search result items.
+</ParamField>
+
+<ParamField path="group" type="{ group }">
+  Customize group headers.
+</ParamField>
+
+<ParamField path="empty">
+  Customize the empty state.
+</ParamField>
+
+## Expose
+
+<ParamField path="commandPaletteRef" type="Ref<CommandPaletteInstance>">
+  Reference to the CommandPalette component instance.
+</ParamField>

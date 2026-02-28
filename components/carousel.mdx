@@ -1,0 +1,263 @@
+---
+title: Carousel
+description: A carousel component built with Embla Carousel that displays slides with navigation controls.
+---
+
+## Usage
+
+The Carousel component provides a flexible way to display content in a scrollable carousel format. It uses [Embla Carousel](https://www.embla-carousel.com/) under the hood.
+
+```vue
+<template>
+  <UCarousel
+    :items="items"
+    arrows
+    dots
+  >
+    <template #default="{ item }">
+      <img :src="item.image" :alt="item.title" />
+    </template>
+  </UCarousel>
+</template>
+
+<script setup lang="ts">
+const items = [
+  { image: '/img/slide1.jpg', title: 'Slide 1' },
+  { image: '/img/slide2.jpg', title: 'Slide 2' },
+  { image: '/img/slide3.jpg', title: 'Slide 3' }
+]
+</script>
+```
+
+## Orientation
+
+Control the carousel direction with the `orientation` prop.
+
+```vue
+<UCarousel
+  :items="items"
+  orientation="vertical"
+  arrows
+>
+  <template #default="{ item }">
+    <div>{{ item.title }}</div>
+  </template>
+</UCarousel>
+```
+
+## Navigation
+
+### Arrows
+
+Enable navigation arrows with the `arrows` prop.
+
+```vue
+<UCarousel :items="items" arrows>
+  <template #default="{ item }">
+    <div>{{ item.content }}</div>
+  </template>
+</UCarousel>
+```
+
+Customize the arrow buttons:
+
+```vue
+<UCarousel
+  :items="items"
+  arrows
+  :prev="{ color: 'primary', variant: 'solid' }"
+  :next="{ color: 'primary', variant: 'solid' }"
+  prev-icon="i-heroicons-chevron-left"
+  next-icon="i-heroicons-chevron-right"
+>
+  <template #default="{ item }">
+    <div>{{ item.content }}</div>
+  </template>
+</UCarousel>
+```
+
+### Dots
+
+Enable dot indicators with the `dots` prop.
+
+```vue
+<UCarousel :items="items" dots>
+  <template #default="{ item }">
+    <div>{{ item.content }}</div>
+  </template>
+</UCarousel>
+```
+
+## Plugins
+
+Embla Carousel supports various plugins that can be enabled through props.
+
+### Autoplay
+
+Enable autoplay to automatically cycle through slides.
+
+```vue
+<UCarousel :items="items" :autoplay="{ delay: 3000 }">
+  <template #default="{ item }">
+    <div>{{ item.content }}</div>
+  </template>
+</UCarousel>
+```
+
+### Auto Scroll
+
+Enable auto scroll for continuous scrolling.
+
+```vue
+<UCarousel :items="items" :auto-scroll="{ speed: 1 }">
+  <template #default="{ item }">
+    <div>{{ item.content }}</div>
+  </template>
+</UCarousel>
+```
+
+### Fade
+
+Enable fade transition between slides.
+
+```vue
+<UCarousel :items="items" fade>
+  <template #default="{ item }">
+    <div>{{ item.content }}</div>
+  </template>
+</UCarousel>
+```
+
+## Events
+
+Listen to the `select` event to track when the selected slide changes.
+
+```vue
+<UCarousel :items="items" @select="onSelect">
+  <template #default="{ item }">
+    <div>{{ item.content }}</div>
+  </template>
+</UCarousel>
+
+<script setup lang="ts">
+function onSelect(index: number) {
+  console.log('Selected slide:', index)
+}
+</script>
+```
+
+## Props
+
+<ParamField path="as" type="any" default="'div'">
+  The element or component this component should render as.
+</ParamField>
+
+<ParamField path="items" type="CarouselItem[]">
+  Array of items to display in the carousel.
+</ParamField>
+
+<ParamField path="orientation" type="'horizontal' | 'vertical'" default="'horizontal'">
+  The orientation of the carousel.
+</ParamField>
+
+<ParamField path="arrows" type="boolean" default="false">
+  Display prev and next buttons to scroll the carousel.
+</ParamField>
+
+<ParamField path="dots" type="boolean" default="false">
+  Display dots to scroll to a specific slide.
+</ParamField>
+
+<ParamField path="prev" type="ButtonProps" default="{ size: 'md', color: 'neutral', variant: 'link' }">
+  Configure the prev button when arrows are enabled.
+</ParamField>
+
+<ParamField path="prevIcon" type="string" default="appConfig.ui.icons.arrowLeft">
+  The icon displayed in the prev button.
+</ParamField>
+
+<ParamField path="next" type="ButtonProps" default="{ size: 'md', color: 'neutral', variant: 'link' }">
+  Configure the next button when arrows are enabled.
+</ParamField>
+
+<ParamField path="nextIcon" type="string" default="appConfig.ui.icons.arrowRight">
+  The icon displayed in the next button.
+</ParamField>
+
+### Embla Options
+
+<ParamField path="align" type="'start' | 'center' | 'end'" default="'center'">
+  Align slides within the viewport.
+</ParamField>
+
+<ParamField path="loop" type="boolean" default="false">
+  Enable infinite looping.
+</ParamField>
+
+<ParamField path="slidesToScroll" type="number" default="1">
+  Number of slides to scroll at once.
+</ParamField>
+
+<ParamField path="dragFree" type="boolean" default="false">
+  Enable free dragging without scroll snapping.
+</ParamField>
+
+<ParamField path="containScroll" type="'trimSnaps' | 'keepSnaps' | false" default="'trimSnaps'">
+  Contain scroll to viewport.
+</ParamField>
+
+### Plugins
+
+<ParamField path="autoplay" type="boolean | AutoplayOptionsType" default="false">
+  Enable Autoplay plugin. [See Embla Autoplay docs](https://www.embla-carousel.com/plugins/autoplay/).
+</ParamField>
+
+<ParamField path="autoScroll" type="boolean | AutoScrollOptionsType" default="false">
+  Enable Auto Scroll plugin. [See Embla Auto Scroll docs](https://www.embla-carousel.com/plugins/auto-scroll/).
+</ParamField>
+
+<ParamField path="autoHeight" type="boolean | AutoHeightOptionsType" default="false">
+  Enable Auto Height plugin. [See Embla Auto Height docs](https://www.embla-carousel.com/plugins/auto-height/).
+</ParamField>
+
+<ParamField path="classNames" type="boolean | ClassNamesOptionsType" default="false">
+  Enable Class Names plugin. [See Embla Class Names docs](https://www.embla-carousel.com/plugins/class-names/).
+</ParamField>
+
+<ParamField path="fade" type="boolean | FadeOptionsType" default="false">
+  Enable Fade plugin. [See Embla Fade docs](https://www.embla-carousel.com/plugins/fade/).
+</ParamField>
+
+<ParamField path="wheelGestures" type="boolean | WheelGesturesPluginOptions" default="false">
+  Enable Wheel Gestures plugin. [See Embla Wheel Gestures docs](https://www.embla-carousel.com/plugins/wheel-gestures/).
+</ParamField>
+
+<ParamField path="class" type="any">
+  Custom class to apply to the root element.
+</ParamField>
+
+<ParamField path="ui" type="Partial<typeof theme>">
+  Override default theme classes.
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="{ item: T, index: number }">
+  Slot for rendering each carousel item.
+</ParamField>
+
+## Emits
+
+<ParamField path="select" type="(selectedIndex: number) => void">
+  Emitted when the selected slide changes.
+</ParamField>
+
+## Expose
+
+<ParamField path="emblaRef" type="Ref<HTMLElement>">
+  Reference to the Embla viewport element.
+</ParamField>
+
+<ParamField path="emblaApi" type="Ref<EmblaCarouselType>">
+  Reference to the Embla API instance.
+</ParamField>

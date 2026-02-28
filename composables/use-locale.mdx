@@ -1,0 +1,372 @@
+---
+title: useLocale & defineLocale
+description: Use and define locales for internationalization in Nuxt UI components and your application.
+---
+
+Nuxt UI provides composables for internationalization. The `useLocale` composable accesses localized messages, while `defineLocale` creates custom locale definitions.
+
+## useLocale
+
+Access localized messages in your components. Nuxt UI uses this internally to translate component labels and messages.
+
+### Usage
+
+```vue
+<script setup>
+const { t } = useLocale()
+
+const closeLabel = t('modal.close')
+const saveLabel = t('button.save')
+</script>
+```
+
+### Return Value
+
+```ts
+const { t, locale } = useLocale()
+```
+
+<ParamField path="t" type="(key: string) => string">
+  Translation function that returns the localized message for the given key.
+</ParamField>
+
+<ParamField path="locale" type="Ref<Locale>">
+  Reactive reference to the current locale object.
+</ParamField>
+
+### Available Message Keys
+
+Nuxt UI includes the following message keys in the default English locale:
+
+```ts
+interface Messages {
+  alert: { close: string }
+  authForm: {
+    hidePassword: string
+    showPassword: string
+    submit: string
+  }
+  banner: { close: string }
+  calendar: {
+    nextMonth: string
+    nextYear: string
+    prevMonth: string
+    prevYear: string
+  }
+  carousel: {
+    dots: string
+    goto: string
+    next: string
+    prev: string
+  }
+  chatPrompt: { placeholder: string }
+  chatPromptSubmit: { label: string }
+  colorMode: {
+    dark: string
+    light: string
+    switchToDark: string
+    switchToLight: string
+    system: string
+  }
+  commandPalette: {
+    back: string
+    close: string
+    noData: string
+    noMatch: string
+    placeholder: string
+  }
+  modal: { close: string }
+  toast: { close: string }
+  // ... and more
+}
+```
+
+### Custom Locale Override
+
+You can override the locale for a specific component tree:
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import { useLocale } from '#ui'
+import frLocale from './locales/fr'
+
+const customLocale = ref(frLocale)
+const { t } = useLocale(customLocale)
+</script>
+```
+
+## defineLocale
+
+Create custom locale definitions for your application.
+
+### Function Signature
+
+```ts
+function defineLocale<M>(options: DefineLocaleOptions<M>): Locale<M>
+```
+
+### Parameters
+
+<ParamField path="options" type="DefineLocaleOptions" required>
+  Configuration object for the locale.
+
+  <ParamField path="options.name" type="string" required>
+    Human-readable name of the locale (e.g., "French", "Spanish").
+  </ParamField>
+
+  <ParamField path="options.code" type="string" required>
+    ISO 639-1 language code (e.g., "fr", "es", "de").
+  </ParamField>
+
+  <ParamField path="options.dir" type="'ltr' | 'rtl'" default="'ltr'">
+    Text direction: left-to-right or right-to-left.
+  </ParamField>
+
+  <ParamField path="options.messages" type="M" required>
+    Object containing all translated messages.
+  </ParamField>
+</ParamField>
+
+### Return Value
+
+Returns a `Locale` object:
+
+```ts
+interface Locale<M> {
+  name: string
+  code: string
+  dir: 'ltr' | 'rtl'
+  messages: M
+}
+```
+
+## Examples
+
+### Using Translation Function
+
+```vue
+<script setup>
+const { t } = useLocale()
+</script>
+
+<template>
+  <button :aria-label="t('modal.close')">
+    <Icon name="i-lucide-x" />
+  </button>
+</template>
+```
+
+### Creating a French Locale
+
+```ts
+import type { Messages } from '#ui'
+import { defineLocale } from '#ui'
+
+export default defineLocale<Messages>({
+  name: 'French',
+  code: 'fr',
+  dir: 'ltr',
+  messages: {
+    alert: {
+      close: 'Fermer'
+    },
+    authForm: {
+      hidePassword: 'Masquer le mot de passe',
+      showPassword: 'Afficher le mot de passe',
+      submit: 'Continuer'
+    },
+    banner: {
+      close: 'Fermer'
+    },
+    calendar: {
+      nextMonth: 'Mois suivant',
+      nextYear: 'Année suivante',
+      prevMonth: 'Mois précédent',
+      prevYear: 'Année précédente'
+    },
+    modal: {
+      close: 'Fermer'
+    },
+    toast: {
+      close: 'Fermer'
+    },
+    // ... other messages
+  }
+})
+```
+
+### Creating a Spanish Locale
+
+```ts
+import type { Messages } from '#ui'
+import { defineLocale } from '#ui'
+
+export default defineLocale<Messages>({
+  name: 'Spanish',
+  code: 'es',
+  messages: {
+    alert: { close: 'Cerrar' },
+    modal: { close: 'Cerrar' },
+    toast: { close: 'Cerrar' },
+    commandPalette: {
+      back: 'Atrás',
+      close: 'Cerrar',
+      noData: 'Sin datos',
+      noMatch: 'No hay coincidencias',
+      placeholder: 'Escribe un comando o busca…'
+    },
+    // ... other messages
+  }
+})
+```
+
+### Creating an Arabic (RTL) Locale
+
+```ts
+import type { Messages } from '#ui'
+import { defineLocale } from '#ui'
+
+export default defineLocale<Messages>({
+  name: 'Arabic',
+  code: 'ar',
+  dir: 'rtl',
+  messages: {
+    alert: { close: 'إغلاق' },
+    modal: { close: 'إغلاق' },
+    toast: { close: 'إغلاق' },
+    // ... other messages
+  }
+})
+```
+
+### Extending an Existing Locale
+
+Use `extendLocale` to partially override an existing locale:
+
+```ts
+import { extendLocale } from '#ui'
+import en from '#ui/locale/en'
+
+const customEnglish = extendLocale(en, {
+  messages: {
+    modal: {
+      close: 'Dismiss'
+    }
+  }
+})
+```
+
+### Providing a Custom Locale
+
+Provide a locale at the app level:
+
+```vue
+<script setup>
+import { provide } from 'vue'
+import { localeContextInjectionKey } from '#ui'
+import frLocale from './locales/fr'
+
+provide(localeContextInjectionKey, ref(frLocale))
+</script>
+```
+
+### Dynamic Locale Switching
+
+```vue
+<script setup>
+import { ref, provide } from 'vue'
+import { localeContextInjectionKey } from '#ui'
+import en from '#ui/locale/en'
+import fr from './locales/fr'
+import es from './locales/es'
+
+const locales = { en, fr, es }
+const currentLocale = ref(en)
+
+provide(localeContextInjectionKey, currentLocale)
+
+function setLocale(code: 'en' | 'fr' | 'es') {
+  currentLocale.value = locales[code]
+}
+</script>
+```
+
+### Using Locale in Custom Components
+
+```vue
+<script setup>
+import { useLocale } from '#ui'
+
+const { t } = useLocale()
+
+const props = defineProps<{
+  confirmLabel?: string
+  cancelLabel?: string
+}>()
+</script>
+
+<template>
+  <div>
+    <button>{{ confirmLabel || t('button.confirm') }}</button>
+    <button>{{ cancelLabel || t('button.cancel') }}</button>
+  </div>
+</template>
+```
+
+## TypeScript
+
+### Custom Message Type
+
+Create type-safe custom locales:
+
+```ts
+import { defineLocale } from '#ui'
+
+interface CustomMessages {
+  app: {
+    welcome: string
+    logout: string
+  }
+  errors: {
+    notFound: string
+    serverError: string
+  }
+}
+
+const myLocale = defineLocale<CustomMessages>({
+  name: 'English',
+  code: 'en',
+  messages: {
+    app: {
+      welcome: 'Welcome to our app',
+      logout: 'Log out'
+    },
+    errors: {
+      notFound: 'Page not found',
+      serverError: 'Server error'
+    }
+  }
+})
+```
+
+### Type Imports
+
+```ts
+import type { 
+  Locale, 
+  Messages, 
+  Direction 
+} from '#ui'
+```
+
+## Locale Context
+
+The `buildLocaleContext` utility (used internally) creates a reactive locale context:
+
+```ts
+const context = buildLocaleContext<Messages>(computed(() => locale.value))
+// Returns: { t: (key: string) => string, locale: ComputedRef<Locale> }
+```
+
+This is used internally by `useLocale` to provide a shared, reactive translation context across your application.

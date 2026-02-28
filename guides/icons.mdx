@@ -1,0 +1,193 @@
+---
+title: 'Icons'
+description: 'Use icons in your Nuxt UI application with @nuxt/icon integration'
+icon: 'icons'
+---
+
+## Overview
+
+Nuxt UI includes built-in support for icons through the [@nuxt/icon](https://nuxt.com/modules/icon) module, which is automatically installed and configured when you use Nuxt UI.
+
+## Icon Module
+
+The `@nuxt/icon` module is automatically registered by Nuxt UI with optimized settings:
+
+```typescript
+// Automatically configured by Nuxt UI
+{
+  icon: {
+    cssLayer: 'base'
+  }
+}
+```
+
+## Using Icons
+
+### Icon Component
+
+Use the `UIcon` component to display icons throughout your application:
+
+```vue
+<template>
+  <UIcon name="i-heroicons-home" />
+</template>
+```
+
+### Icon Collections
+
+Nuxt Icon supports multiple icon collections. You can use icons from:
+
+- **Heroicons** - `i-heroicons-{name}`
+- **Material Design Icons** - `i-mdi-{name}`
+- **Phosphor** - `i-ph-{name}`
+- **Tabler** - `i-tabler-{name}`
+- And [100,000+ other icons](https://icones.js.org/)
+
+<CodeGroup>
+```vue Heroicons
+<UIcon name="i-heroicons-star" />
+```
+
+```vue Material Design
+<UIcon name="i-mdi-account" />
+```
+
+```vue Phosphor
+<UIcon name="i-ph-heart" />
+```
+</CodeGroup>
+
+## Icons in Components
+
+Many Nuxt UI components accept icon props to enhance their appearance:
+
+### Buttons
+
+```vue
+<template>
+  <UButton
+    icon="i-heroicons-check"
+    trailing-icon="i-heroicons-arrow-right"
+  >
+    Continue
+  </UButton>
+</template>
+```
+
+### Input Fields
+
+```vue
+<template>
+  <UInput
+    icon="i-heroicons-magnifying-glass"
+    placeholder="Search..."
+  />
+</template>
+```
+
+### Alerts
+
+```vue
+<template>
+  <UAlert
+    icon="i-heroicons-information-circle"
+    title="Information"
+    description="This is an informational message."
+  />
+</template>
+```
+
+## AppConfig Icons
+
+Nuxt UI uses icons defined in your `app.config.ts` for various UI elements. You can customize these default icons:
+
+```typescript app.config.ts
+export default defineAppConfig({
+  ui: {
+    icons: {
+      dark: 'i-heroicons-moon',
+      light: 'i-heroicons-sun',
+      search: 'i-heroicons-magnifying-glass',
+      close: 'i-heroicons-x-mark',
+      check: 'i-heroicons-check'
+    }
+  }
+})
+```
+
+These icons are used throughout Nuxt UI components:
+
+- `dark` / `light` - Color mode toggle buttons
+- `search` - Search inputs and command palettes
+- `close` - Modal, drawer, and alert close buttons
+- `check` - Checkbox and selection indicators
+
+## Custom SVG Icons
+
+You can also use custom SVG icons by adding them to your `public/icons` directory:
+
+<Steps>
+  <Step title="Create icons directory">
+    Create a `public/icons` directory in your project root.
+  </Step>
+  
+  <Step title="Add SVG files">
+    Add your custom SVG files to the directory:
+    ```
+    public/icons/custom-logo.svg
+    ```
+  </Step>
+  
+  <Step title="Use the icon">
+    Reference your custom icon using the file path:
+    ```vue
+    <UIcon name="i-custom-logo" />
+    ```
+  </Step>
+</Steps>
+
+## Icon Sizing
+
+Control icon size using Tailwind CSS classes:
+
+```vue
+<template>
+  <UIcon name="i-heroicons-star" class="w-4 h-4" />
+  <UIcon name="i-heroicons-star" class="w-6 h-6" />
+  <UIcon name="i-heroicons-star" class="w-8 h-8" />
+</template>
+```
+
+## Icon Colors
+
+Icons inherit the text color from their parent element:
+
+```vue
+<template>
+  <UIcon name="i-heroicons-heart" class="text-error" />
+  <UIcon name="i-heroicons-check" class="text-success" />
+  <UIcon name="i-heroicons-star" class="text-primary" />
+</template>
+```
+
+<Note>
+  Icons in Nuxt UI use semantic color tokens like `text-primary`, `text-error`, etc. See the [Theme documentation](/theme/design-system) for more information.
+</Note>
+
+## Server-Side Rendering
+
+Icons are fully compatible with SSR. The `@nuxt/icon` module handles server-side rendering automatically, ensuring icons are displayed correctly on both server and client.
+
+## Performance
+
+The icon module only bundles icons that are actually used in your application, keeping your bundle size minimal.
+
+<Warning>
+  Avoid using dynamic icon names with string interpolation as this prevents proper tree-shaking. Use computed properties or static icon names instead.
+</Warning>
+
+## Learn More
+
+- [@nuxt/icon Documentation](https://nuxt.com/modules/icon)
+- [Iconify Icon Sets](https://icones.js.org/)
+- [Icon Component API](/components/icon)

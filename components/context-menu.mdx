@@ -1,0 +1,389 @@
+---
+title: 'Context Menu'
+description: 'A right-click menu with items, icons, and nested submenus'
+icon: 'menu'
+---
+
+## Overview
+
+The Context Menu component displays a contextual menu when right-clicking an element. Supports items with icons, avatars, keyboard shortcuts, checkboxes, and nested submenus.
+
+## Basic Usage
+
+```vue
+<template>
+  <UContextMenu :items="menuItems">
+    <template #default>
+      <div class="p-8 border rounded">
+        Right-click here
+      </div>
+    </template>
+  </UContextMenu>
+</template>
+
+<script setup>
+const menuItems = [
+  {
+    label: 'Edit',
+    icon: 'i-lucide-pencil',
+    onSelect: () => console.log('Edit clicked')
+  },
+  {
+    label: 'Delete',
+    icon: 'i-lucide-trash',
+    color: 'error',
+    onSelect: () => console.log('Delete clicked')
+  }
+]
+</script>
+```
+
+## Props
+
+<ParamField path="items" type="ContextMenuItem[]">
+  Array of menu items to display. See Item Properties below.
+</ParamField>
+
+<ParamField path="size" type="'xs' | 'sm' | 'md' | 'lg' | 'xl'" default="'md'">
+  The size of the menu and its items.
+</ParamField>
+
+<ParamField path="checkedIcon" type="string" default="appConfig.ui.icons.check">
+  The icon displayed when an item is checked. Accepts Iconify icon names.
+</ParamField>
+
+<ParamField path="loadingIcon" type="string" default="appConfig.ui.icons.loading">
+  The icon displayed when an item is loading. Accepts Iconify icon names.
+</ParamField>
+
+<ParamField path="externalIcon" type="boolean | string" default="appConfig.ui.icons.external">
+  The icon displayed when the item is an external link. Set to `false` to hide.
+</ParamField>
+
+<ParamField path="content" type="ContextMenuContentProps">
+  Additional props passed to the menu content element.
+</ParamField>
+
+<ParamField path="portal" type="boolean | string | HTMLElement" default="true">
+  Render the menu in a portal.
+</ParamField>
+
+<ParamField path="modal" type="boolean" default="true">
+  The modality of the menu.
+</ParamField>
+
+<ParamField path="labelKey" type="string" default="'label'">
+  The key used to get the label from the item.
+</ParamField>
+
+<ParamField path="descriptionKey" type="string" default="'description'">
+  The key used to get the description from the item.
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  Disable the entire context menu.
+</ParamField>
+
+<ParamField path="class" type="any">
+  CSS class for styling the trigger element.
+</ParamField>
+
+<ParamField path="ui" type="object">
+  Theme customization object for component slots.
+</ParamField>
+
+## Events
+
+<ParamField path="update:open" type="(open: boolean) => void">
+  Emitted when the open state changes.
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="{}">
+  The trigger element that opens the context menu on right-click.
+</ParamField>
+
+<ParamField path="item" type="{ item: ContextMenuItem, active: boolean, index: number, ui: object }">
+  Customize the entire item rendering.
+</ParamField>
+
+<ParamField path="item-leading" type="{ item: ContextMenuItem, active: boolean, index: number, ui: object }">
+  Customize the leading section (icon/avatar) of items.
+</ParamField>
+
+<ParamField path="item-label" type="{ item: ContextMenuItem, active: boolean, index: number }">
+  Customize the label section of items.
+</ParamField>
+
+<ParamField path="item-description" type="{ item: ContextMenuItem, active: boolean, index: number }">
+  Customize the description section of items.
+</ParamField>
+
+<ParamField path="item-trailing" type="{ item: ContextMenuItem, active: boolean, index: number, ui: object }">
+  Customize the trailing section (keyboard shortcuts/icons) of items.
+</ParamField>
+
+<ParamField path="content-top" type="{ sub: boolean }">
+  Content rendered at the top of the menu.
+</ParamField>
+
+<ParamField path="content-bottom" type="{ sub: boolean }">
+  Content rendered at the bottom of the menu.
+</ParamField>
+
+## Item Properties
+
+Each item in the `items` array can have the following properties:
+
+<ParamField path="label" type="string">
+  The text label for the item.
+</ParamField>
+
+<ParamField path="description" type="string">
+  Optional description text shown below the label.
+</ParamField>
+
+<ParamField path="icon" type="string">
+  Iconify icon name to display before the label.
+</ParamField>
+
+<ParamField path="avatar" type="AvatarProps">
+  Avatar to display instead of an icon.
+</ParamField>
+
+<ParamField path="color" type="string">
+  Color variant for the item.
+</ParamField>
+
+<ParamField path="kbds" type="KbdProps['value'][] | KbdProps[]">
+  Keyboard shortcuts to display on the right.
+</ParamField>
+
+<ParamField path="type" type="'label' | 'separator' | 'link' | 'checkbox'" default="'link'">
+  The item type.
+</ParamField>
+
+<ParamField path="slot" type="string">
+  Custom slot name for this item.
+</ParamField>
+
+<ParamField path="loading" type="boolean">
+  Show loading state for the item.
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  Disable the item.
+</ParamField>
+
+<ParamField path="checked" type="boolean">
+  Checked state for checkbox items.
+</ParamField>
+
+<ParamField path="children" type="ContextMenuItem[]">
+  Nested submenu items.
+</ParamField>
+
+<ParamField path="onSelect" type="(e: Event) => void">
+  Callback fired when the item is selected.
+</ParamField>
+
+<ParamField path="onUpdateChecked" type="(checked: boolean) => void">
+  Callback fired when checkbox state changes.
+</ParamField>
+
+## Examples
+
+### With Nested Submenus
+
+```vue
+<template>
+  <UContextMenu :items="menuItems">
+    <template #default>
+      <div class="p-8 border rounded">
+        Right-click for nested menu
+      </div>
+    </template>
+  </UContextMenu>
+</template>
+
+<script setup>
+const menuItems = [
+  {
+    label: 'File',
+    icon: 'i-lucide-file',
+    children: [
+      { label: 'New', icon: 'i-lucide-file-plus' },
+      { label: 'Open', icon: 'i-lucide-folder-open' },
+      { type: 'separator' },
+      { label: 'Save', icon: 'i-lucide-save', kbds: ['meta', 'S'] }
+    ]
+  },
+  {
+    label: 'Edit',
+    icon: 'i-lucide-pencil',
+    children: [
+      { label: 'Cut', icon: 'i-lucide-scissors', kbds: ['meta', 'X'] },
+      { label: 'Copy', icon: 'i-lucide-copy', kbds: ['meta', 'C'] },
+      { label: 'Paste', icon: 'i-lucide-clipboard', kbds: ['meta', 'V'] }
+    ]
+  }
+]
+</script>
+```
+
+### With Checkboxes
+
+```vue
+<template>
+  <UContextMenu :items="menuItems">
+    <template #default>
+      <div class="p-8 border rounded">
+        Right-click for options
+      </div>
+    </template>
+  </UContextMenu>
+</template>
+
+<script setup>
+const showToolbar = ref(true)
+const showSidebar = ref(false)
+
+const menuItems = computed(() => [
+  {
+    label: 'Show Toolbar',
+    type: 'checkbox',
+    checked: showToolbar.value,
+    onUpdateChecked: (val) => showToolbar.value = val
+  },
+  {
+    label: 'Show Sidebar',
+    type: 'checkbox',
+    checked: showSidebar.value,
+    onUpdateChecked: (val) => showSidebar.value = val
+  }
+])
+</script>
+```
+
+### With Separators and Labels
+
+```vue
+<template>
+  <UContextMenu :items="menuItems">
+    <template #default>
+      <div class="p-8 border rounded">
+        Right-click here
+      </div>
+    </template>
+  </UContextMenu>
+</template>
+
+<script setup>
+const menuItems = [
+  { type: 'label', label: 'Actions' },
+  { label: 'Edit', icon: 'i-lucide-pencil' },
+  { label: 'Duplicate', icon: 'i-lucide-copy' },
+  { type: 'separator' },
+  { type: 'label', label: 'Danger Zone' },
+  { label: 'Delete', icon: 'i-lucide-trash', color: 'error' }
+]
+</script>
+```
+
+### With User Avatar
+
+```vue
+<template>
+  <UContextMenu :items="menuItems">
+    <template #default>
+      <div class="p-8 border rounded">
+        Right-click for user menu
+      </div>
+    </template>
+  </UContextMenu>
+</template>
+
+<script setup>
+const menuItems = [
+  {
+    label: 'John Doe',
+    description: 'john@example.com',
+    avatar: { src: '/avatar.jpg' }
+  },
+  { type: 'separator' },
+  { label: 'Profile', icon: 'i-lucide-user' },
+  { label: 'Settings', icon: 'i-lucide-settings' },
+  { type: 'separator' },
+  { label: 'Logout', icon: 'i-lucide-log-out', color: 'error' }
+]
+</script>
+```
+
+### With Loading State
+
+```vue
+<template>
+  <UContextMenu :items="menuItems">
+    <template #default>
+      <div class="p-8 border rounded">
+        Right-click to see loading
+      </div>
+    </template>
+  </UContextMenu>
+</template>
+
+<script setup>
+const isLoading = ref(false)
+
+const menuItems = computed(() => [
+  { 
+    label: 'Refresh', 
+    icon: 'i-lucide-refresh-cw',
+    loading: isLoading.value,
+    onSelect: async () => {
+      isLoading.value = true
+      await new Promise(resolve => setTimeout(resolve, 2000))
+      isLoading.value = false
+    }
+  }
+])
+</script>
+```
+
+### With External Links
+
+```vue
+<template>
+  <UContextMenu :items="menuItems">
+    <template #default>
+      <div class="p-8 border rounded">
+        Right-click for links
+      </div>
+    </template>
+  </UContextMenu>
+</template>
+
+<script setup>
+const menuItems = [
+  { 
+    label: 'Documentation', 
+    icon: 'i-lucide-book',
+    to: 'https://nuxt.com',
+    target: '_blank'
+  },
+  { 
+    label: 'GitHub', 
+    icon: 'i-lucide-github',
+    to: 'https://github.com/nuxt/ui',
+    target: '_blank'
+  }
+]
+</script>
+```
+
+## Related Components
+
+- [Dropdown Menu](/components/dropdown-menu) - For click-triggered menus
+- [Popover](/components/popover) - For floating content
+- [Context Menu](https://reka-ui.com/docs/components/context-menu) - Reka UI Context Menu documentation

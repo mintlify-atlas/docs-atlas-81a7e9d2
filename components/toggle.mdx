@@ -1,0 +1,46 @@
+---
+title: 'Toggle'
+description: 'Toggle component (Switch). A two-state button that can be toggled on or off.'
+icon: 'toggle-on'
+---
+
+<Note>
+  The Toggle component is implemented as the **Switch** component in Nuxt UI. It provides a toggle switch interface for binary on/off states.
+</Note>
+
+## See Also
+
+<Card title="Switch" icon="toggle-on" href="/components/switch">
+  Use the Switch component to create toggle switches for enabling or disabling features.
+</Card>
+
+## Quick Example
+
+```vue
+<template>
+  <USwitch v-model="enabled" label="Enable notifications" />
+</template>
+
+<script setup>
+const enabled = ref(false)
+</script>
+```
+
+## Common Use Cases
+
+- **Settings toggles**: Enable/disable features in user settings
+- **Form controls**: Binary yes/no choices in forms
+- **Feature flags**: Toggle features on or off
+- **Status indicators**: Show and control active/inactive states
+
+## Switch vs Checkbox
+
+Use a **Switch** when:
+- The change takes effect immediately
+- You're toggling a feature or setting on/off
+- The action is more of a state change than a selection
+
+Use a **Checkbox** when:
+- The change requires form submission
+- You're selecting from multiple options
+- You need an indeterminate state

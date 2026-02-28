@@ -1,0 +1,372 @@
+---
+title: Accordion
+description: Display collapsible content panels with the Accordion component.
+icon: 'list'
+---
+
+## Usage
+
+Use the `UAccordion` component to create expandable/collapsible content sections.
+
+```vue
+<template>
+  <UAccordion
+    :items="[
+      { label: 'What is Nuxt UI?', content: 'Nuxt UI is a component library built on Reka UI and Tailwind CSS.' },
+      { label: 'How do I install it?', content: 'Install it using npm install @nuxt/ui' },
+      { label: 'Is it accessible?', content: 'Yes, it is built with accessibility in mind.' }
+    ]"
+  />
+</template>
+```
+
+## Props
+
+### as
+- **Type:** `any`
+- **Default:** `'div'`
+
+The element or component this component should render as.
+
+### items
+- **Type:** `AccordionItem[]`
+
+Array of items to display in the accordion.
+
+**AccordionItem interface:**
+```typescript
+interface AccordionItem {
+  label?: string
+  icon?: string // Iconify icon name
+  trailingIcon?: string // Iconify icon name
+  slot?: string
+  content?: string
+  value?: string // Unique value, defaults to index
+  disabled?: boolean
+  class?: any
+  ui?: object
+  [key: string]: any
+}
+```
+
+### type
+- **Type:** `'single' | 'multiple'`
+- **Default:** `'single'`
+
+Determines if one or multiple items can be open at once.
+
+```vue
+<UAccordion
+  type="multiple"
+  :items="items"
+/>
+```
+
+### collapsible
+- **Type:** `boolean`
+- **Default:** `true`
+
+Whether an open item can be collapsed when `type` is `'single'`.
+
+### defaultValue
+- **Type:** `string | string[]`
+
+Default open item value(s).
+
+```vue
+<UAccordion
+  :items="items"
+  default-value="0"
+/>
+```
+
+### modelValue
+- **Type:** `string | string[]`
+
+Controlled value for open items.
+
+```vue
+<script setup>
+const openItems = ref(['0', '1'])
+</script>
+
+<template>
+  <UAccordion
+    v-model="openItems"
+    type="multiple"
+    :items="items"
+  />
+</template>
+```
+
+### disabled
+- **Type:** `boolean`
+
+Disable all items.
+
+### unmountOnHide
+- **Type:** `boolean`
+- **Default:** `true`
+
+Unmount content when collapsed.
+
+### trailingIcon
+- **Type:** `string` (Iconify icon name)
+- **Default:** `appConfig.ui.icons.chevronDown`
+
+The icon displayed on the right side of each trigger.
+
+```vue
+<UAccordion
+  :items="items"
+  trailing-icon="i-heroicons-plus"
+/>
+```
+
+### valueKey
+- **Type:** `string`
+- **Default:** `'value'`
+
+The key used to get the value from each item.
+
+### labelKey
+- **Type:** `string`
+- **Default:** `'label'`
+
+The key used to get the label from each item.
+
+### class
+- **Type:** `any`
+
+Additional CSS classes.
+
+### ui
+- **Type:** `object`
+
+Customize styling. Available slots:
+- `root` - The root container
+- `item` - Each accordion item
+- `header` - The item header
+- `trigger` - The clickable trigger
+- `leadingIcon` - The leading icon
+- `label` - The label text
+- `trailingIcon` - The trailing icon
+- `content` - The collapsible content wrapper
+- `body` - The content body
+
+## Events
+
+Inherits all events from Reka UI's `AccordionRoot`.
+
+## Slots
+
+### leading
+- **Props:** `{ item: T, index: number, open: boolean, ui: Accordion['ui'] }`
+
+Customize the leading icon for each item.
+
+```vue
+<UAccordion :items="items">
+  <template #leading="{ item, open }">
+    <div :class="open ? 'rotate-90' : ''" class="transition-transform">
+      →
+    </div>
+  </template>
+</UAccordion>
+```
+
+### default
+- **Props:** `{ item: T, index: number, open: boolean }`
+
+Customize the label content.
+
+```vue
+<UAccordion :items="items">
+  <template #default="{ item, open }">
+    <span :class="{ 'font-bold': open }">{{ item.label }}</span>
+  </template>
+</UAccordion>
+```
+
+### trailing
+- **Props:** `{ item: T, index: number, open: boolean, ui: Accordion['ui'] }`
+
+Customize the trailing icon.
+
+### content
+- **Props:** `{ item: T, index: number, open: boolean, ui: Accordion['ui'] }`
+
+Customize the entire content area.
+
+### body
+- **Props:** `{ item: T, index: number, open: boolean, ui: Accordion['ui'] }`
+
+Customize the content body.
+
+```vue
+<UAccordion :items="items">
+  <template #body="{ item }">
+    <div class="text-muted">
+      {{ item.content }}
+    </div>
+  </template>
+</UAccordion>
+```
+
+### Dynamic Slots
+
+You can use dynamic slots based on the `slot` property of items:
+- `[item.slot]` - Custom content slot
+- `[item.slot]-body` - Custom body slot
+
+```vue
+<script setup>
+const items = [
+  { label: 'Custom Content', slot: 'custom' }
+]
+</script>
+
+<template>
+  <UAccordion :items="items">
+    <template #custom="{ item }">
+      <div>Custom content for {{ item.label }}</div>
+    </template>
+  </UAccordion>
+</template>
+```
+
+## Examples
+
+### Basic Accordion
+
+```vue
+<template>
+  <UAccordion
+    :items="[
+      { label: 'Section 1', content: 'Content for section 1' },
+      { label: 'Section 2', content: 'Content for section 2' },
+      { label: 'Section 3', content: 'Content for section 3' }
+    ]"
+  />
+</template>
+```
+
+### With Icons
+
+```vue
+<template>
+  <UAccordion
+    :items="[
+      {
+        label: 'Getting Started',
+        icon: 'i-heroicons-rocket-launch',
+        content: 'Learn how to get started'
+      },
+      {
+        label: 'Documentation',
+        icon: 'i-heroicons-book-open',
+        content: 'Read the full documentation'
+      }
+    ]"
+  />
+</template>
+```
+
+### Multiple Open Items
+
+```vue
+<template>
+  <UAccordion
+    type="multiple"
+    :items="items"
+  />
+</template>
+```
+
+### Disabled Items
+
+```vue
+<template>
+  <UAccordion
+    :items="[
+      { label: 'Available', content: 'This is available' },
+      { label: 'Disabled', content: 'This is disabled', disabled: true },
+      { label: 'Also Available', content: 'This is available' }
+    ]"
+  />
+</template>
+```
+
+### Controlled State
+
+```vue
+<script setup>
+const openValue = ref('1')
+
+const items = [
+  { value: '0', label: 'First', content: 'First content' },
+  { value: '1', label: 'Second', content: 'Second content' },
+  { value: '2', label: 'Third', content: 'Third content' }
+]
+</script>
+
+<template>
+  <div>
+    <button @click="openValue = '0'">Open First</button>
+    <button @click="openValue = '1'">Open Second</button>
+    <button @click="openValue = '2'">Open Third</button>
+    
+    <UAccordion
+      v-model="openValue"
+      :items="items"
+    />
+  </div>
+</template>
+```
+
+### Custom Styling
+
+```vue
+<template>
+  <UAccordion
+    :items="items"
+    :ui="{
+      item: 'border-l-2 border-primary pl-4',
+      label: 'text-lg font-semibold',
+      body: 'text-muted p-4'
+    }"
+  />
+</template>
+```
+
+### FAQ Example
+
+```vue
+<script setup>
+const faqs = [
+  {
+    label: 'What payment methods do you accept?',
+    content: 'We accept all major credit cards, PayPal, and bank transfers.'
+  },
+  {
+    label: 'How long does shipping take?',
+    content: 'Standard shipping takes 5-7 business days. Express shipping is available.'
+  },
+  {
+    label: 'What is your return policy?',
+    content: 'We offer a 30-day money-back guarantee on all products.'
+  },
+  {
+    label: 'Do you ship internationally?',
+    content: 'Yes, we ship to over 100 countries worldwide.'
+  }
+]
+</script>
+
+<template>
+  <div>
+    <h2 class="text-2xl font-bold mb-4">Frequently Asked Questions</h2>
+    <UAccordion :items="faqs" />
+  </div>
+</template>
+```

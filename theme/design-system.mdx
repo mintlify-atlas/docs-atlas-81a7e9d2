@@ -1,0 +1,246 @@
+---
+title: Design System
+description: Learn about Nuxt UI's design system built on Tailwind CSS and Tailwind Variants.
+---
+
+Nuxt UI's design system is built on top of [Tailwind CSS v4](https://tailwindcss.com/) and [Tailwind Variants](https://www.tailwind-variants.org/), providing a powerful and flexible theming system that enables consistent, customizable components.
+
+## Architecture
+
+The design system consists of three main layers:
+
+1. **CSS Variables** - Semantic design tokens defined in CSS
+2. **Tailwind Variants** - Component-level theme definitions
+3. **Runtime Configuration** - Dynamic theme customization via `app.config.ts`
+
+## Color System
+
+### Color Aliases
+
+Nuxt UI uses semantic color aliases that map to actual color values. By default, the following color aliases are available:
+
+```ts
+['primary', 'secondary', 'success', 'info', 'warning', 'error']
+```
+
+These aliases are configured in your `nuxt.config.ts`:
+
+```ts [nuxt.config.ts]
+export default defineNuxtConfig({
+  modules: ['@nuxt/ui'],
+  ui: {
+    theme: {
+      colors: ['primary', 'secondary', 'success', 'info', 'warning', 'error']
+    }
+  }
+})
+```
+
+### Default Color Mapping
+
+The default color mapping in `app.config.ts` is:
+
+```ts [app.config.ts]
+export default defineAppConfig({
+  ui: {
+    colors: {
+      primary: 'green',
+      secondary: 'blue',
+      success: 'green',
+      info: 'blue',
+      warning: 'yellow',
+      error: 'red',
+      neutral: 'slate'
+    }
+  }
+})
+```
+
+### Semantic Color Tokens
+
+Nuxt UI provides semantic color tokens that automatically adapt to light and dark modes:
+
+**Text Colors:**
+- `text-dimmed` - Dimmed text (neutral-400 in light, neutral-500 in dark)
+- `text-muted` - Muted text (neutral-500 in light, neutral-400 in dark)
+- `text-toned` - Toned text (neutral-600 in light, neutral-300 in dark)
+- `text-default` - Default text (neutral-700 in light, neutral-200 in dark)
+- `text-highlighted` - Highlighted text (neutral-900 in light, white in dark)
+- `text-inverted` - Inverted text (white in light, neutral-900 in dark)
+
+**Background Colors:**
+- `bg-default` - Default background (white in light, neutral-900 in dark)
+- `bg-muted` - Muted background (neutral-50 in light, neutral-800 in dark)
+- `bg-elevated` - Elevated background (neutral-100 in light, neutral-800 in dark)
+- `bg-accented` - Accented background (neutral-200 in light, neutral-700 in dark)
+- `bg-inverted` - Inverted background (neutral-900 in light, white in dark)
+
+**Border Colors:**
+- `ring-default` - Default border (neutral-200 in light, neutral-800 in dark)
+- `ring-muted` - Muted border (neutral-200 in light, neutral-700 in dark)
+- `ring-accented` - Accented border (neutral-300 in light, neutral-700 in dark)
+- `ring-inverted` - Inverted border (neutral-900 in light, white in dark)
+
+## Size Variants
+
+Most components support standardized size variants:
+
+```ts
+type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+```
+
+You can set default size variants globally:
+
+```ts [nuxt.config.ts]
+export default defineNuxtConfig({
+  ui: {
+    theme: {
+      defaultVariants: {
+        size: 'md',
+        color: 'primary'
+      }
+    }
+  }
+})
+```
+
+## Component Variants
+
+Components typically support these visual variants:
+
+- **solid** - Filled background with the color
+- **outline** - Transparent background with colored border
+- **soft** - Light background with colored text
+- **subtle** - Light background with border and colored text
+- **ghost** - Transparent with hover states
+- **link** - Text-only appearance
+
+<Note>
+Not all variants are available on all components. Check individual component documentation for supported variants.
+</Note>
+
+## Tailwind Variants
+
+Each component's theme is defined using Tailwind Variants in `src/theme/*.ts` files. Here's an example from the Button component:
+
+```ts [src/theme/button.ts]
+export default (options: Required<ModuleOptions>) => ({
+  slots: {
+    base: ['rounded-md font-medium inline-flex items-center', options.theme.transitions && 'transition-colors'],
+    label: 'truncate',
+    leadingIcon: 'shrink-0',
+    trailingIcon: 'shrink-0'
+  },
+  variants: {
+    color: {
+      ...Object.fromEntries((options.theme.colors || []).map((color: string) => [color, ''])),
+      neutral: ''
+    },
+    variant: {
+      solid: '',
+      outline: '',
+      soft: '',
+      ghost: ''
+    },
+    size: {
+      xs: { base: 'px-2 py-1 text-xs gap-1' },
+      sm: { base: 'px-2.5 py-1.5 text-xs gap-1.5' },
+      md: { base: 'px-2.5 py-1.5 text-sm gap-1.5' },
+      lg: { base: 'px-3 py-2 text-sm gap-2' },
+      xl: { base: 'px-3 py-2 text-base gap-2' }
+    }
+  },
+  compoundVariants: [
+    {
+      color: 'primary',
+      variant: 'solid',
+      class: 'text-inverted bg-primary hover:bg-primary/75'
+    }
+  ],
+  defaultVariants: {
+    color: 'primary',
+    variant: 'solid',
+    size: 'md'
+  }
+})
+```
+
+## Transitions
+
+Transitions can be globally enabled or disabled:
+
+```ts [nuxt.config.ts]
+export default defineNuxtConfig({
+  ui: {
+    theme: {
+      transitions: true // default
+    }
+  }
+})
+```
+
+When disabled, components won't include transition classes, which can improve performance.
+
+## Tailwind CSS Prefix
+
+You can prefix all Tailwind utility classes to avoid conflicts:
+
+```ts [nuxt.config.ts]
+export default defineNuxtConfig({
+  ui: {
+    theme: {
+      prefix: 'tw'
+    }
+  }
+})
+```
+
+This prefixes all utilities with `tw:`, resulting in classes like `tw:bg-primary` and `tw:text-sm`.
+
+## Design Tokens
+
+Nuxt UI uses CSS variables as design tokens, making it easy to customize the entire design system. Key tokens include:
+
+```css
+:root {
+  --ui-radius: 0.25rem;
+  --ui-container: 80rem;
+  --ui-header-height: 4rem;
+}
+```
+
+See [CSS Variables](/theme/css-variables) for a complete reference of available tokens.
+
+## Best Practices
+
+<Steps>
+  <Step title="Use semantic colors">
+    Always use semantic color tokens like `text-default` and `bg-elevated` instead of raw Tailwind palette colors like `text-gray-500`.
+  </Step>
+
+  <Step title="Leverage color aliases">
+    Use color aliases (`primary`, `secondary`, etc.) for components to maintain consistency and enable easy theme switching.
+  </Step>
+
+  <Step title="Override at the right level">
+    Use CSS variables for global changes, `app.config.ts` for color mappings, and component-level overrides for specific customizations.
+  </Step>
+
+  <Step title="Test in both modes">
+    Always test your customizations in both light and dark color modes to ensure proper contrast and readability.
+  </Step>
+</Steps>
+
+## Related
+
+<CardGroup cols={3}>
+  <Card title="CSS Variables" icon="code" href="/theme/css-variables">
+    Customize design tokens and CSS variables
+  </Card>
+  <Card title="Component Theming" icon="palette" href="/theme/components">
+    Learn how to theme individual components
+  </Card>
+  <Card title="Customization Guide" icon="wrench" href="/theme/customization">
+    Advanced theme customization techniques
+  </Card>
+</CardGroup>

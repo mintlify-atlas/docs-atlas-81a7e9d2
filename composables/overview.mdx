@@ -1,0 +1,114 @@
+---
+title: Composables Overview
+description: Explore all available composables in Nuxt UI for toast notifications, keyboard shortcuts, localization, and color mode.
+---
+
+Nuxt UI provides a collection of composables to enhance your application with toast notifications, keyboard shortcuts, internationalization, and theme management.
+
+## Available Composables
+
+### useToast
+
+Manage toast notifications in your application. Add, update, remove, and clear toast messages with full control over their appearance and behavior.
+
+```vue
+<script setup>
+const toast = useToast()
+
+toast.add({
+  title: 'Success',
+  description: 'Your changes have been saved',
+  color: 'success'
+})
+</script>
+```
+
+[Learn more about useToast](/composables/use-toast)
+
+### defineShortcuts
+
+Define keyboard shortcuts for your application with support for modifier keys, chained shortcuts, and input field handling.
+
+```vue
+<script setup>
+defineShortcuts({
+  'meta_k': () => {
+    // Open command palette
+  },
+  'g-h': () => {
+    // Navigate to home (chained shortcut)
+  }
+})
+</script>
+```
+
+[Learn more about defineShortcuts](/composables/use-shortcuts)
+
+### useLocale
+
+Access and use localized messages in your components. Nuxt UI components use this internally for internationalization.
+
+```vue
+<script setup>
+const { t } = useLocale()
+
+const closeLabel = t('modal.close')
+</script>
+```
+
+[Learn more about useLocale](/composables/use-locale)
+
+### defineLocale
+
+Create custom locale definitions with translations for your application or to extend existing locales.
+
+```ts
+import { defineLocale } from '#ui'
+
+const frLocale = defineLocale({
+  name: 'French',
+  code: 'fr',
+  dir: 'ltr',
+  messages: {
+    modal: {
+      close: 'Fermer'
+    }
+  }
+})
+```
+
+[Learn more about defineLocale](/composables/use-locale#definelocale)
+
+### useColorMode
+
+Integration with Nuxt Color Mode module for managing dark/light themes. This composable works seamlessly with Nuxt UI's color mode components.
+
+```vue
+<script setup>
+const colorMode = useColorMode()
+</script>
+```
+
+[Learn more about useColorMode](/composables/use-color-mode)
+
+## Usage in Components
+
+All composables can be used within Vue components' `<script setup>` blocks:
+
+```vue
+<script setup>
+import { useToast, defineShortcuts, useLocale } from '#ui'
+
+const toast = useToast()
+const { t } = useLocale()
+
+defineShortcuts({
+  'meta_s': () => {
+    toast.add({
+      title: t('saved'),
+      color: 'success'
+    })
+  }
+})
+</script>
+```

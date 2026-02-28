@@ -1,0 +1,248 @@
+---
+title: 'Checkbox'
+description: 'A control that allows users to toggle between checked and unchecked states.'
+icon: 'square-check'
+---
+
+## Usage
+
+The Checkbox component allows users to select or deselect options. It supports labels, descriptions, and indeterminate state.
+
+```vue
+<template>
+  <UCheckbox v-model="checked" label="Accept terms and conditions" />
+</template>
+
+<script setup>
+const checked = ref(false)
+</script>
+```
+
+## With Description
+
+Add a description to provide additional context:
+
+```vue
+<template>
+  <UCheckbox
+    v-model="checked"
+    label="Subscribe to newsletter"
+    description="Receive updates about new features and releases"
+  />
+</template>
+
+<script setup>
+const checked = ref(false)
+</script>
+```
+
+## Indeterminate State
+
+The checkbox supports an indeterminate state for partial selections:
+
+```vue
+<template>
+  <UCheckbox
+    v-model="state"
+    label="Select all items"
+  />
+</template>
+
+<script setup>
+const state = ref('indeterminate')
+</script>
+```
+
+## Variants
+
+Checkboxes come in different variants:
+
+```vue
+<template>
+  <div class="space-y-4">
+    <UCheckbox v-model="checked" label="List variant" variant="list" />
+    <UCheckbox v-model="checked" label="Default variant" />
+  </div>
+</template>
+
+<script setup>
+const checked = ref(false)
+</script>
+```
+
+## Sizes
+
+```vue
+<template>
+  <div class="space-y-4">
+    <UCheckbox v-model="checked" label="Small" size="sm" />
+    <UCheckbox v-model="checked" label="Medium" size="md" />
+    <UCheckbox v-model="checked" label="Large" size="lg" />
+  </div>
+</template>
+
+<script setup>
+const checked = ref(false)
+</script>
+```
+
+## Colors
+
+```vue
+<template>
+  <div class="space-y-4">
+    <UCheckbox v-model="checked" label="Primary" color="primary" />
+    <UCheckbox v-model="checked" label="Success" color="success" />
+    <UCheckbox v-model="checked" label="Warning" color="warning" />
+    <UCheckbox v-model="checked" label="Error" color="error" />
+  </div>
+</template>
+
+<script setup>
+const checked = ref(false)
+</script>
+```
+
+## Disabled
+
+```vue
+<template>
+  <UCheckbox v-model="checked" label="Disabled checkbox" disabled />
+</template>
+
+<script setup>
+const checked = ref(false)
+</script>
+```
+
+## Custom Icons
+
+```vue
+<template>
+  <UCheckbox
+    v-model="checked"
+    label="Custom icons"
+    icon="i-heroicons-heart"
+    indeterminate-icon="i-heroicons-minus"
+  />
+</template>
+
+<script setup>
+const checked = ref(false)
+</script>
+```
+
+## Slots
+
+Customize the label and description using slots:
+
+```vue
+<template>
+  <UCheckbox v-model="checked">
+    <template #label>
+      <span class="font-bold">Custom Label</span>
+    </template>
+    <template #description>
+      <span class="text-sm">Custom description content</span>
+    </template>
+  </UCheckbox>
+</template>
+
+<script setup>
+const checked = ref(false)
+</script>
+```
+
+## Props
+
+<ParamField path="modelValue" type="boolean | 'indeterminate'">
+  The controlled checked state of the checkbox. Can be bound with `v-model`.
+</ParamField>
+
+<ParamField path="defaultValue" type="boolean | 'indeterminate'">
+  The default checked state when initially rendered. Use when you do not need to control the state.
+</ParamField>
+
+<ParamField path="label" type="string">
+  The label text for the checkbox.
+</ParamField>
+
+<ParamField path="description" type="string">
+  The description text displayed below the label.
+</ParamField>
+
+<ParamField path="color" type="string" default="primary">
+  The color theme of the checkbox.
+</ParamField>
+
+<ParamField path="variant" type="string" default="list">
+  The visual variant of the checkbox.
+</ParamField>
+
+<ParamField path="size" type="string" default="md">
+  The size of the checkbox. Options: `sm`, `md`, `lg`.
+</ParamField>
+
+<ParamField path="indicator" type="string" default="start">
+  Position of the checkbox indicator. Options: `start`, `end`.
+</ParamField>
+
+<ParamField path="icon" type="string">
+  The icon displayed when checked. Defaults to `appConfig.ui.icons.check`.
+</ParamField>
+
+<ParamField path="indeterminateIcon" type="string">
+  The icon displayed when the checkbox is indeterminate. Defaults to `appConfig.ui.icons.minus`.
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  When `true`, prevents user interaction with the checkbox.
+</ParamField>
+
+<ParamField path="required" type="boolean">
+  When `true`, indicates that the checkbox must be checked.
+</ParamField>
+
+<ParamField path="name" type="string">
+  The name of the checkbox for form submission.
+</ParamField>
+
+<ParamField path="value" type="string">
+  The value of the checkbox when used in a form.
+</ParamField>
+
+<ParamField path="id" type="string">
+  The id attribute of the checkbox input element.
+</ParamField>
+
+<ParamField path="as" type="any" default="div">
+  The element or component this component should render as.
+</ParamField>
+
+<ParamField path="class" type="any">
+  Additional CSS classes to apply to the root element.
+</ParamField>
+
+<ParamField path="ui" type="object">
+  UI customization object for styling different parts of the checkbox.
+</ParamField>
+
+## Events
+
+<ParamField path="@change" type="(event: Event) => void">
+  Emitted when the checkbox state changes.
+</ParamField>
+
+<ParamField path="@update:modelValue" type="(value: boolean | 'indeterminate') => void">
+  Emitted when the checked state changes.
+</ParamField>
+
+## Slots
+
+<ParamField path="label" type="{ label?: string }">
+  Customize the label content.
+</ParamField>
+
+<ParamField path="description" type="{ description?: string }">
+  Customize the description content.
+</ParamField>

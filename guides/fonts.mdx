@@ -1,0 +1,248 @@
+---
+title: 'Fonts'
+description: 'Configure custom fonts in your Nuxt UI application with @nuxt/fonts'
+icon: 'font'
+---
+
+## Overview
+
+Nuxt UI automatically integrates [@nuxt/fonts](https://nuxt.com/modules/fonts) to provide optimized font loading and management. The module handles font optimization, local font loading, and web font providers.
+
+## Automatic Integration
+
+The `@nuxt/fonts` module is automatically installed and configured by Nuxt UI:
+
+```typescript
+// Automatically configured by Nuxt UI
+{
+  fonts: {
+    defaults: {
+      weights: [400, 500, 600, 700]
+    }
+  }
+}
+```
+
+<Note>
+  Font integration is enabled by default. You can disable it by setting `fonts: false` in your Nuxt UI configuration.
+</Note>
+
+## Default Font Weights
+
+Nuxt UI pre-configures common font weights used throughout the component library:
+
+- **400** - Regular text
+- **500** - Medium emphasis
+- **600** - Semibold headings
+- **700** - Bold elements
+
+## Using System Fonts
+
+By default, Nuxt UI uses system font stacks for optimal performance:
+
+```css
+font-family: ui-sans-serif, system-ui, sans-serif;
+```
+
+No additional configuration is needed for system fonts.
+
+## Custom Fonts
+
+### Google Fonts
+
+Add Google Fonts to your application:
+
+<Steps>
+  <Step title="Configure in nuxt.config.ts">
+    ```typescript nuxt.config.ts
+    export default defineNuxtConfig({
+      modules: ['@nuxt/ui'],
+      
+      fonts: {
+        families: [
+          { name: 'Inter', provider: 'google' }
+        ]
+      }
+    })
+    ```
+  </Step>
+  
+  <Step title="Apply in CSS">
+    ```css app.vue
+    <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    </style>
+    ```
+  </Step>
+</Steps>
+
+### Local Fonts
+
+Use local font files for better performance and privacy:
+
+<Steps>
+  <Step title="Add font files">
+    Place your font files in the `public/fonts` directory:
+    ```
+    public/fonts/MyFont-Regular.woff2
+    public/fonts/MyFont-Bold.woff2
+    ```
+  </Step>
+  
+  <Step title="Configure local fonts">
+    ```typescript nuxt.config.ts
+    export default defineNuxtConfig({
+      modules: ['@nuxt/ui'],
+      
+      fonts: {
+        families: [
+          {
+            name: 'MyFont',
+            provider: 'local',
+            weights: [400, 700]
+          }
+        ]
+      }
+    })
+    ```
+  </Step>
+  
+  <Step title="Apply the font">
+    ```css
+    body {
+      font-family: 'MyFont', sans-serif;
+    }
+    ```
+  </Step>
+</Steps>
+
+## Font Display Strategy
+
+Optimize font loading behavior:
+
+```typescript nuxt.config.ts
+export default defineNuxtConfig({
+  fonts: {
+    defaults: {
+      weights: [400, 500, 600, 700],
+      fallbacks: {
+        'sans-serif': ['system-ui', 'Arial']
+      }
+    }
+  }
+})
+```
+
+<CodeGroup>
+```typescript Font Swap
+{
+  fonts: {
+    defaults: {
+      styles: ['normal'],
+      display: 'swap'
+    }
+  }
+}
+```
+
+```typescript Font Optional
+{
+  fonts: {
+    defaults: {
+      styles: ['normal'],
+      display: 'optional'
+    }
+  }
+}
+```
+</CodeGroup>
+
+## Variable Fonts
+
+Use variable fonts for greater flexibility:
+
+```typescript nuxt.config.ts
+export default defineNuxtConfig({
+  fonts: {
+    families: [
+      {
+        name: 'Inter Variable',
+        provider: 'google',
+        variable: true
+      }
+    ]
+  }
+})
+```
+
+## Disabling Font Module
+
+If you prefer to manage fonts manually, disable the automatic integration:
+
+```typescript nuxt.config.ts
+export default defineNuxtConfig({
+  modules: ['@nuxt/ui'],
+  
+  ui: {
+    fonts: false
+  }
+})
+```
+
+## Tailwind Typography
+
+Combine custom fonts with Tailwind's typography plugin for content-rich pages:
+
+```typescript tailwind.config.ts
+export default {
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace']
+      }
+    }
+  }
+}
+```
+
+## Best Practices
+
+<Steps>
+  <Step title="Limit font weights">
+    Only load the font weights you actually use to reduce bundle size.
+  </Step>
+  
+  <Step title="Use variable fonts">
+    Variable fonts provide all weights in a single file, improving performance.
+  </Step>
+  
+  <Step title="Preload critical fonts">
+    Preload fonts used above the fold for faster initial rendering.
+  </Step>
+  
+  <Step title="Provide fallbacks">
+    Always specify fallback fonts that match your custom font's metrics.
+  </Step>
+</Steps>
+
+## Performance Considerations
+
+The `@nuxt/fonts` module automatically:
+
+- Optimizes font loading with `font-display: swap`
+- Generates local fallback fonts
+- Prefetches font resources
+- Provides type-safe font configuration
+
+<Warning>
+  Avoid loading too many font weights or styles, as this increases page load time and negatively impacts performance.
+</Warning>
+
+## Learn More
+
+- [@nuxt/fonts Documentation](https://nuxt.com/modules/fonts)
+- [Web Font Best Practices](https://web.dev/font-best-practices/)
+- [Google Fonts](https://fonts.google.com/)

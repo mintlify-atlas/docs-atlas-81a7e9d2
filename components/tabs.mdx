@@ -1,0 +1,377 @@
+---
+title: Tabs
+description: A set of layered sections of content that are displayed one at a time.
+---
+
+## Usage
+
+The Tabs component allows users to switch between different views or sections of content. It supports icons, avatars, badges, and various orientations.
+
+### Basic Example
+
+```vue
+<template>
+  <UTabs :items="items" />
+</template>
+
+<script setup>
+const items = [
+  { label: 'Account', content: 'Make changes to your account here.' },
+  { label: 'Password', content: 'Change your password here.' },
+  { label: 'Settings', content: 'Manage your settings here.' }
+]
+</script>
+```
+
+### With Icons
+
+```vue
+<template>
+  <UTabs :items="items" />
+</template>
+
+<script setup>
+const items = [
+  { label: 'Home', icon: 'i-lucide-home', content: 'Welcome home!' },
+  { label: 'Settings', icon: 'i-lucide-settings', content: 'Adjust your settings.' },
+  { label: 'Profile', icon: 'i-lucide-user', content: 'View your profile.' }
+]
+</script>
+```
+
+### With Badges
+
+```vue
+<template>
+  <UTabs :items="items" />
+</template>
+
+<script setup>
+const items = [
+  { label: 'Inbox', badge: 5, content: 'You have 5 new messages.' },
+  { label: 'Sent', badge: 0, content: 'No sent messages.' },
+  { label: 'Drafts', badge: { label: '3', color: 'primary' }, content: '3 drafts saved.' }
+]
+</script>
+```
+
+### Vertical Orientation
+
+```vue
+<template>
+  <UTabs :items="items" orientation="vertical" />
+</template>
+
+<script setup>
+const items = [
+  { label: 'Account', content: 'Make changes to your account here.' },
+  { label: 'Password', content: 'Change your password here.' },
+  { label: 'Settings', content: 'Manage your settings here.' }
+]
+</script>
+```
+
+### Different Variants
+
+```vue
+<template>
+  <div class="space-y-4">
+    <UTabs :items="items" variant="pill" />
+    <UTabs :items="items" variant="link" />
+  </div>
+</template>
+
+<script setup>
+const items = [
+  { label: 'Tab 1', content: 'Content 1' },
+  { label: 'Tab 2', content: 'Content 2' },
+  { label: 'Tab 3', content: 'Content 3' }
+]
+</script>
+```
+
+### Controlled State
+
+```vue
+<template>
+  <div>
+    <UTabs v-model="selectedTab" :items="items" />
+    <p class="mt-4">Current tab: {{ selectedTab }}</p>
+  </div>
+</template>
+
+<script setup>
+const selectedTab = ref('1')
+
+const items = [
+  { label: 'First', value: '1', content: 'First tab content' },
+  { label: 'Second', value: '2', content: 'Second tab content' },
+  { label: 'Third', value: '3', content: 'Third tab content' }
+]
+</script>
+```
+
+### Disabled Tabs
+
+```vue
+<template>
+  <UTabs :items="items" />
+</template>
+
+<script setup>
+const items = [
+  { label: 'Available', content: 'This tab is available.' },
+  { label: 'Disabled', content: 'This content cannot be accessed.', disabled: true },
+  { label: 'Also Available', content: 'This tab is also available.' }
+]
+</script>
+```
+
+### Without Content
+
+```vue
+<template>
+  <UTabs v-model="selectedTab" :items="items" :content="false" />
+  
+  <!-- Custom content outside tabs -->
+  <div class="mt-4">
+    <div v-if="selectedTab === '0'">Custom content for tab 1</div>
+    <div v-else-if="selectedTab === '1'">Custom content for tab 2</div>
+    <div v-else>Custom content for tab 3</div>
+  </div>
+</template>
+
+<script setup>
+const selectedTab = ref('0')
+
+const items = [
+  { label: 'Tab 1' },
+  { label: 'Tab 2' },
+  { label: 'Tab 3' }
+]
+</script>
+```
+
+## API
+
+### Props
+
+<ParamField path="items" type="TabsItem[]">
+  Array of tab items to display.
+</ParamField>
+
+<ParamField path="modelValue" type="string | number">
+  The controlled value of the active tab (v-model).
+</ParamField>
+
+<ParamField path="defaultValue" type="string | number" default="'0'">
+  The default active tab value when uncontrolled.
+</ParamField>
+
+<ParamField path="as" type="any" default="'div'">
+  The element or component this component should render as.
+</ParamField>
+
+<ParamField path="color" type="string" default="'primary'">
+  The color theme of the tabs.
+</ParamField>
+
+<ParamField path="variant" type="string" default="'pill'">
+  The visual variant of the tabs. Options: `pill`, `link`.
+</ParamField>
+
+<ParamField path="size" type="string" default="'md'">
+  The size of the tabs. Options: `xs`, `sm`, `md`, `lg`, `xl`.
+</ParamField>
+
+<ParamField path="orientation" type="string" default="'horizontal'">
+  The orientation of the tabs. Options: `horizontal`, `vertical`.
+</ParamField>
+
+<ParamField path="content" type="boolean" default="true">
+  Whether to render the content panels. Set to `false` to manage content externally.
+</ParamField>
+
+<ParamField path="activationMode" type="string">
+  How tabs are activated. Options: `automatic`, `manual`.
+</ParamField>
+
+<ParamField path="unmountOnHide" type="boolean" default="true">
+  Whether to unmount inactive tab content from the DOM.
+</ParamField>
+
+<ParamField path="valueKey" type="string" default="'value'">
+  The key used to get the value from the item.
+</ParamField>
+
+<ParamField path="labelKey" type="string" default="'label'">
+  The key used to get the label from the item.
+</ParamField>
+
+<ParamField path="class" type="any">
+  Additional CSS classes to apply to the root element.
+</ParamField>
+
+<ParamField path="ui" type="object">
+  Custom UI configuration for slots.
+</ParamField>
+
+### TabsItem
+
+<ParamField path="label" type="string">
+  The text label for the tab.
+</ParamField>
+
+<ParamField path="value" type="string | number">
+  A unique value for the tab item. Defaults to the index.
+</ParamField>
+
+<ParamField path="icon" type="string">
+  An Iconify icon name to display before the label.
+</ParamField>
+
+<ParamField path="avatar" type="AvatarProps">
+  Avatar configuration to display before the label.
+</ParamField>
+
+<ParamField path="badge" type="string | number | BadgeProps">
+  Display a badge on the tab. Can be a simple value or full badge configuration.
+</ParamField>
+
+<ParamField path="content" type="string">
+  The content to display in the tab panel.
+</ParamField>
+
+<ParamField path="slot" type="string">
+  Custom slot name for this tab's content.
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  Whether the tab is disabled.
+</ParamField>
+
+<ParamField path="class" type="any">
+  Additional CSS classes for the tab.
+</ParamField>
+
+<ParamField path="ui" type="object">
+  Custom UI configuration for this tab's slots.
+</ParamField>
+
+### Emits
+
+<ParamField path="update:modelValue" type="(value: string | number) => void">
+  Emitted when the active tab changes.
+</ParamField>
+
+## Slots
+
+### default
+
+Customize the tab label.
+
+```vue
+<template>
+  <UTabs :items="items">
+    <template #default="{ item, index }">
+      <span class="uppercase">{{ item.label }}</span>
+    </template>
+  </UTabs>
+</template>
+```
+
+### leading
+
+Customize the leading icon or avatar for all tabs.
+
+```vue
+<template>
+  <UTabs :items="items">
+    <template #leading="{ item, index, ui }">
+      <UIcon :name="item.icon" class="text-primary" />
+    </template>
+  </UTabs>
+</template>
+```
+
+### trailing
+
+Customize the trailing badge or add custom trailing content.
+
+```vue
+<template>
+  <UTabs :items="items">
+    <template #trailing="{ item, index, ui }">
+      <UBadge v-if="item.count" :label="item.count" />
+    </template>
+  </UTabs>
+</template>
+```
+
+### content
+
+Customize the content panel for all tabs.
+
+```vue
+<template>
+  <UTabs :items="items">
+    <template #content="{ item, index, ui }">
+      <div class="p-4">
+        <h3>{{ item.label }}</h3>
+        <p>{{ item.content }}</p>
+      </div>
+    </template>
+  </UTabs>
+</template>
+```
+
+### list-leading
+
+Add content before the tab list.
+
+```vue
+<template>
+  <UTabs :items="items">
+    <template #list-leading>
+      <UButton icon="i-lucide-plus" size="xs" />
+    </template>
+  </UTabs>
+</template>
+```
+
+### list-trailing
+
+Add content after the tab list.
+
+```vue
+<template>
+  <UTabs :items="items">
+    <template #list-trailing>
+      <UButton icon="i-lucide-settings" size="xs" />
+    </template>
+  </UTabs>
+</template>
+```
+
+### Dynamic Slots
+
+You can use dynamic slots based on the `slot` property of items:
+
+```vue
+<template>
+  <UTabs :items="items">
+    <template #special-content="{ item, index, ui }">
+      <div class="special-content">
+        This is special content!
+      </div>
+    </template>
+  </UTabs>
+</template>
+
+<script setup>
+const items = [
+  { label: 'Normal', content: 'Normal content' },
+  { label: 'Special', slot: 'special' }
+]
+</script>
+```

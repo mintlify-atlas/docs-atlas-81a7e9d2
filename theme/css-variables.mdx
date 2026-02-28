@@ -1,0 +1,306 @@
+---
+title: CSS Variables
+description: Reference for CSS variables and design tokens used in Nuxt UI.
+---
+
+Nuxt UI uses CSS variables (custom properties) as design tokens to provide a flexible and customizable theming system. These variables are defined in the `:root` and `.dark` scopes to support both light and dark color modes.
+
+## Text Color Variables
+
+Semantic text color tokens that automatically adapt to color mode:
+
+```css
+/* Light mode */
+:root, :host, .light {
+  --ui-text-dimmed: var(--ui-color-neutral-400);
+  --ui-text-muted: var(--ui-color-neutral-500);
+  --ui-text-toned: var(--ui-color-neutral-600);
+  --ui-text: var(--ui-color-neutral-700);
+  --ui-text-highlighted: var(--ui-color-neutral-900);
+  --ui-text-inverted: white;
+}
+
+/* Dark mode */
+.dark {
+  --ui-text-dimmed: var(--ui-color-neutral-500);
+  --ui-text-muted: var(--ui-color-neutral-400);
+  --ui-text-toned: var(--ui-color-neutral-300);
+  --ui-text: var(--ui-color-neutral-200);
+  --ui-text-highlighted: white;
+  --ui-text-inverted: var(--ui-color-neutral-900);
+}
+```
+
+### Tailwind Utilities
+
+These variables are mapped to Tailwind utilities:
+
+- `text-dimmed` → `var(--ui-text-dimmed)`
+- `text-muted` → `var(--ui-text-muted)`
+- `text-toned` → `var(--ui-text-toned)`
+- `text-default` → `var(--ui-text)`
+- `text-highlighted` → `var(--ui-text-highlighted)`
+- `text-inverted` → `var(--ui-text-inverted)`
+
+## Background Color Variables
+
+Semantic background color tokens:
+
+```css
+/* Light mode */
+:root, :host, .light {
+  --ui-bg: white;
+  --ui-bg-muted: var(--ui-color-neutral-50);
+  --ui-bg-elevated: var(--ui-color-neutral-100);
+  --ui-bg-accented: var(--ui-color-neutral-200);
+  --ui-bg-inverted: var(--ui-color-neutral-900);
+}
+
+/* Dark mode */
+.dark {
+  --ui-bg: var(--ui-color-neutral-900);
+  --ui-bg-muted: var(--ui-color-neutral-800);
+  --ui-bg-elevated: var(--ui-color-neutral-800);
+  --ui-bg-accented: var(--ui-color-neutral-700);
+  --ui-bg-inverted: white;
+}
+```
+
+### Tailwind Utilities
+
+- `bg-default` → `var(--ui-bg)`
+- `bg-muted` → `var(--ui-bg-muted)`
+- `bg-elevated` → `var(--ui-bg-elevated)`
+- `bg-accented` → `var(--ui-bg-accented)`
+- `bg-inverted` → `var(--ui-bg-inverted)`
+
+## Border Color Variables
+
+Semantic border and ring color tokens:
+
+```css
+/* Light mode */
+:root, :host, .light {
+  --ui-border: var(--ui-color-neutral-200);
+  --ui-border-muted: var(--ui-color-neutral-200);
+  --ui-border-accented: var(--ui-color-neutral-300);
+  --ui-border-inverted: var(--ui-color-neutral-900);
+}
+
+/* Dark mode */
+.dark {
+  --ui-border: var(--ui-color-neutral-800);
+  --ui-border-muted: var(--ui-color-neutral-700);
+  --ui-border-accented: var(--ui-color-neutral-700);
+  --ui-border-inverted: white;
+}
+```
+
+### Tailwind Utilities
+
+- `border-default` / `ring-default` → `var(--ui-border)`
+- `border-muted` / `ring-muted` → `var(--ui-border-muted)`
+- `border-accented` / `ring-accented` → `var(--ui-border-accented)`
+- `border-inverted` / `ring-inverted` → `var(--ui-border-inverted)`
+
+## Layout Variables
+
+Global layout configuration:
+
+```css
+:root, :host {
+  --ui-header-height: --spacing(16); /* 4rem */
+  --ui-container: 80rem;
+  --ui-radius: 0.25rem;
+}
+```
+
+### Usage
+
+- **Header Height** - Used by layout components for spacing calculations
+- **Container** - Maximum width for container elements
+- **Radius** - Base border radius, scaled for different sizes
+
+## Radius Scale
+
+Nuxt UI generates a radius scale based on `--ui-radius`:
+
+```css
+--radius-xs: calc(var(--ui-radius) * 0.5);   /* 0.125rem */
+--radius-sm: var(--ui-radius);                /* 0.25rem */
+--radius-md: calc(var(--ui-radius) * 1.5);   /* 0.375rem */
+--radius-lg: calc(var(--ui-radius) * 2);     /* 0.5rem */
+--radius-xl: calc(var(--ui-radius) * 3);     /* 0.75rem */
+--radius-2xl: calc(var(--ui-radius) * 4);    /* 1rem */
+--radius-3xl: calc(var(--ui-radius) * 6);    /* 1.5rem */
+```
+
+These map to Tailwind's `rounded-*` utilities.
+
+## Color Shade Variables
+
+Each color alias generates a full shade scale (50-950):
+
+```css
+:root, :host {
+  --ui-color-primary-50: var(--color-green-50);
+  --ui-color-primary-100: var(--color-green-100);
+  --ui-color-primary-200: var(--color-green-200);
+  /* ... */
+  --ui-color-primary-900: var(--color-green-900);
+  --ui-color-primary-950: var(--color-green-950);
+}
+```
+
+The main color value for components:
+
+```css
+/* Light mode */
+:root, :host, .light {
+  --ui-primary: var(--ui-color-primary-500);
+}
+
+/* Dark mode */
+.dark {
+  --ui-primary: var(--ui-color-primary-400);
+}
+```
+
+<Note>
+Colors are automatically lighter (400) in dark mode for better visibility.
+</Note>
+
+## Customizing Variables
+
+### Global Customization
+
+Override CSS variables in your app's CSS:
+
+```css [assets/css/main.css]
+@import '#ui';
+
+@layer theme {
+  :root {
+    /* Increase border radius */
+    --ui-radius: 0.5rem;
+    
+    /* Wider container */
+    --ui-container: 90rem;
+  }
+  
+  /* Custom text colors */
+  .light {
+    --ui-text: var(--ui-color-neutral-800);
+    --ui-text-highlighted: black;
+  }
+  
+  .dark {
+    --ui-bg: var(--ui-color-neutral-950);
+  }
+}
+```
+
+### Component-Specific Variables
+
+Some components may define their own CSS variables. Always check component documentation for available customization options.
+
+## Accessing Variables in JavaScript
+
+You can access CSS variables programmatically:
+
+```vue
+<script setup lang="ts">
+const radius = ref<string>()
+
+onMounted(() => {
+  const root = document.documentElement
+  radius.value = getComputedStyle(root).getPropertyValue('--ui-radius')
+})
+</script>
+```
+
+## Using with Tailwind CSS v4
+
+Nuxt UI leverages Tailwind CSS v4's native CSS variable support. You can reference these variables in your custom Tailwind classes:
+
+```vue
+<template>
+  <div class="bg-[var(--ui-bg-elevated)] text-[var(--ui-text)]">
+    Custom styled element
+  </div>
+</template>
+```
+
+## Variable Reference
+
+<Accordion title="Complete Variable List">
+
+### Text Colors
+- `--ui-text-dimmed`
+- `--ui-text-muted`
+- `--ui-text-toned`
+- `--ui-text`
+- `--ui-text-highlighted`
+- `--ui-text-inverted`
+
+### Background Colors
+- `--ui-bg`
+- `--ui-bg-muted`
+- `--ui-bg-elevated`
+- `--ui-bg-accented`
+- `--ui-bg-inverted`
+
+### Border Colors
+- `--ui-border`
+- `--ui-border-muted`
+- `--ui-border-accented`
+- `--ui-border-inverted`
+
+### Layout
+- `--ui-header-height`
+- `--ui-container`
+- `--ui-radius`
+
+### Radius Scale
+- `--radius-xs` through `--radius-3xl`
+
+### Color Shades
+For each color alias (`primary`, `secondary`, etc.):
+- `--ui-color-{alias}-50` through `--ui-color-{alias}-950`
+- `--ui-{alias}` (main color value)
+
+</Accordion>
+
+## Best Practices
+
+<Steps>
+  <Step title="Use semantic tokens">
+    Prefer semantic tokens like `--ui-text` over specific shades like `--ui-color-neutral-700` for better theme adaptability.
+  </Step>
+
+  <Step title="Layer your overrides">
+    Always wrap custom CSS variable definitions in `@layer theme` to maintain proper cascade order.
+  </Step>
+
+  <Step title="Test both modes">
+    When customizing color variables, always test in both light and dark modes to ensure readability.
+  </Step>
+
+  <Step title="Use calc() for scales">
+    When creating related values, use `calc()` based on base variables like `--ui-radius` for consistency.
+  </Step>
+</Steps>
+
+## Related
+
+<CardGroup cols={3}>
+  <Card title="Design System" icon="palette" href="/theme/design-system">
+    Learn about Nuxt UI's design system architecture
+  </Card>
+  <Card title="Customization" icon="wrench" href="/theme/customization">
+    Advanced theme customization techniques
+  </Card>
+  <Card title="Components" icon="cube" href="/theme/components">
+    Component-level theming with Tailwind Variants
+  </Card>
+</CardGroup>

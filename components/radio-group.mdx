@@ -1,0 +1,391 @@
+---
+title: 'RadioGroup'
+description: 'A group of radio buttons that allows users to select a single option.'
+icon: 'list-radio'
+---
+
+## Usage
+
+The RadioGroup component allows users to select a single value from a set of options.
+
+```vue
+<template>
+  <URadioGroup
+    v-model="selected"
+    legend="Select a size"
+    :items="items"
+  />
+</template>
+
+<script setup>
+const selected = ref('md')
+const items = [
+  { value: 'sm', label: 'Small' },
+  { value: 'md', label: 'Medium' },
+  { value: 'lg', label: 'Large' }
+]
+</script>
+```
+
+## With Descriptions
+
+Add descriptions to provide more context for each option:
+
+```vue
+<template>
+  <URadioGroup
+    v-model="selected"
+    legend="Choose a plan"
+    :items="items"
+  />
+</template>
+
+<script setup>
+const selected = ref('pro')
+const items = [
+  {
+    value: 'free',
+    label: 'Free Plan',
+    description: 'Basic features for personal use'
+  },
+  {
+    value: 'pro',
+    label: 'Pro Plan',
+    description: 'Advanced features for professionals'
+  },
+  {
+    value: 'enterprise',
+    label: 'Enterprise Plan',
+    description: 'Full features for large organizations'
+  }
+]
+</script>
+```
+
+## Simple Values
+
+You can also use simple string or number values:
+
+```vue
+<template>
+  <URadioGroup
+    v-model="selected"
+    legend="Select an option"
+    :items="['Option 1', 'Option 2', 'Option 3']"
+  />
+</template>
+
+<script setup>
+const selected = ref('Option 1')
+</script>
+```
+
+## Horizontal Layout
+
+```vue
+<template>
+  <URadioGroup
+    v-model="selected"
+    legend="Select an option"
+    :items="items"
+    orientation="horizontal"
+  />
+</template>
+
+<script setup>
+const selected = ref('1')
+const items = ['Option 1', 'Option 2', 'Option 3']
+</script>
+```
+
+## Sizes
+
+```vue
+<template>
+  <div class="space-y-8">
+    <URadioGroup
+      v-model="selected"
+      legend="Small"
+      :items="items"
+      size="sm"
+    />
+    <URadioGroup
+      v-model="selected"
+      legend="Medium"
+      :items="items"
+      size="md"
+    />
+    <URadioGroup
+      v-model="selected"
+      legend="Large"
+      :items="items"
+      size="lg"
+    />
+  </div>
+</template>
+
+<script setup>
+const selected = ref('1')
+const items = ['Option 1', 'Option 2', 'Option 3']
+</script>
+```
+
+## Colors
+
+```vue
+<template>
+  <div class="space-y-8">
+    <URadioGroup
+      v-model="selected"
+      legend="Primary"
+      :items="items"
+      color="primary"
+    />
+    <URadioGroup
+      v-model="selected"
+      legend="Success"
+      :items="items"
+      color="success"
+    />
+    <URadioGroup
+      v-model="selected"
+      legend="Error"
+      :items="items"
+      color="error"
+    />
+  </div>
+</template>
+
+<script setup>
+const selected = ref('1')
+const items = ['Option 1', 'Option 2', 'Option 3']
+</script>
+```
+
+## Variants
+
+```vue
+<template>
+  <div class="space-y-8">
+    <URadioGroup
+      v-model="selected"
+      legend="List variant"
+      :items="items"
+      variant="list"
+    />
+    <URadioGroup
+      v-model="selected"
+      legend="Default variant"
+      :items="items"
+    />
+  </div>
+</template>
+
+<script setup>
+const selected = ref('1')
+const items = ['Option 1', 'Option 2', 'Option 3']
+</script>
+```
+
+## Disabled Items
+
+```vue
+<template>
+  <URadioGroup
+    v-model="selected"
+    legend="Select an option"
+    :items="items"
+  />
+</template>
+
+<script setup>
+const selected = ref('1')
+const items = [
+  { value: '1', label: 'Option 1' },
+  { value: '2', label: 'Option 2 (disabled)', disabled: true },
+  { value: '3', label: 'Option 3' }
+]
+</script>
+```
+
+## Indicator Position
+
+```vue
+<template>
+  <div class="space-y-8">
+    <URadioGroup
+      v-model="selected"
+      legend="Indicator at start"
+      :items="items"
+      indicator="start"
+    />
+    <URadioGroup
+      v-model="selected"
+      legend="Indicator at end"
+      :items="items"
+      indicator="end"
+    />
+  </div>
+</template>
+
+<script setup>
+const selected = ref('1')
+const items = ['Option 1', 'Option 2', 'Option 3']
+</script>
+```
+
+## Custom Keys
+
+Use custom keys for value, label, and description fields:
+
+```vue
+<template>
+  <URadioGroup
+    v-model="selected"
+    legend="Select a plan"
+    :items="items"
+    value-key="id"
+    label-key="name"
+    description-key="info"
+  />
+</template>
+
+<script setup>
+const selected = ref('1')
+const items = [
+  { id: '1', name: 'Free', info: 'Free forever' },
+  { id: '2', name: 'Pro', info: '$10/month' },
+  { id: '3', name: 'Enterprise', info: 'Contact us' }
+]
+</script>
+```
+
+## Slots
+
+```vue
+<template>
+  <URadioGroup v-model="selected" :items="items">
+    <template #legend>
+      <span class="font-bold text-lg">Custom Legend</span>
+    </template>
+    <template #label="{ item, modelValue }">
+      <span :class="{ 'font-bold': item.value === modelValue }">
+        {{ item.label }}
+      </span>
+    </template>
+    <template #description="{ item }">
+      <em class="text-xs">{{ item.description }}</em>
+    </template>
+  </URadioGroup>
+</template>
+
+<script setup>
+const selected = ref('1')
+const items = [
+  { value: '1', label: 'Option 1', description: 'Description 1' },
+  { value: '2', label: 'Option 2', description: 'Description 2' }
+]
+</script>
+```
+
+## Props
+
+<ParamField path="modelValue" type="string | number">
+  The controlled value of the radio group. Can be bound with `v-model`.
+</ParamField>
+
+<ParamField path="defaultValue" type="string | number">
+  The value of the radio group when initially rendered.
+</ParamField>
+
+<ParamField path="items" type="array">
+  Array of items to render as radio buttons. Can be strings, numbers, or objects.
+</ParamField>
+
+<ParamField path="legend" type="string">
+  The legend text for the radio group fieldset.
+</ParamField>
+
+<ParamField path="valueKey" type="string" default="value">
+  When items is an array of objects, select the field to use as the value.
+</ParamField>
+
+<ParamField path="labelKey" type="string" default="label">
+  When items is an array of objects, select the field to use as the label.
+</ParamField>
+
+<ParamField path="descriptionKey" type="string" default="description">
+  When items is an array of objects, select the field to use as the description.
+</ParamField>
+
+<ParamField path="size" type="string" default="md">
+  The size of the radio buttons. Options: `sm`, `md`, `lg`.
+</ParamField>
+
+<ParamField path="variant" type="string" default="list">
+  The visual variant of the radio buttons.
+</ParamField>
+
+<ParamField path="color" type="string" default="primary">
+  The color theme of the radio buttons.
+</ParamField>
+
+<ParamField path="orientation" type="string" default="vertical">
+  The orientation the radio buttons are laid out. Options: `vertical`, `horizontal`.
+</ParamField>
+
+<ParamField path="indicator" type="string" default="start">
+  Position of the radio indicator. Options: `start`, `end`.
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  When `true`, prevents user interaction with all radio buttons.
+</ParamField>
+
+<ParamField path="required" type="boolean">
+  When `true`, indicates that a radio button must be selected.
+</ParamField>
+
+<ParamField path="name" type="string">
+  The name of the radio group for form submission.
+</ParamField>
+
+<ParamField path="loop" type="boolean">
+  When `true`, keyboard navigation will loop from last to first item.
+</ParamField>
+
+<ParamField path="as" type="any" default="div">
+  The element or component this component should render as.
+</ParamField>
+
+<ParamField path="class" type="any">
+  Additional CSS classes to apply to the root element.
+</ParamField>
+
+<ParamField path="ui" type="object">
+  UI customization object for styling different parts of the radio group.
+</ParamField>
+
+## Events
+
+<ParamField path="@change" type="(event: Event) => void">
+  Emitted when the selected radio button changes.
+</ParamField>
+
+<ParamField path="@update:modelValue" type="(value: string | number) => void">
+  Emitted when the selected value changes.
+</ParamField>
+
+## Slots
+
+<ParamField path="legend" type="{}">
+  Customize the legend content.
+</ParamField>
+
+<ParamField path="label" type="{ item: object, modelValue: string | number }">
+  Customize the label content for each radio button.
+</ParamField>
+
+<ParamField path="description" type="{ item: object, modelValue: string | number }">
+  Customize the description content for each radio button.
+</ParamField>

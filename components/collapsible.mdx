@@ -1,0 +1,344 @@
+---
+title: Collapsible
+description: Create an expandable/collapsible content section with custom trigger.
+icon: 'chevron-down'
+---
+
+## Usage
+
+Use the `UCollapsible` component to create collapsible content with a custom trigger.
+
+```vue
+<script setup>
+const isOpen = ref(false)
+</script>
+
+<template>
+  <UCollapsible v-model:open="isOpen">
+    <template #default="{ open }">
+      <button>{{ open ? 'Hide' : 'Show' }} Content</button>
+    </template>
+    <template #content>
+      <div>This is the collapsible content</div>
+    </template>
+  </UCollapsible>
+</template>
+```
+
+## Props
+
+### as
+- **Type:** `any`
+- **Default:** `'div'`
+
+The element or component this component should render as.
+
+### defaultOpen
+- **Type:** `boolean`
+
+The default open state (uncontrolled).
+
+```vue
+<UCollapsible default-open>
+  <template #default>
+    <button>Toggle</button>
+  </template>
+  <template #content>
+    <div>This starts open</div>
+  </template>
+</UCollapsible>
+```
+
+### open
+- **Type:** `boolean`
+
+The controlled open state.
+
+```vue
+<script setup>
+const isOpen = ref(true)
+</script>
+
+<template>
+  <UCollapsible v-model:open="isOpen">
+    <!-- content -->
+  </UCollapsible>
+</template>
+```
+
+### disabled
+- **Type:** `boolean`
+
+Disable the collapsible.
+
+```vue
+<UCollapsible disabled>
+  <template #default>
+    <button>Can't Toggle</button>
+  </template>
+  <template #content>
+    <div>Content</div>
+  </template>
+</UCollapsible>
+```
+
+### unmountOnHide
+- **Type:** `boolean`
+- **Default:** `true`
+
+Unmount the content when collapsed.
+
+### class
+- **Type:** `any`
+
+Additional CSS classes.
+
+### ui
+- **Type:** `object`
+
+Customize styling. Available slots:
+- `root` - The root container
+- `content` - The collapsible content wrapper
+
+## Events
+
+Inherits all events from Reka UI's `CollapsibleRoot`.
+
+## Slots
+
+### default
+- **Props:** `{ open: boolean }`
+
+The trigger element. Must be an element that can receive click events.
+
+```vue
+<UCollapsible>
+  <template #default="{ open }">
+    <button class="flex items-center gap-2">
+      <span>Toggle Content</span>
+      <div :class="open ? 'rotate-180' : ''" class="transition-transform">
+        ↓
+      </div>
+    </button>
+  </template>
+  <template #content>
+    <div>Content here</div>
+  </template>
+</UCollapsible>
+```
+
+### content
+
+The collapsible content.
+
+```vue
+<UCollapsible>
+  <template #default>
+    <button>Show Details</button>
+  </template>
+  <template #content>
+    <div class="p-4 bg-elevated">
+      Detailed information here
+    </div>
+  </template>
+</UCollapsible>
+```
+
+## Examples
+
+### Basic Collapsible
+
+```vue
+<template>
+  <UCollapsible>
+    <template #default="{ open }">
+      <button class="font-medium">
+        {{ open ? 'Hide' : 'Show' }} Details
+      </button>
+    </template>
+    <template #content>
+      <div class="mt-2 p-4 bg-elevated rounded">
+        This is the detailed content that can be shown or hidden.
+      </div>
+    </template>
+  </UCollapsible>
+</template>
+```
+
+### With Icon
+
+```vue
+<template>
+  <UCollapsible>
+    <template #default="{ open }">
+      <button class="flex items-center gap-2">
+        <span>More Information</span>
+        <div
+          :class="open ? 'rotate-180' : 'rotate-0'"
+          class="transition-transform duration-200"
+        >
+          <div class="i-heroicons-chevron-down size-5" />
+        </div>
+      </button>
+    </template>
+    <template #content>
+      <p class="mt-2">Additional information appears here.</p>
+    </template>
+  </UCollapsible>
+</template>
+```
+
+### Controlled State
+
+```vue
+<script setup>
+const isExpanded = ref(false)
+
+function toggle() {
+  isExpanded.value = !isExpanded.value
+}
+</script>
+
+<template>
+  <div>
+    <button @click="toggle" class="mb-2">
+      External Toggle
+    </button>
+    
+    <UCollapsible v-model:open="isExpanded">
+      <template #default="{ open }">
+        <button>{{ open ? 'Collapse' : 'Expand' }}</button>
+      </template>
+      <template #content>
+        <div>Controlled content</div>
+      </template>
+    </UCollapsible>
+  </div>
+</template>
+```
+
+### Details Section
+
+```vue
+<template>
+  <div class="border border-default rounded-lg p-4">
+    <UCollapsible>
+      <template #default="{ open }">
+        <button class="flex justify-between items-center w-full text-left">
+          <span class="font-semibold">Product Specifications</span>
+          <div :class="open ? 'rotate-180' : ''" class="transition-transform">
+            <div class="i-heroicons-chevron-down size-5" />
+          </div>
+        </button>
+      </template>
+      <template #content>
+        <div class="mt-4 space-y-2 text-sm text-muted">
+          <div><strong>Weight:</strong> 1.5 kg</div>
+          <div><strong>Dimensions:</strong> 30 x 20 x 10 cm</div>
+          <div><strong>Material:</strong> Premium plastic</div>
+          <div><strong>Color:</strong> Black</div>
+        </div>
+      </template>
+    </UCollapsible>
+  </div>
+</template>
+```
+
+### Multiple Collapsibles
+
+```vue
+<script setup>
+const sections = ref([
+  { id: 1, title: 'Section 1', open: false, content: 'Content for section 1' },
+  { id: 2, title: 'Section 2', open: false, content: 'Content for section 2' },
+  { id: 3, title: 'Section 3', open: false, content: 'Content for section 3' }
+])
+</script>
+
+<template>
+  <div class="space-y-2">
+    <UCollapsible
+      v-for="section in sections"
+      :key="section.id"
+      v-model:open="section.open"
+    >
+      <template #default="{ open }">
+        <button class="w-full text-left p-3 bg-elevated rounded">
+          <div class="flex justify-between items-center">
+            <span>{{ section.title }}</span>
+            <div :class="open ? 'rotate-180' : ''" class="transition-transform">
+              ↓
+            </div>
+          </div>
+        </button>
+      </template>
+      <template #content>
+        <div class="p-3">
+          {{ section.content }}
+        </div>
+      </template>
+    </UCollapsible>
+  </div>
+</template>
+```
+
+### Read More
+
+```vue
+<script setup>
+const showMore = ref(false)
+
+const shortText = 'This is a preview of the content...'
+const fullText = 'This is a preview of the content. When you click "Read More", you will see the full text with all the details and additional information that was initially hidden.'
+</script>
+
+<template>
+  <div>
+    <p>{{ showMore ? fullText : shortText }}</p>
+    
+    <UCollapsible v-model:open="showMore">
+      <template #default="{ open }">
+        <button class="text-primary mt-2">
+          {{ open ? 'Read Less' : 'Read More' }}
+        </button>
+      </template>
+      <template #content>
+        <!-- Content shown inline above -->
+      </template>
+    </UCollapsible>
+  </div>
+</template>
+```
+
+### Filter Panel
+
+```vue
+<script setup>
+const filtersOpen = ref(true)
+</script>
+
+<template>
+  <div class="border border-default rounded-lg">
+    <UCollapsible v-model:open="filtersOpen">
+      <template #default="{ open }">
+        <button class="w-full p-4 flex justify-between items-center">
+          <span class="font-semibold">Filters</span>
+          <div class="i-heroicons-chevron-down size-5" :class="open ? 'rotate-180' : ''" />
+        </button>
+      </template>
+      <template #content>
+        <div class="p-4 border-t border-default space-y-4">
+          <div>
+            <label class="block text-sm font-medium mb-2">Price Range</label>
+            <!-- Price range inputs -->
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-2">Category</label>
+            <!-- Category checkboxes -->
+          </div>
+        </div>
+      </template>
+    </UCollapsible>
+  </div>
+</template>
+```

@@ -1,0 +1,453 @@
+---
+title: 'Dropdown Menu'
+description: 'A click-triggered menu with items, icons, and nested submenus'
+icon: 'chevron-down'
+---
+
+## Overview
+
+The Dropdown Menu component displays a menu when clicking a trigger element. Supports items with icons, avatars, keyboard shortcuts, checkboxes, and nested submenus.
+
+## Basic Usage
+
+```vue
+<template>
+  <UDropdownMenu :items="menuItems">
+    <template #default="{ open }">
+      <UButton>Menu {{ open ? '▲' : '▼' }}</UButton>
+    </template>
+  </UDropdownMenu>
+</template>
+
+<script setup>
+const menuItems = [
+  {
+    label: 'Profile',
+    icon: 'i-lucide-user',
+    onSelect: () => console.log('Profile clicked')
+  },
+  {
+    label: 'Settings',
+    icon: 'i-lucide-settings',
+    onSelect: () => console.log('Settings clicked')
+  },
+  { type: 'separator' },
+  {
+    label: 'Logout',
+    icon: 'i-lucide-log-out',
+    color: 'error',
+    onSelect: () => console.log('Logout clicked')
+  }
+]
+</script>
+```
+
+## Props
+
+<ParamField path="items" type="DropdownMenuItem[]">
+  Array of menu items to display. See Item Properties below.
+</ParamField>
+
+<ParamField path="size" type="'xs' | 'sm' | 'md' | 'lg' | 'xl'" default="'md'">
+  The size of the menu and its items.
+</ParamField>
+
+<ParamField path="checkedIcon" type="string" default="appConfig.ui.icons.check">
+  The icon displayed when an item is checked. Accepts Iconify icon names.
+</ParamField>
+
+<ParamField path="loadingIcon" type="string" default="appConfig.ui.icons.loading">
+  The icon displayed when an item is loading. Accepts Iconify icon names.
+</ParamField>
+
+<ParamField path="externalIcon" type="boolean | string" default="appConfig.ui.icons.external">
+  The icon displayed when the item is an external link. Set to `false` to hide.
+</ParamField>
+
+<ParamField path="content" type="DropdownMenuContentProps" default="{ side: 'bottom', sideOffset: 8, collisionPadding: 8 }">
+  Configuration object for menu positioning and behavior.
+</ParamField>
+
+<ParamField path="arrow" type="boolean | DropdownMenuArrowProps" default="false">
+  Display an arrow pointing to the trigger element.
+</ParamField>
+
+<ParamField path="portal" type="boolean | string | HTMLElement" default="true">
+  Render the menu in a portal.
+</ParamField>
+
+<ParamField path="modal" type="boolean" default="true">
+  The modality of the menu.
+</ParamField>
+
+<ParamField path="open" type="boolean">
+  Controls the open state of the menu (v-model:open).
+</ParamField>
+
+<ParamField path="defaultOpen" type="boolean">
+  The default open state when uncontrolled.
+</ParamField>
+
+<ParamField path="labelKey" type="string" default="'label'">
+  The key used to get the label from the item.
+</ParamField>
+
+<ParamField path="descriptionKey" type="string" default="'description'">
+  The key used to get the description from the item.
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  Disable the entire dropdown menu.
+</ParamField>
+
+<ParamField path="class" type="any">
+  CSS class for styling the trigger element.
+</ParamField>
+
+<ParamField path="ui" type="object">
+  Theme customization object for component slots.
+</ParamField>
+
+## Events
+
+<ParamField path="update:open" type="(open: boolean) => void">
+  Emitted when the open state changes.
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="{ open: boolean }">
+  The trigger element that opens the dropdown menu. Receives the current open state.
+</ParamField>
+
+<ParamField path="item" type="{ item: DropdownMenuItem, active: boolean, index: number, ui: object }">
+  Customize the entire item rendering.
+</ParamField>
+
+<ParamField path="item-leading" type="{ item: DropdownMenuItem, active: boolean, index: number, ui: object }">
+  Customize the leading section (icon/avatar) of items.
+</ParamField>
+
+<ParamField path="item-label" type="{ item: DropdownMenuItem, active: boolean, index: number }">
+  Customize the label section of items.
+</ParamField>
+
+<ParamField path="item-description" type="{ item: DropdownMenuItem, active: boolean, index: number }">
+  Customize the description section of items.
+</ParamField>
+
+<ParamField path="item-trailing" type="{ item: DropdownMenuItem, active: boolean, index: number, ui: object }">
+  Customize the trailing section (keyboard shortcuts/icons) of items.
+</ParamField>
+
+<ParamField path="content-top" type="{ sub: boolean }">
+  Content rendered at the top of the menu.
+</ParamField>
+
+<ParamField path="content-bottom" type="{ sub: boolean }">
+  Content rendered at the bottom of the menu.
+</ParamField>
+
+## Item Properties
+
+Each item in the `items` array can have the following properties:
+
+<ParamField path="label" type="string">
+  The text label for the item.
+</ParamField>
+
+<ParamField path="description" type="string">
+  Optional description text shown below the label.
+</ParamField>
+
+<ParamField path="icon" type="string">
+  Iconify icon name to display before the label.
+</ParamField>
+
+<ParamField path="avatar" type="AvatarProps">
+  Avatar to display instead of an icon.
+</ParamField>
+
+<ParamField path="color" type="string">
+  Color variant for the item.
+</ParamField>
+
+<ParamField path="kbds" type="KbdProps['value'][] | KbdProps[]">
+  Keyboard shortcuts to display on the right.
+</ParamField>
+
+<ParamField path="type" type="'label' | 'separator' | 'link' | 'checkbox'" default="'link'">
+  The item type.
+</ParamField>
+
+<ParamField path="slot" type="string">
+  Custom slot name for this item.
+</ParamField>
+
+<ParamField path="loading" type="boolean">
+  Show loading state for the item.
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  Disable the item.
+</ParamField>
+
+<ParamField path="checked" type="boolean">
+  Checked state for checkbox items.
+</ParamField>
+
+<ParamField path="children" type="DropdownMenuItem[]">
+  Nested submenu items.
+</ParamField>
+
+<ParamField path="onSelect" type="(e: Event) => void">
+  Callback fired when the item is selected.
+</ParamField>
+
+<ParamField path="onUpdateChecked" type="(checked: boolean) => void">
+  Callback fired when checkbox state changes.
+</ParamField>
+
+## Examples
+
+### User Menu
+
+```vue
+<template>
+  <UDropdownMenu :items="userMenu">
+    <template #default>
+      <UButton>
+        <UAvatar src="/avatar.jpg" size="sm" />
+      </UButton>
+    </template>
+  </UDropdownMenu>
+</template>
+
+<script setup>
+const userMenu = [
+  {
+    label: 'John Doe',
+    description: 'john@example.com',
+    slot: 'user'
+  },
+  { type: 'separator' },
+  { label: 'Profile', icon: 'i-lucide-user', to: '/profile' },
+  { label: 'Settings', icon: 'i-lucide-settings', to: '/settings' },
+  { label: 'Billing', icon: 'i-lucide-credit-card', to: '/billing' },
+  { type: 'separator' },
+  { label: 'Logout', icon: 'i-lucide-log-out', color: 'error' }
+]
+</script>
+```
+
+### With Nested Submenus
+
+```vue
+<template>
+  <UDropdownMenu :items="menuItems">
+    <template #default>
+      <UButton>Actions</UButton>
+    </template>
+  </UDropdownMenu>
+</template>
+
+<script setup>
+const menuItems = [
+  {
+    label: 'Share',
+    icon: 'i-lucide-share',
+    children: [
+      { label: 'Email', icon: 'i-lucide-mail' },
+      { label: 'Copy Link', icon: 'i-lucide-link' },
+      { label: 'Social Media', icon: 'i-lucide-share-2' }
+    ]
+  },
+  {
+    label: 'Export',
+    icon: 'i-lucide-download',
+    children: [
+      { label: 'Export as PDF', icon: 'i-lucide-file-text' },
+      { label: 'Export as CSV', icon: 'i-lucide-table' },
+      { label: 'Export as JSON', icon: 'i-lucide-braces' }
+    ]
+  },
+  { type: 'separator' },
+  { label: 'Delete', icon: 'i-lucide-trash', color: 'error' }
+]
+</script>
+```
+
+### With Keyboard Shortcuts
+
+```vue
+<template>
+  <UDropdownMenu :items="menuItems">
+    <template #default>
+      <UButton>File</UButton>
+    </template>
+  </UDropdownMenu>
+</template>
+
+<script setup>
+const menuItems = [
+  { label: 'New', icon: 'i-lucide-file-plus', kbds: ['meta', 'N'] },
+  { label: 'Open', icon: 'i-lucide-folder-open', kbds: ['meta', 'O'] },
+  { type: 'separator' },
+  { label: 'Save', icon: 'i-lucide-save', kbds: ['meta', 'S'] },
+  { label: 'Save As', icon: 'i-lucide-save', kbds: ['meta', 'shift', 'S'] },
+  { type: 'separator' },
+  { label: 'Close', icon: 'i-lucide-x', kbds: ['meta', 'W'] }
+]
+</script>
+```
+
+### With Checkboxes
+
+```vue
+<template>
+  <UDropdownMenu :items="viewOptions">
+    <template #default>
+      <UButton>View Options</UButton>
+    </template>
+  </UDropdownMenu>
+</template>
+
+<script setup>
+const showLineNumbers = ref(true)
+const showMinimap = ref(false)
+const wordWrap = ref(true)
+
+const viewOptions = computed(() => [
+  {
+    label: 'Show Line Numbers',
+    type: 'checkbox',
+    checked: showLineNumbers.value,
+    onUpdateChecked: (val) => showLineNumbers.value = val
+  },
+  {
+    label: 'Show Minimap',
+    type: 'checkbox',
+    checked: showMinimap.value,
+    onUpdateChecked: (val) => showMinimap.value = val
+  },
+  {
+    label: 'Word Wrap',
+    type: 'checkbox',
+    checked: wordWrap.value,
+    onUpdateChecked: (val) => wordWrap.value = val
+  }
+])
+</script>
+```
+
+### With Arrow
+
+```vue
+<template>
+  <UDropdownMenu :items="menuItems" :arrow="true">
+    <template #default>
+      <UButton>Menu with Arrow</UButton>
+    </template>
+  </UDropdownMenu>
+</template>
+```
+
+### Different Positions
+
+```vue
+<template>
+  <div class="flex gap-4">
+    <UDropdownMenu :items="menuItems" :content="{ side: 'top' }">
+      <UButton>Top</UButton>
+    </UDropdownMenu>
+    
+    <UDropdownMenu :items="menuItems" :content="{ side: 'right' }">
+      <UButton>Right</UButton>
+    </UDropdownMenu>
+    
+    <UDropdownMenu :items="menuItems" :content="{ side: 'bottom' }">
+      <UButton>Bottom</UButton>
+    </UDropdownMenu>
+    
+    <UDropdownMenu :items="menuItems" :content="{ side: 'left' }">
+      <UButton>Left</UButton>
+    </UDropdownMenu>
+  </div>
+</template>
+```
+
+### With Loading State
+
+```vue
+<template>
+  <UDropdownMenu :items="menuItems">
+    <template #default>
+      <UButton>Actions</UButton>
+    </template>
+  </UDropdownMenu>
+</template>
+
+<script setup>
+const isRefreshing = ref(false)
+
+const menuItems = computed(() => [
+  { 
+    label: 'Refresh', 
+    icon: 'i-lucide-refresh-cw',
+    loading: isRefreshing.value,
+    onSelect: async () => {
+      isRefreshing.value = true
+      await new Promise(resolve => setTimeout(resolve, 2000))
+      isRefreshing.value = false
+    }
+  },
+  { label: 'Settings', icon: 'i-lucide-settings' }
+])
+</script>
+```
+
+### Controlled State
+
+```vue
+<template>
+  <div>
+    <UDropdownMenu v-model:open="isOpen" :items="menuItems">
+      <template #default>
+        <UButton>{{ isOpen ? 'Close' : 'Open' }} Menu</UButton>
+      </template>
+    </UDropdownMenu>
+    
+    <UButton @click="isOpen = !isOpen" variant="outline">
+      Toggle from Outside
+    </UButton>
+  </div>
+</template>
+
+<script setup>
+const isOpen = ref(false)
+
+const menuItems = [
+  { label: 'Item 1' },
+  { label: 'Item 2' },
+  { label: 'Item 3' }
+]
+</script>
+```
+
+## Content Props
+
+The `content` prop accepts the following positioning options:
+
+- `side`: `'top' | 'right' | 'bottom' | 'left'` - Which side to position the menu
+- `sideOffset`: `number` - Distance in pixels from the trigger
+- `align`: `'start' | 'center' | 'end'` - Alignment along the side
+- `alignOffset`: `number` - Offset along the alignment axis
+- `collisionPadding`: `number | Partial<Record<'top' | 'right' | 'bottom' | 'left', number>>` - Padding from viewport edges
+- `avoidCollisions`: `boolean` - Whether to adjust position to avoid collisions
+- `loop`: `boolean` - Whether keyboard navigation should loop
+
+## Related Components
+
+- [Context Menu](/components/context-menu) - For right-click menus
+- [Popover](/components/popover) - For floating content
+- [Dropdown Menu](https://reka-ui.com/docs/components/dropdown-menu) - Reka UI Dropdown Menu documentation

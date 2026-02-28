@@ -1,0 +1,593 @@
+---
+title: Theme Customization
+description: Advanced guide to customizing Nuxt UI's theme system.
+---
+
+Nuxt UI provides multiple layers of customization, allowing you to tailor the design system to match your brand while maintaining consistency and type safety.
+
+## Customization Hierarchy
+
+Theme customization follows a clear hierarchy:
+
+1. **Module Options** (`nuxt.config.ts`) - Global theme configuration
+2. **App Config** (`app.config.ts`) - Runtime theme overrides and color mappings
+3. **CSS Variables** (`assets/css/main.css`) - Design token customization
+4. **Component Props** - Per-instance customization
+
+Each level overrides the previous, giving you fine-grained control.
+
+## Module Configuration
+
+Configure the theme system in `nuxt.config.ts`:
+
+```ts [nuxt.config.ts]
+export default defineNuxtConfig({
+  modules: ['@nuxt/ui'],
+  
+  ui: {
+    // Component prefix (default: 'U')
+    prefix: 'U',
+    
+    theme: {
+      // Available color aliases
+      colors: ['primary', 'secondary', 'success', 'info', 'warning', 'error'],
+      
+      // Enable/disable transitions
+      transitions: true,
+      
+      // Default variants for all components
+      defaultVariants: {
+        color: 'primary',
+        size: 'md'
+      },
+      
+      // Tailwind CSS prefix
+      prefix: undefined // e.g., 'tw' for 'tw:bg-primary'
+    }
+  }
+})
+```
+
+### Adding Custom Colors
+
+Extend the default color palette with custom aliases:
+
+```ts [nuxt.config.ts]
+export default defineNuxtConfig({
+  ui: {
+    theme: {
+      colors: [
+        'primary',
+        'secondary', 
+        'success',
+        'info',
+        'warning',
+        'error',
+        'brand',      // Custom color
+        'accent'      // Custom color
+      ]
+    }
+  }
+})
+```
+
+Then map them to Tailwind colors in `app.config.ts`:
+
+```ts [app.config.ts]
+export default defineAppConfig({
+  ui: {
+    colors: {
+      primary: 'green',
+      secondary: 'blue',
+      success: 'green',
+      info: 'blue',
+      warning: 'yellow',
+      error: 'red',
+      brand: 'purple',    // Map to Tailwind color
+      accent: 'orange',   // Map to Tailwind color
+      neutral: 'slate'
+    }
+  }
+})
+```
+
+<Note>
+The `primary` color is always required and will be automatically included even if not specified.
+</Note>
+
+## App Config Customization
+
+The `app.config.ts` file is where you customize component themes at runtime:
+
+### Color Mappings
+
+```ts [app.config.ts]
+export default defineAppConfig({
+  ui: {
+    colors: {
+      primary: 'indigo',
+      secondary: 'pink',
+      neutral: 'zinc'
+    }
+  }
+})
+```
+
+### Component Theme Overrides
+
+Customize individual component themes:
+
+```ts [app.config.ts]
+export default defineAppConfig({
+  ui: {
+    // Button customization
+    button: {
+      slots: {
+        base: 'font-semibold shadow-sm',
+        label: 'tracking-wide'
+      },
+      variants: {
+        size: {
+          '2xl': {
+            base: 'px-6 py-4 text-xl gap-3',
+            leadingIcon: 'size-7',
+            trailingIcon: 'size-7'
+          }
+        },
+        variant: {
+          gradient: '' // Add new variant
+        }
+      },
+      compoundVariants: [
+        {
+          variant: 'gradient',
+          color: 'primary',
+          class: 'bg-gradient-to-r from-primary to-secondary text-white'
+        }
+      ],
+      defaultVariants: {
+        variant: 'soft',
+        size: 'lg'
+      }
+    },
+    
+    // Input customization
+    input: {
+      slots: {
+        base: 'border-2' // Thicker borders
+      },
+      defaultVariants: {
+        variant: 'outline',
+        size: 'lg'
+      }
+    },
+    
+    // Badge customization
+    badge: {
+      slots: {
+        base: 'uppercase font-bold'
+      }
+    }
+  }
+})
+```
+
+### Icon Mapping
+
+Customize the default icons used across components:
+
+```ts [app.config.ts]
+export default defineAppConfig({
+  ui: {
+    icons: {
+      // Override default icons
+      chevronDown: 'i-heroicons-chevron-down-20-solid',
+      check: 'i-heroicons-check-20-solid',
+      close: 'i-heroicons-x-mark-20-solid',
+      search: 'i-heroicons-magnifying-glass-20-solid',
+      
+      // Add custom icons
+      custom: 'i-custom-icon'
+    }
+  }
+})
+```
+
+## CSS Variable Customization
+
+For deep customization, override CSS variables:
+
+```css [assets/css/main.css]
+@import '#ui';
+
+@layer theme {
+  :root {
+    /* Layout */
+    --ui-radius: 0.5rem;          /* Larger border radius */
+    --ui-container: 90rem;        /* Wider container */
+    --ui-header-height: 5rem;     /* Taller header */
+  }
+  
+  /* Light mode customization */
+  :root, .light {
+    --ui-bg: #fafafa;                           /* Off-white background */
+    --ui-text: var(--ui-color-neutral-800);     /* Darker text */
+    --ui-border: var(--ui-color-neutral-300);   /* More visible borders */
+  }
+  
+  /* Dark mode customization */
+  .dark {
+    --ui-bg: #0a0a0a;                           /* Deeper black */
+    --ui-bg-elevated: var(--ui-color-neutral-900);
+    --ui-text-highlighted: var(--ui-color-neutral-50);
+  }
+}
+```
+
+### Custom Color Shades
+
+Define completely custom color scales:
+
+```css [assets/css/main.css]
+@layer theme {
+  :root {
+    /* Custom brand color scale */
+    --ui-color-brand-50: #f0f9ff;
+    --ui-color-brand-100: #e0f2fe;
+    --ui-color-brand-200: #bae6fd;
+    --ui-color-brand-300: #7dd3fc;
+    --ui-color-brand-400: #38bdf8;
+    --ui-color-brand-500: #0ea5e9;
+    --ui-color-brand-600: #0284c7;
+    --ui-color-brand-700: #0369a1;
+    --ui-color-brand-800: #075985;
+    --ui-color-brand-900: #0c4a6e;
+    --ui-color-brand-950: #082f49;
+  }
+  
+  .light {
+    --ui-brand: var(--ui-color-brand-500);
+  }
+  
+  .dark {
+    --ui-brand: var(--ui-color-brand-400);
+  }
+}
+```
+
+Then use this color in your config:
+
+```ts [app.config.ts]
+export default defineAppConfig({
+  ui: {
+    colors: {
+      brand: 'brand' // Reference your custom color
+    }
+  }
+})
+```
+
+## Advanced Patterns
+
+### Creating Component Presets
+
+Create reusable component configurations:
+
+```ts [config/ui-presets.ts]
+export const buttonPresets = {
+  primary: {
+    variant: 'solid',
+    color: 'primary',
+    size: 'lg'
+  },
+  secondary: {
+    variant: 'outline',
+    color: 'secondary',
+    size: 'md'
+  },
+  danger: {
+    variant: 'solid',
+    color: 'error',
+    size: 'md'
+  }
+} as const
+```
+
+Use in components:
+
+```vue
+<script setup lang="ts">
+import { buttonPresets } from '~/config/ui-presets'
+</script>
+
+<template>
+  <UButton v-bind="buttonPresets.primary">Submit</UButton>
+  <UButton v-bind="buttonPresets.secondary">Cancel</UButton>
+  <UButton v-bind="buttonPresets.danger">Delete</UButton>
+</template>
+```
+
+### Dynamic Theming
+
+Change themes at runtime using `updateAppConfig`:
+
+```vue
+<script setup lang="ts">
+import { updateAppConfig } from '#app'
+
+function switchToPurpleTheme() {
+  updateAppConfig({
+    ui: {
+      colors: {
+        primary: 'purple',
+        secondary: 'pink'
+      }
+    }
+  })
+}
+
+function switchToGreenTheme() {
+  updateAppConfig({
+    ui: {
+      colors: {
+        primary: 'green',
+        secondary: 'blue'
+      }
+    }
+  })
+}
+</script>
+
+<template>
+  <div>
+    <UButton @click="switchToPurpleTheme">Purple Theme</UButton>
+    <UButton @click="switchToGreenTheme">Green Theme</UButton>
+  </div>
+</template>
+```
+
+### Responsive Variant Overrides
+
+Create responsive component configurations:
+
+```vue
+<script setup lang="ts">
+import { useBreakpoints } from '@vueuse/core'
+
+const breakpoints = useBreakpoints({
+  sm: 640,
+  md: 768,
+  lg: 1024
+})
+
+const buttonSize = computed(() => {
+  if (breakpoints.isGreater('lg')) return 'xl'
+  if (breakpoints.isGreater('md')) return 'lg'
+  return 'md'
+})
+</script>
+
+<template>
+  <UButton :size="buttonSize">Responsive Button</UButton>
+</template>
+```
+
+### Component-Specific Class Utilities
+
+Create utility functions for consistent styling:
+
+```ts [utils/ui-classes.ts]
+export function getCardClasses(elevated = false) {
+  return {
+    base: elevated ? 'shadow-lg' : 'shadow-sm',
+    body: 'space-y-4',
+    header: 'border-b border-default'
+  }
+}
+
+export function getInputClasses(error?: string) {
+  return error ? {
+    base: 'ring-2 ring-error',
+    trailing: 'text-error'
+  } : {}
+}
+```
+
+Use in components:
+
+```vue
+<script setup lang="ts">
+import { getCardClasses, getInputClasses } from '~/utils/ui-classes'
+
+const error = ref<string>()
+</script>
+
+<template>
+  <UCard :class="getCardClasses(true)">
+    <UInput :class="getInputClasses(error)" />
+  </UCard>
+</template>
+```
+
+## Brand Theming Example
+
+Complete example of a custom brand theme:
+
+```ts [nuxt.config.ts]
+export default defineNuxtConfig({
+  ui: {
+    theme: {
+      colors: ['brand', 'secondary', 'success', 'warning', 'error'],
+      defaultVariants: {
+        color: 'brand',
+        size: 'lg'
+      }
+    }
+  }
+})
+```
+
+```ts [app.config.ts]
+export default defineAppConfig({
+  ui: {
+    colors: {
+      brand: 'violet',
+      secondary: 'fuchsia',
+      success: 'emerald',
+      warning: 'amber',
+      error: 'rose',
+      neutral: 'slate'
+    },
+    
+    // Global component customization
+    button: {
+      slots: {
+        base: 'font-semibold shadow-sm hover:shadow-md transition-shadow'
+      },
+      defaultVariants: {
+        variant: 'soft'
+      }
+    },
+    
+    input: {
+      defaultVariants: {
+        variant: 'outline',
+        size: 'lg'
+      }
+    },
+    
+    card: {
+      slots: {
+        base: 'shadow-lg'
+      }
+    }
+  }
+})
+```
+
+```css [assets/css/main.css]
+@import '#ui';
+
+@layer theme {
+  :root {
+    --ui-radius: 0.75rem;
+  }
+  
+  .light {
+    --ui-bg: #fafafa;
+  }
+  
+  .dark {
+    --ui-bg: #0f0f0f;
+  }
+}
+```
+
+## Tailwind CSS Prefix
+
+Avoid conflicts with other CSS frameworks by prefixing Tailwind utilities:
+
+```ts [nuxt.config.ts]
+export default defineNuxtConfig({
+  ui: {
+    theme: {
+      prefix: 'tw'
+    }
+  }
+})
+```
+
+Now all Tailwind classes are prefixed:
+
+```html
+<div class="tw:bg-primary tw:text-white tw:p-4">
+  Prefixed utilities
+</div>
+```
+
+<Warning>
+When using a Tailwind prefix, you must also prefix custom classes in your theme overrides.
+</Warning>
+
+## Disabling Transitions
+
+For performance-critical applications, disable transitions globally:
+
+```ts [nuxt.config.ts]
+export default defineNuxtConfig({
+  ui: {
+    theme: {
+      transitions: false
+    }
+  }
+})
+```
+
+This removes all `transition-*` classes from components.
+
+## Best Practices
+
+<Steps>
+  <Step title="Start with module config">
+    Define your color palette and global settings in `nuxt.config.ts` first.
+  </Step>
+
+  <Step title="Map colors in app config">
+    Use `app.config.ts` to map color aliases to Tailwind colors for runtime flexibility.
+  </Step>
+
+  <Step title="Use CSS variables for tokens">
+    Customize design tokens (radius, spacing, colors) via CSS variables for deep customization.
+  </Step>
+
+  <Step title="Override components selectively">
+    Only override the specific slots or variants you need, preserving the default behavior for others.
+  </Step>
+
+  <Step title="Test thoroughly">
+    Always test customizations with all component variants and in both light/dark modes.
+  </Step>
+
+  <Step title="Document your theme">
+    Create a style guide documenting your theme customizations for team consistency.
+  </Step>
+</Steps>
+
+## TypeScript Support
+
+Nuxt UI provides full TypeScript support for theme customization:
+
+```ts
+import type { AppConfigUI } from '@nuxt/ui'
+
+const uiConfig: AppConfigUI = {
+  colors: {
+    primary: 'blue',
+    neutral: 'slate'
+  },
+  button: {
+    defaultVariants: {
+      variant: 'soft',
+      size: 'lg'
+    }
+  }
+}
+
+export default defineAppConfig({
+  ui: uiConfig
+})
+```
+
+## Related
+
+<CardGroup cols={3}>
+  <Card title="Design System" icon="palette" href="/theme/design-system">
+    Learn about the design system architecture
+  </Card>
+  <Card title="CSS Variables" icon="code" href="/theme/css-variables">
+    Complete CSS variable reference
+  </Card>
+  <Card title="Components" icon="cube" href="/theme/components">
+    Component-level theming with Tailwind Variants
+  </Card>
+</CardGroup>

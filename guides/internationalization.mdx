@@ -1,0 +1,308 @@
+---
+title: 'Internationalization'
+description: 'Add multi-language support to your Nuxt UI application'
+icon: 'language'
+---
+
+## Overview
+
+Nuxt UI includes a built-in locale system that allows you to customize component labels and messages for different languages. The library ships with translations for 60+ languages.
+
+## Locale System
+
+All user-facing text in Nuxt UI components is internationalized through the locale system.
+
+### useLocale Composable
+
+Access translations in your components:
+
+```vue
+<script setup>
+const { t } = useLocale()
+</script>
+
+<template>
+  <button>{{ t('modal.close') }}</button>
+</template>
+```
+
+## Available Locales
+
+Nuxt UI includes pre-built translations for many languages:
+
+- **English** - `en`, `en_gb`
+- **Spanish** - `es`
+- **French** - `fr`
+- **German** - `de`, `de_ch`
+- **Italian** - `it`
+- **Portuguese** - `pt`, `pt_br`
+- **Chinese** - `zh_cn`, `zh_tw`
+- **Japanese** - `ja`
+- **Korean** - `ko`
+- **Arabic** - `ar`
+- **Russian** - `ru`
+- And 50+ more languages
+
+<Note>
+  All locale files are located in `@nuxt/ui/locale/` and can be imported directly.
+</Note>
+
+## Using a Locale
+
+### Import and Set Default Locale
+
+```typescript app.config.ts
+import de from '@nuxt/ui/locale/de'
+
+export default defineAppConfig({
+  ui: {
+    locale: de
+  }
+})
+```
+
+### Provide Locale to Components
+
+You can provide a locale to a specific part of your component tree:
+
+```vue
+<script setup>
+import { provide } from 'vue'
+import { localeContextInjectionKey } from '@nuxt/ui/composables'
+import fr from '@nuxt/ui/locale/fr'
+
+provide(localeContextInjectionKey, fr)
+</script>
+
+<template>
+  <!-- All Nuxt UI components here will use French -->
+  <UModal>
+    <UAlert title="Bonjour" />
+  </UModal>
+</template>
+```
+
+## Locale Structure
+
+Each locale defines messages for all components:
+
+```typescript
+{
+  name: 'English',
+  code: 'en',
+  messages: {
+    alert: {
+      close: 'Close'
+    },
+    modal: {
+      close: 'Close'
+    },
+    toast: {
+      close: 'Close'
+    },
+    colorMode: {
+      dark: 'Dark',
+      light: 'Light',
+      system: 'System'
+    },
+    // ... more component messages
+  }
+}
+```
+
+## Creating Custom Locales
+
+### Define a New Locale
+
+Create your own locale using the `defineLocale` helper:
+
+```typescript locales/custom.ts
+import { defineLocale } from '@nuxt/ui/composables'
+import type { Messages } from '@nuxt/ui/types'
+
+export default defineLocale<Messages>({
+  name: 'Custom Language',
+  code: 'custom',
+  dir: 'ltr', // or 'rtl' for right-to-left languages
+  messages: {
+    alert: {
+      close: 'Close Alert'
+    },
+    modal: {
+      close: 'Close Modal'
+    },
+    // ... define all required messages
+  }
+})
+```
+
+### Extend Existing Locale
+
+Customize specific messages while keeping the rest:
+
+```typescript
+import { extendLocale } from '@nuxt/ui/composables'
+import en from '@nuxt/ui/locale/en'
+
+const customEn = extendLocale(en, {
+  name: 'Custom English',
+  messages: {
+    modal: {
+      close: 'Dismiss'
+    },
+    toast: {
+      close: 'Dismiss'
+    }
+  }
+})
+
+export default defineAppConfig({
+  ui: {
+    locale: customEn
+  }
+})
+```
+
+## Message Categories
+
+Messages are organized by component:
+
+- `alert` - Alert component messages
+- `authForm` - Authentication form labels
+- `banner` - Banner component messages
+- `calendar` - Calendar navigation
+- `carousel` - Carousel controls
+- `colorMode` - Color mode labels
+- `commandPalette` - Command palette UI
+- `modal` - Modal dialogs
+- `toast` - Toast notifications
+- `table` - Data table messages
+- `inputMenu` - Input menu messages
+- `selectMenu` - Select menu messages
+- And more...
+
+## Right-to-Left (RTL) Support
+
+Nuxt UI supports RTL languages:
+
+```typescript
+import ar from '@nuxt/ui/locale/ar'
+
+export default defineAppConfig({
+  ui: {
+    locale: ar // Arabic is RTL by default
+  }
+})
+```
+
+RTL locales have `dir: 'rtl'` configured automatically.
+
+## Dynamic Locale Switching
+
+Switch locales at runtime:
+
+```vue
+<script setup>
+import { ref, provide } from 'vue'
+import { localeContextInjectionKey } from '@nuxt/ui/composables'
+import en from '@nuxt/ui/locale/en'
+import fr from '@nuxt/ui/locale/fr'
+import de from '@nuxt/ui/locale/de'
+
+const locales = { en, fr, de }
+const currentLocale = ref(en)
+
+provide(localeContextInjectionKey, currentLocale)
+
+function changeLocale(code: keyof typeof locales) {
+  currentLocale.value = locales[code]
+}
+</script>
+
+<template>
+  <div>
+    <select @change="changeLocale($event.target.value)">
+      <option value="en">English</option>
+      <option value="fr">Français</option>
+      <option value="de">Deutsch</option>
+    </select>
+    
+    <!-- Components will use selected locale -->
+    <UModal />
+    <UAlert />
+  </div>
+</template>
+```
+
+## Integration with @nuxtjs/i18n
+
+Combine with the official i18n module:
+
+```vue
+<script setup>
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import en from '@nuxt/ui/locale/en'
+import fr from '@nuxt/ui/locale/fr'
+
+const { locale } = useI18n()
+
+const uiLocale = computed(() => {
+  return locale.value === 'fr' ? fr : en
+})
+</script>
+```
+
+## TypeScript Support
+
+The locale system is fully typed:
+
+```typescript
+import type { Locale, Messages } from '@nuxt/ui/types'
+
+const myLocale: Locale<Messages> = defineLocale({
+  name: 'My Language',
+  code: 'my',
+  messages: {
+    // TypeScript will enforce all required messages
+  }
+})
+```
+
+## Best Practices
+
+<Steps>
+  <Step title="Use semantic keys">
+    Access messages using the `t()` function with dot notation: `t('component.key')`.
+  </Step>
+  
+  <Step title="Provide locale at app level">
+    Set the locale in `app.config.ts` for global consistency.
+  </Step>
+  
+  <Step title="Extend, don't replace">
+    Use `extendLocale()` to customize only what you need.
+  </Step>
+  
+  <Step title="Test with RTL">
+    If supporting RTL languages, test your UI with Arabic or Hebrew.
+  </Step>
+</Steps>
+
+<Warning>
+  When creating custom locales, ensure all message keys are defined to avoid missing translations.
+</Warning>
+
+## Contributing Locales
+
+To contribute a new locale to Nuxt UI:
+
+1. Create a new locale file based on `en.ts`
+2. Translate all messages
+3. Submit a PR to the [Nuxt UI repository](https://github.com/nuxt/ui)
+
+## Learn More
+
+- [useLocale Composable](/composables/use-locale)
+- [Locale Type Reference](/api-reference/types/locale)
+- [@nuxtjs/i18n Module](https://i18n.nuxtjs.org/)

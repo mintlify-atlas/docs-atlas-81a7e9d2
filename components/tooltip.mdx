@@ -1,0 +1,256 @@
+---
+title: 'Tooltip'
+description: 'A floating text hint that appears on hover'
+icon: 'info'
+---
+
+## Overview
+
+The Tooltip component displays helpful text hints when hovering over an element. Supports text, keyboard shortcuts, and custom positioning.
+
+## Basic Usage
+
+```vue
+<template>
+  <UTooltip text="This is a helpful tooltip">
+    <template #default>
+      <UButton>Hover me</UButton>
+    </template>
+  </UTooltip>
+</template>
+```
+
+## Props
+
+<ParamField path="text" type="string">
+  The text content of the tooltip.
+</ParamField>
+
+<ParamField path="kbds" type="KbdProps['value'][] | KbdProps[]">
+  Array of keyboard keys to display in the tooltip.
+</ParamField>
+
+<ParamField path="content" type="TooltipContentProps" default="{ side: 'bottom', sideOffset: 8, collisionPadding: 8 }">
+  Configuration object for tooltip positioning and behavior.
+</ParamField>
+
+<ParamField path="arrow" type="boolean | TooltipArrowProps" default="false">
+  Display an arrow pointing to the trigger element.
+</ParamField>
+
+<ParamField path="portal" type="boolean | string | HTMLElement" default="true">
+  Render the tooltip in a portal.
+</ParamField>
+
+<ParamField path="reference" type="HTMLElement">
+  The reference element for positioning. If not provided, uses the trigger element.
+</ParamField>
+
+<ParamField path="open" type="boolean">
+  Controls the open state of the tooltip (v-model:open).
+</ParamField>
+
+<ParamField path="defaultOpen" type="boolean">
+  The default open state when uncontrolled.
+</ParamField>
+
+<ParamField path="delayDuration" type="number">
+  Delay in milliseconds before the tooltip appears.
+</ParamField>
+
+<ParamField path="disableHoverableContent" type="boolean">
+  Prevent the tooltip from staying open when hovering over its content.
+</ParamField>
+
+<ParamField path="disableClosingTrigger" type="boolean">
+  Prevent the tooltip from closing when the trigger is activated.
+</ParamField>
+
+<ParamField path="ignoreNonKeyboardFocus" type="boolean">
+  Prevent the tooltip from opening on non-keyboard focus events.
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  Disable the tooltip. Automatically disabled when no text or kbds are provided.
+</ParamField>
+
+<ParamField path="class" type="any">
+  CSS class for styling the trigger element.
+</ParamField>
+
+<ParamField path="ui" type="object">
+  Theme customization object for component slots.
+</ParamField>
+
+## Events
+
+<ParamField path="update:open" type="(open: boolean) => void">
+  Emitted when the open state changes.
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="{ open: boolean }">
+  The trigger element that shows the tooltip on hover. Receives the current open state.
+</ParamField>
+
+<ParamField path="content" type="{ ui: object }">
+  Custom content for the tooltip, replacing the default text and keyboard shortcuts.
+</ParamField>
+
+## Examples
+
+### With Keyboard Shortcuts
+
+```vue
+<template>
+  <UTooltip text="Save file" :kbds="['meta', 'S']">
+    <template #default>
+      <UButton icon="i-lucide-save" />
+    </template>
+  </UTooltip>
+</template>
+```
+
+### With Arrow
+
+```vue
+<template>
+  <UTooltip text="Tooltip with arrow" :arrow="true">
+    <template #default>
+      <UButton>Hover me</UButton>
+    </template>
+  </UTooltip>
+</template>
+```
+
+### Different Positions
+
+```vue
+<template>
+  <div class="flex gap-4">
+    <UTooltip text="Top tooltip" :content="{ side: 'top' }">
+      <UButton>Top</UButton>
+    </UTooltip>
+    
+    <UTooltip text="Right tooltip" :content="{ side: 'right' }">
+      <UButton>Right</UButton>
+    </UTooltip>
+    
+    <UTooltip text="Bottom tooltip" :content="{ side: 'bottom' }">
+      <UButton>Bottom</UButton>
+    </UTooltip>
+    
+    <UTooltip text="Left tooltip" :content="{ side: 'left' }">
+      <UButton>Left</UButton>
+    </UTooltip>
+  </div>
+</template>
+```
+
+### With Delay
+
+```vue
+<template>
+  <UTooltip text="This appears after 500ms" :delay-duration="500">
+    <template #default>
+      <UButton>Hover and wait</UButton>
+    </template>
+  </UTooltip>
+</template>
+```
+
+### Custom Content
+
+```vue
+<template>
+  <UTooltip>
+    <template #default>
+      <UButton>Custom tooltip</UButton>
+    </template>
+    <template #content>
+      <div class="p-2">
+        <p class="font-bold">Custom Content</p>
+        <p class="text-sm">You can put anything here</p>
+      </div>
+    </template>
+  </UTooltip>
+</template>
+```
+
+### Multiple Keyboard Shortcuts
+
+```vue
+<template>
+  <UTooltip 
+    text="Search" 
+    :kbds="[
+      { value: 'meta', size: 'xs' },
+      { value: 'K', size: 'xs' }
+    ]"
+  >
+    <template #default>
+      <UButton icon="i-lucide-search" />
+    </template>
+  </UTooltip>
+</template>
+```
+
+### On Icon Button
+
+```vue
+<template>
+  <div class="flex gap-2">
+    <UTooltip text="Edit">
+      <UButton icon="i-lucide-pencil" variant="ghost" />
+    </UTooltip>
+    
+    <UTooltip text="Delete">
+      <UButton icon="i-lucide-trash" variant="ghost" color="error" />
+    </UTooltip>
+    
+    <UTooltip text="Share">
+      <UButton icon="i-lucide-share" variant="ghost" />
+    </UTooltip>
+  </div>
+</template>
+```
+
+### Disabled Tooltip
+
+```vue
+<template>
+  <UTooltip text="This won't show" :disabled="true">
+    <template #default>
+      <UButton>No tooltip</UButton>
+    </template>
+  </UTooltip>
+</template>
+```
+
+## Content Props
+
+The `content` prop accepts the following positioning options:
+
+- `side`: `'top' | 'right' | 'bottom' | 'left'` - Which side to position the tooltip
+- `sideOffset`: `number` - Distance in pixels from the trigger
+- `align`: `'start' | 'center' | 'end'` - Alignment along the side
+- `alignOffset`: `number` - Offset along the alignment axis
+- `collisionPadding`: `number | Partial<Record<'top' | 'right' | 'bottom' | 'left', number>>` - Padding from viewport edges
+- `avoidCollisions`: `boolean` - Whether to adjust position to avoid collisions
+- `sticky`: `'partial' | 'always'` - Sticky behavior during scrolling
+
+## Accessibility
+
+The Tooltip component automatically:
+
+- Disables when no content is provided
+- Provides proper ARIA attributes
+- Supports keyboard navigation
+- Can be configured to ignore non-keyboard focus for better accessibility
+
+## Related Components
+
+- [Popover](/components/popover) - For interactive floating content
+- [Kbd](/components/kbd) - For displaying keyboard shortcuts
+- [Tooltip](https://reka-ui.com/docs/components/tooltip) - Reka UI Tooltip documentation

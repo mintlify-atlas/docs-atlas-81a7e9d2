@@ -1,0 +1,424 @@
+---
+title: Table
+description: A powerful and flexible table component built on TanStack Table.
+---
+
+## Usage
+
+The Table component provides a full-featured data table implementation using [@tanstack/vue-table](https://tanstack.com/table/latest). It supports sorting, filtering, pagination, row selection, column pinning, virtualization, and more.
+
+```vue
+<script setup>
+const data = [
+  { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Admin' },
+  { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'User' },
+  { id: 3, name: 'Bob Johnson', email: 'bob@example.com', role: 'User' }
+]
+
+const columns = [
+  { accessorKey: 'name', header: 'Name' },
+  { accessorKey: 'email', header: 'Email' },
+  { accessorKey: 'role', header: 'Role' }
+]
+</script>
+
+<template>
+  <UTable :data="data" :columns="columns" />
+</template>
+```
+
+## Props
+
+<ParamField path="data" type="T[]">
+  The data array to display in the table.
+</ParamField>
+
+<ParamField path="columns" type="TableColumn<T>[]">
+  Array of column definitions. Each column can have `accessorKey`, `header`, `cell`, `footer`, and more TanStack Table column options.
+</ParamField>
+
+<ParamField path="as" type="any" default="'div'">
+  The element or component this component should render as.
+</ParamField>
+
+<ParamField path="caption" type="string">
+  Optional caption text for the table.
+</ParamField>
+
+<ParamField path="meta" type="TableMeta<T>">
+  Table metadata including custom class and style functions for rows.
+</ParamField>
+
+<ParamField path="virtualize" type="boolean | VirtualizerOptions" default="false">
+  Enable virtualization for large datasets. When enabled, only visible rows are rendered. Note: divider and sticky properties are not supported with virtualization.
+  
+  You can pass `true` for default settings or an object with:
+  - `overscan` (number): Number of items rendered outside the visible area. Default: `12`
+  - `estimateSize` (number | function): Estimated size in px of each item. Default: `65`
+</ParamField>
+
+<ParamField path="empty" type="string" default="t('table.noData')">
+  The text to display when the table is empty.
+</ParamField>
+
+<ParamField path="sticky" type="boolean | 'header' | 'footer'" default="false">
+  Whether the table should have a sticky header or footer. Use `true` for both, `'header'` for header only, or `'footer'` for footer only. Not supported when `virtualize` is true.
+</ParamField>
+
+<ParamField path="loading" type="boolean">
+  Whether the table should be in loading state.
+</ParamField>
+
+<ParamField path="loadingColor" type="string" default="'primary'">
+  Color of the loading indicator.
+</ParamField>
+
+<ParamField path="loadingAnimation" type="string" default="'carousel'">
+  Animation style for the loading indicator.
+</ParamField>
+
+<ParamField path="watchOptions" type="WatchOptions" default="{ deep: true }">
+  Customize reactivity for data changes. Disable deep watching or limit traversal depth to improve performance.
+</ParamField>
+
+### TanStack Table Feature Props
+
+The Table component supports all TanStack Table features through dedicated props:
+
+<ParamField path="globalFilterOptions" type="GlobalFilterOptions<T>">
+  Options for global filtering. See [TanStack Table Global Filtering Guide](https://tanstack.com/table/v8/docs/guide/global-filtering).
+</ParamField>
+
+<ParamField path="columnFiltersOptions" type="ColumnFiltersOptions<T>">
+  Options for column filtering. See [TanStack Table Column Filtering Guide](https://tanstack.com/table/v8/docs/guide/column-filtering).
+</ParamField>
+
+<ParamField path="columnPinningOptions" type="ColumnPinningOptions">
+  Options for column pinning. See [TanStack Table Column Pinning Guide](https://tanstack.com/table/v8/docs/guide/column-pinning).
+</ParamField>
+
+<ParamField path="columnSizingOptions" type="ColumnSizingOptions">
+  Options for column sizing. See [TanStack Table Column Sizing Guide](https://tanstack.com/table/v8/docs/guide/column-sizing).
+</ParamField>
+
+<ParamField path="visibilityOptions" type="VisibilityOptions">
+  Options for column visibility. See [TanStack Table Column Visibility Guide](https://tanstack.com/table/v8/docs/guide/column-visibility).
+</ParamField>
+
+<ParamField path="sortingOptions" type="SortingOptions<T>">
+  Options for sorting. See [TanStack Table Sorting Guide](https://tanstack.com/table/v8/docs/guide/sorting).
+</ParamField>
+
+<ParamField path="groupingOptions" type="GroupingOptions">
+  Options for grouping. See [TanStack Table Grouping Guide](https://tanstack.com/table/v8/docs/guide/grouping).
+</ParamField>
+
+<ParamField path="expandedOptions" type="ExpandedOptions<T>">
+  Options for row expanding. See [TanStack Table Expanding Guide](https://tanstack.com/table/v8/docs/guide/expanding).
+</ParamField>
+
+<ParamField path="rowSelectionOptions" type="RowSelectionOptions<T>">
+  Options for row selection. See [TanStack Table Row Selection Guide](https://tanstack.com/table/v8/docs/guide/row-selection).
+</ParamField>
+
+<ParamField path="rowPinningOptions" type="RowPinningOptions<T>">
+  Options for row pinning. See [TanStack Table Row Pinning Guide](https://tanstack.com/table/v8/docs/guide/row-pinning).
+</ParamField>
+
+<ParamField path="paginationOptions" type="PaginationOptions">
+  Options for pagination. See [TanStack Table Pagination Guide](https://tanstack.com/table/v8/docs/guide/pagination).
+</ParamField>
+
+<ParamField path="facetedOptions" type="FacetedOptions<T>">
+  Options for column faceting. See [TanStack Table Column Faceting Guide](https://tanstack.com/table/v8/docs/guide/column-faceting).
+</ParamField>
+
+### Event Handlers
+
+<ParamField path="onSelect" type="(e: Event, row: TableRow<T>) => void">
+  Callback fired when a row is selected/clicked.
+</ParamField>
+
+<ParamField path="onHover" type="(e: Event, row: TableRow<T> | null) => void">
+  Callback fired when a row is hovered.
+</ParamField>
+
+<ParamField path="onContextmenu" type="((e: Event, row: TableRow<T>) => void) | Array<(e: Event, row: TableRow<T>) => void>">
+  Callback(s) fired when a row is right-clicked.
+</ParamField>
+
+<ParamField path="class" type="any">
+  Additional CSS classes to apply.
+</ParamField>
+
+<ParamField path="ui" type="object">
+  UI customization object for styling table slots.
+</ParamField>
+
+## Models (v-model)
+
+The Table component provides v-model bindings for all TanStack Table state:
+
+<ParamField path="v-model:globalFilter" type="string">
+  Global filter value.
+</ParamField>
+
+<ParamField path="v-model:columnFilters" type="ColumnFiltersState">
+  Column filter state.
+</ParamField>
+
+<ParamField path="v-model:columnOrder" type="ColumnOrderState">
+  Column order state.
+</ParamField>
+
+<ParamField path="v-model:columnVisibility" type="VisibilityState">
+  Column visibility state.
+</ParamField>
+
+<ParamField path="v-model:columnPinning" type="ColumnPinningState">
+  Column pinning state.
+</ParamField>
+
+<ParamField path="v-model:columnSizing" type="ColumnSizingState">
+  Column sizing state.
+</ParamField>
+
+<ParamField path="v-model:columnSizingInfo" type="ColumnSizingInfoState">
+  Column sizing info state.
+</ParamField>
+
+<ParamField path="v-model:rowSelection" type="RowSelectionState">
+  Row selection state.
+</ParamField>
+
+<ParamField path="v-model:rowPinning" type="RowPinningState">
+  Row pinning state.
+</ParamField>
+
+<ParamField path="v-model:sorting" type="SortingState">
+  Sorting state.
+</ParamField>
+
+<ParamField path="v-model:grouping" type="GroupingState">
+  Grouping state.
+</ParamField>
+
+<ParamField path="v-model:expanded" type="ExpandedState">
+  Expanded rows state.
+</ParamField>
+
+<ParamField path="v-model:pagination" type="PaginationState">
+  Pagination state.
+</ParamField>
+
+## Slots
+
+<ParamField path="expanded" type="{ row: Row<T> }">
+  Content to display when a row is expanded.
+</ParamField>
+
+<ParamField path="empty" type="{}">
+  Custom content to display when the table is empty.
+</ParamField>
+
+<ParamField path="loading" type="{}">
+  Custom content to display when the table is loading.
+</ParamField>
+
+<ParamField path="caption" type="{}">
+  Custom table caption content.
+</ParamField>
+
+<ParamField path="body-top" type="{}">
+  Content to insert at the top of the table body.
+</ParamField>
+
+<ParamField path="body-bottom" type="{}">
+  Content to insert at the bottom of the table body.
+</ParamField>
+
+<ParamField path="{columnId}-header" type="HeaderContext<T, unknown>">
+  Custom header content for a specific column. Replace `{columnId}` with the column's ID.
+</ParamField>
+
+<ParamField path="{columnId}-footer" type="HeaderContext<T, unknown>">
+  Custom footer content for a specific column. Replace `{columnId}` with the column's ID.
+</ParamField>
+
+<ParamField path="{columnId}-cell" type="CellContext<T, unknown>">
+  Custom cell content for a specific column. Replace `{columnId}` with the column's ID.
+</ParamField>
+
+## Examples
+
+### Sortable Columns
+
+```vue
+<script setup>
+const sorting = ref([])
+
+const columns = [
+  {
+    accessorKey: 'name',
+    header: 'Name',
+    enableSorting: true
+  },
+  {
+    accessorKey: 'email',
+    header: 'Email',
+    enableSorting: true
+  }
+]
+</script>
+
+<template>
+  <UTable 
+    :data="data" 
+    :columns="columns" 
+    v-model:sorting="sorting"
+    :sorting-options="{ enableSorting: true }"
+  />
+</template>
+```
+
+### Row Selection
+
+```vue
+<script setup>
+const rowSelection = ref({})
+
+const columns = [
+  {
+    id: 'select',
+    header: ({ table }) => (
+      h(UCheckbox, {
+        checked: table.getIsAllRowsSelected(),
+        indeterminate: table.getIsSomeRowsSelected(),
+        onUpdate:modelValue: (value) => table.toggleAllRowsSelected(!!value)
+      })
+    ),
+    cell: ({ row }) => (
+      h(UCheckbox, {
+        checked: row.getIsSelected(),
+        onUpdate:modelValue: (value) => row.toggleSelected(!!value)
+      })
+    )
+  },
+  // ... other columns
+]
+</script>
+
+<template>
+  <UTable 
+    :data="data" 
+    :columns="columns" 
+    v-model:rowSelection="rowSelection"
+    :row-selection-options="{ enableRowSelection: true }"
+  />
+</template>
+```
+
+### Pagination
+
+```vue
+<script setup>
+const pagination = ref({ pageIndex: 0, pageSize: 10 })
+</script>
+
+<template>
+  <UTable 
+    :data="data" 
+    :columns="columns" 
+    v-model:pagination="pagination"
+    :pagination-options="{ 
+      pageCount: Math.ceil(data.length / pagination.pageSize)
+    }"
+  />
+</template>
+```
+
+### Custom Cell Rendering
+
+```vue
+<script setup>
+const columns = [
+  {
+    accessorKey: 'name',
+    header: 'Name',
+    cell: ({ getValue }) => h('strong', getValue())
+  },
+  {
+    accessorKey: 'status',
+    header: 'Status',
+    cell: ({ getValue }) => {
+      const status = getValue()
+      return h(UBadge, {
+        color: status === 'active' ? 'green' : 'gray',
+        label: status
+      })
+    }
+  }
+]
+</script>
+
+<template>
+  <UTable :data="data" :columns="columns" />
+</template>
+```
+
+### Virtualization for Large Datasets
+
+```vue
+<template>
+  <UTable 
+    :data="largeDataset" 
+    :columns="columns" 
+    :virtualize="{
+      overscan: 20,
+      estimateSize: 50
+    }"
+  />
+</template>
+```
+
+### Column Metadata
+
+Use column metadata to customize styling:
+
+```vue
+<script setup>
+const columns = [
+  {
+    accessorKey: 'name',
+    header: 'Name',
+    meta: {
+      class: {
+        th: 'font-bold',
+        td: (cell) => cell.getValue() === 'Admin' ? 'text-primary' : ''
+      },
+      style: {
+        th: { width: '200px' },
+        td: { fontWeight: '500' }
+      }
+    }
+  }
+]
+</script>
+```
+
+## Type Exports
+
+```typescript
+import type { 
+  TableRow,
+  TableData,
+  TableColumn,
+  TableOptions,
+  TableProps,
+  TableSlots
+} from '#ui/types'
+```
+
+## API Reference
+
+For detailed information about column definitions, features, and options, refer to the [TanStack Table documentation](https://tanstack.com/table/latest).

@@ -1,0 +1,350 @@
+---
+title: 'ButtonGroup'
+description: 'Group buttons together with shared styling and layout'
+---
+
+<Info>
+ButtonGroup is implemented using the FieldGroup component, which provides orientation and size context to child Button components.
+</Info>
+
+## Basic Usage
+
+The ButtonGroup component groups multiple buttons together with automatic styling adjustments for connected appearance.
+
+```vue
+<template>
+  <UFieldGroup>
+    <UButton label="Left" />
+    <UButton label="Center" />
+    <UButton label="Right" />
+  </UFieldGroup>
+</template>
+```
+
+## Props
+
+<ParamField path="orientation" type="string" default="horizontal">
+  The orientation of the button group.
+  
+  Available options:
+  - `horizontal` - Buttons laid out horizontally in a row
+  - `vertical` - Buttons stacked vertically in a column
+</ParamField>
+
+<ParamField path="size" type="string" default="md">
+  The size to apply to all child buttons. This overrides individual button size props.
+  
+  Available sizes: `xs`, `sm`, `md`, `lg`, `xl`
+</ParamField>
+
+<ParamField path="as" type="string | Component" default="div">
+  The element or component this component should render as.
+</ParamField>
+
+<ParamField path="ui" type="object">
+  Override component styles. Accepts partial UI configuration for the base slot.
+</ParamField>
+
+<ParamField path="class" type="any">
+  Additional CSS classes to apply to the group container.
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="slot">
+  Button components to group together. Typically contains multiple `UButton` components.
+  
+  ```vue
+  <UFieldGroup>
+    <UButton label="One" />
+    <UButton label="Two" />
+    <UButton label="Three" />
+  </UFieldGroup>
+  ```
+</ParamField>
+
+## Examples
+
+### Horizontal Group (Default)
+
+```vue
+<template>
+  <UFieldGroup orientation="horizontal">
+    <UButton label="Option 1" />
+    <UButton label="Option 2" />
+    <UButton label="Option 3" />
+  </UFieldGroup>
+</template>
+```
+
+Buttons are laid out horizontally with connected borders and rounded corners only on the outer edges.
+
+### Vertical Group
+
+```vue
+<template>
+  <UFieldGroup orientation="vertical">
+    <UButton label="Top" />
+    <UButton label="Middle" />
+    <UButton label="Bottom" />
+  </UFieldGroup>
+</template>
+```
+
+Buttons are stacked vertically with connected borders.
+
+### Different Variants
+
+<Tabs>
+  <Tab title="Solid">
+    ```vue
+    <template>
+      <UFieldGroup>
+        <UButton variant="solid" label="Save" />
+        <UButton variant="solid" label="Cancel" />
+      </UFieldGroup>
+    </template>
+    ```
+  </Tab>
+  
+  <Tab title="Outline">
+    ```vue
+    <template>
+      <UFieldGroup>
+        <UButton variant="outline" label="Edit" />
+        <UButton variant="outline" label="Delete" />
+      </UFieldGroup>
+    </template>
+    ```
+  </Tab>
+  
+  <Tab title="Ghost">
+    ```vue
+    <template>
+      <UFieldGroup>
+        <UButton variant="ghost" label="View" />
+        <UButton variant="ghost" label="Share" />
+      </UFieldGroup>
+    </template>
+    ```
+  </Tab>
+</Tabs>
+
+### With Icons
+
+```vue
+<template>
+  <UFieldGroup>
+    <UButton 
+      leadingIcon="i-heroicons-arrow-left" 
+      label="Previous" 
+    />
+    <UButton 
+      label="Next" 
+      trailingIcon="i-heroicons-arrow-right" 
+    />
+  </UFieldGroup>
+</template>
+```
+
+### Icon-Only Buttons
+
+```vue
+<template>
+  <UFieldGroup>
+    <UButton icon="i-heroicons-bars-3" square />
+    <UButton icon="i-heroicons-magnifying-glass" square />
+    <UButton icon="i-heroicons-bell" square />
+  </UFieldGroup>
+</template>
+```
+
+Perfect for toolbar-style layouts.
+
+### Controlled Size
+
+```vue
+<template>
+  <div class="space-y-4">
+    <UFieldGroup size="xs">
+      <UButton label="Small" />
+      <UButton label="Group" />
+    </UFieldGroup>
+    
+    <UFieldGroup size="lg">
+      <UButton label="Large" />
+      <UButton label="Group" />
+    </UFieldGroup>
+  </div>
+</template>
+```
+
+The size prop on FieldGroup overrides individual button sizes for consistency.
+
+### Mixed Button States
+
+```vue
+<template>
+  <UFieldGroup>
+    <UButton label="Active" color="primary" variant="solid" />
+    <UButton label="Inactive" color="neutral" variant="outline" />
+    <UButton label="Disabled" disabled />
+  </UFieldGroup>
+</template>
+```
+
+### Segmented Control Pattern
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const selected = ref('grid')
+</script>
+
+<template>
+  <UFieldGroup>
+    <UButton 
+      icon="i-heroicons-squares-2x2" 
+      square
+      :variant="selected === 'grid' ? 'solid' : 'outline'"
+      @click="selected = 'grid'"
+    />
+    <UButton 
+      icon="i-heroicons-list-bullet" 
+      square
+      :variant="selected === 'list' ? 'solid' : 'outline'"
+      @click="selected = 'list'"
+    />
+  </UFieldGroup>
+</template>
+```
+
+Create a segmented control for view switching or option selection.
+
+### Toolbar Example
+
+```vue
+<template>
+  <UFieldGroup>
+    <UButton 
+      icon="i-heroicons-bold" 
+      square 
+      variant="ghost" 
+    />
+    <UButton 
+      icon="i-heroicons-italic" 
+      square 
+      variant="ghost" 
+    />
+    <UButton 
+      icon="i-heroicons-underline" 
+      square 
+      variant="ghost" 
+    />
+  </UFieldGroup>
+</template>
+```
+
+A common pattern for text formatting toolbars.
+
+### Dropdown Split Button
+
+```vue
+<template>
+  <UFieldGroup>
+    <UButton label="Save" @click="save" />
+    <UButton 
+      icon="i-heroicons-chevron-down" 
+      square
+    />
+  </UFieldGroup>
+</template>
+```
+
+Combine an action button with a dropdown trigger.
+
+### Full Width Group
+
+```vue
+<template>
+  <UFieldGroup class="w-full">
+    <UButton block label="Left" />
+    <UButton block label="Right" />
+  </UFieldGroup>
+</template>
+```
+
+### Vertical Navigation
+
+```vue
+<template>
+  <UFieldGroup orientation="vertical" class="w-48">
+    <UButton 
+      leadingIcon="i-heroicons-home" 
+      label="Home" 
+      variant="ghost"
+      class="justify-start"
+    />
+    <UButton 
+      leadingIcon="i-heroicons-cog-6-tooth" 
+      label="Settings" 
+      variant="ghost"
+      class="justify-start"
+    />
+    <UButton 
+      leadingIcon="i-heroicons-user" 
+      label="Profile" 
+      variant="ghost"
+      class="justify-start"
+    />
+  </UFieldGroup>
+</template>
+```
+
+Use vertical orientation for sidebar navigation patterns.
+
+## Theming
+
+The ButtonGroup component leverages the FieldGroup theme with the following field group variants:
+
+```typescript
+fieldGroup: {
+  horizontal: {
+    // Removes borders between buttons
+    // Rounds corners only on first and last buttons
+  },
+  vertical: {
+    // Removes borders between buttons
+    // Rounds corners only on first and last buttons
+  }
+}
+```
+
+Buttons within the group automatically adjust their styling based on:
+- Position (first, middle, last)
+- Orientation (horizontal, vertical)
+- Inherited size from the group
+
+## Accessibility
+
+- Each button maintains individual keyboard focus and activation
+- Proper ARIA attributes are preserved for each button
+- When used as a segmented control, consider adding `role="group"` and `aria-label`
+- For radio-style selection, ensure only one button appears selected at a time
+
+## Use Cases
+
+- **Toolbars**: Icon-only buttons for text formatting or actions
+- **Segmented Controls**: Mutually exclusive options (view switchers, filters)
+- **Split Buttons**: Primary action with additional options in a dropdown
+- **Pagination**: Previous/Next navigation controls
+- **View Toggles**: Grid/List view switching
+- **Action Groups**: Related actions grouped together (Save/Cancel)
+
+## Related Components
+
+- [Button](/components/button) - Individual button component
+- [FieldGroup](/components/field-group) - Base grouping component (used internally)
+- [Tabs](/components/tabs) - For mutually exclusive navigation
+- [RadioGroup](/components/radio-group) - For form-based single selection

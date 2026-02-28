@@ -1,0 +1,218 @@
+---
+title: AuthForm
+description: A complete authentication form component with providers, fields, and validation support.
+---
+
+## Overview
+
+The `AuthForm` component provides a complete, pre-built authentication form with support for OAuth providers, multiple field types (text, email, password, checkbox, select, OTP), validation, and customizable styling.
+
+## Basic usage
+
+```vue
+<template>
+  <UAuthForm
+    title="Sign in to your account"
+    :fields="[
+      { name: 'email', type: 'email', label: 'Email', placeholder: 'Enter your email' },
+      { name: 'password', type: 'password', label: 'Password', placeholder: 'Enter your password' }
+    ]"
+    :submit="{ label: 'Sign in' }"
+    @submit="handleSubmit"
+  />
+</template>
+
+<script setup lang="ts">
+function handleSubmit(event: any) {
+  console.log('Form submitted:', event.data)
+}
+</script>
+```
+
+## With OAuth providers
+
+```vue
+<template>
+  <UAuthForm
+    icon="i-lucide-lock"
+    title="Create an account"
+    description="Get started with Nuxt UI"
+    :providers="[
+      { label: 'Continue with GitHub', icon: 'i-simple-icons-github', color: 'neutral' },
+      { label: 'Continue with Google', icon: 'i-simple-icons-google', color: 'neutral' }
+    ]"
+    separator="or continue with email"
+    :fields="fields"
+    :submit="{ label: 'Sign up' }"
+  />
+</template>
+```
+
+## With validation
+
+```vue
+<template>
+  <UAuthForm
+    :fields="fields"
+    :schema="schema"
+    :submit="{ label: 'Sign in' }"
+    @submit="onSubmit"
+  />
+</template>
+
+<script setup lang="ts">
+import { z } from 'zod'
+
+const schema = z.object({
+  email: z.string().email('Invalid email'),
+  password: z.string().min(8, 'Must be at least 8 characters')
+})
+
+const fields = [
+  { name: 'email', type: 'email', label: 'Email', placeholder: 'you@example.com' },
+  { name: 'password', type: 'password', label: 'Password', placeholder: 'Enter password' }
+]
+
+function onSubmit(event: any) {
+  console.log(event.data)
+}
+</script>
+```
+
+## Props
+
+<ParamField path="icon" type="string">
+  Icon displayed above the title. Supports any Iconify icon.
+</ParamField>
+
+<ParamField path="title" type="string">
+  The title text displayed in the form header.
+</ParamField>
+
+<ParamField path="description" type="string">
+  Description text displayed below the title.
+</ParamField>
+
+<ParamField path="fields" type="AuthFormField[]">
+  Array of form fields to render. Each field can be of type: `text`, `email`, `password`, `checkbox`, `select`, or `otp`.
+</ParamField>
+
+<ParamField path="providers" type="ButtonProps[]">
+  Array of OAuth provider buttons displayed at the top of the form.
+</ParamField>
+
+<ParamField path="separator" type="string | SeparatorProps" default="'or'">
+  Text or separator configuration displayed between providers and fields.
+</ParamField>
+
+<ParamField path="submit" type="ButtonProps">
+  Submit button configuration. Default: `{ label: 'Continue', block: true }`
+</ParamField>
+
+<ParamField path="schema" type="FormSchema">
+  Validation schema (Zod, Yup, Valibot, etc.)
+</ParamField>
+
+<ParamField path="validate" type="function">
+  Custom validation function.
+</ParamField>
+
+<ParamField path="loading" type="boolean">
+  Loading state for the submit button.
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  Disable the entire form.
+</ParamField>
+
+## Field types
+
+The `fields` prop accepts an array of field objects. Each field can have the following types:
+
+### Text/Email/Password fields
+
+```typescript
+{
+  name: string
+  type: 'text' | 'email' | 'password' | 'number' | 'tel' | 'url'
+  label?: string
+  placeholder?: string
+  icon?: string
+  required?: boolean
+}
+```
+
+### Checkbox fields
+
+```typescript
+{
+  name: string
+  type: 'checkbox'
+  label?: string
+  description?: string
+  required?: boolean
+}
+```
+
+### Select fields
+
+```typescript
+{
+  name: string
+  type: 'select'
+  label?: string
+  placeholder?: string
+  items: any[]
+  required?: boolean
+}
+```
+
+### OTP fields
+
+```typescript
+{
+  name: string
+  type: 'otp'
+  label?: string
+  length?: number
+  placeholder?: string
+}
+```
+
+## Events
+
+<ParamField path="submit" type="(event: FormSubmitEvent) => void">
+  Emitted when the form is submitted successfully with validated data.
+</ParamField>
+
+## Slots
+
+<ParamField path="header" type="slot">
+  Replace the entire header section (icon, title, description).
+</ParamField>
+
+<ParamField path="title" type="slot">
+  Replace just the title.
+</ParamField>
+
+<ParamField path="description" type="slot">
+  Replace just the description.
+</ParamField>
+
+<ParamField path="providers" type="slot">
+  Replace the OAuth providers section.
+</ParamField>
+
+<ParamField path="submit" type="slot">
+  Replace the submit button.
+</ParamField>
+
+<ParamField path="{field-name}-field" type="slot">
+  Replace a specific field by name. Example: `#email-field`.
+</ParamField>
+
+## Related
+
+- [Form](/components/form)
+- [FormField](/components/form-field)
+- [Button](/components/button)

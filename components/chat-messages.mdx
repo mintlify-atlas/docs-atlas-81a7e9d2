@@ -1,0 +1,158 @@
+---
+title: ChatMessages
+description: An AI chat interface component with streaming support and auto-scroll functionality.
+---
+
+## Overview
+
+The `ChatMessages` component displays a list of chat messages with support for streaming (like AI responses), auto-scrolling, markdown rendering, and customizable user/assistant message styling.
+
+## Basic usage
+
+```vue
+<template>
+  <UChatMessages :messages="messages" />
+</template>
+
+<script setup lang="ts">
+const messages = ref([
+  { id: '1', role: 'user', content: 'Hello!' },
+  { id: '2', role: 'assistant', content: 'Hi! How can I help you today?' }
+])
+</script>
+```
+
+## With streaming
+
+```vue
+<template>
+  <UChatMessages 
+    :messages="messages"
+    :status="status"
+  />
+</template>
+
+<script setup lang="ts">
+import { useChat } from 'ai/vue'
+
+const { messages, status } = useChat({
+  api: '/api/chat'
+})
+</script>
+```
+
+## Props
+
+<ParamField path="messages" type="UIMessage[]" required>
+  Array of chat messages to display. Each message should have `id`, `role`, and `content` properties.
+</ParamField>
+
+<ParamField path="status" type="'pending' | 'streaming' | 'done'" default="'done'">
+  Current chat status for showing loading indicators.
+</ParamField>
+
+<ParamField path="shouldAutoScroll" type="boolean" default="true">
+  Whether to automatically scroll to the bottom when new messages arrive.
+</ParamField>
+
+<ParamField path="shouldScrollToBottom" type="boolean" default="true">
+  Whether to show a "scroll to bottom" button when scrolled up.
+</ParamField>
+
+<ParamField path="autoScrollButton" type="ButtonProps">
+  Configuration for the auto-scroll button.
+</ParamField>
+
+<ParamField path="userMessage" type="object">
+  Custom styling configuration for user messages.
+</ParamField>
+
+<ParamField path="assistantMessage" type="object">
+  Custom styling configuration for assistant messages.
+</ParamField>
+
+<ParamField path="compact" type="boolean" default="false">
+  Enable compact mode with reduced spacing.
+</ParamField>
+
+<ParamField path="spacingOffset" type="number" default="0">
+  Additional spacing offset from the bottom (useful when combined with sticky prompt).
+</ParamField>
+
+## Message interface
+
+```typescript
+interface UIMessage {
+  id: string
+  role: 'user' | 'assistant' | 'system'
+  content: string
+  metadata?: Record<string, any>
+}
+```
+
+## With Vercel AI SDK
+
+```vue
+<template>
+  <div>
+    <UChatMessages
+      :messages="messages"
+      :status="status"
+    />
+    <UChatPrompt
+      v-model="input"
+      :loading="status === 'pending'"
+      @submit="handleSubmit"
+    />
+  </div>
+</template>
+
+<script setup lang="ts">
+import { useChat } from 'ai/vue'
+
+const { messages, input, status, handleSubmit } = useChat({
+  api: '/api/chat'
+})
+</script>
+```
+
+## Custom message styling
+
+```vue
+<template>
+  <UChatMessages
+    :messages="messages"
+    :user-message="{
+      variant: 'solid',
+      color: 'primary'
+    }"
+    :assistant-message="{
+      variant: 'soft',
+      color: 'neutral'
+    }"
+  />
+</template>
+```
+
+## Slots
+
+<ParamField path="message" type="slot">
+  Customize the entire message rendering.
+</ParamField>
+
+<ParamField path="user-message" type="slot">
+  Customize user messages only.
+</ParamField>
+
+<ParamField path="assistant-message" type="slot">
+  Customize assistant messages only.
+</ParamField>
+
+<ParamField path="message-actions" type="slot">
+  Add action buttons to messages (copy, regenerate, etc.).
+</ParamField>
+
+## Related
+
+- [ChatPrompt](/components/chat-prompt)
+- [Editor](/components/editor)

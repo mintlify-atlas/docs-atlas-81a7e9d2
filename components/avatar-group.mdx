@@ -1,0 +1,169 @@
+---
+title: Avatar Group
+description: Display a collection of avatars with overflow handling.
+---
+
+## Usage
+
+The AvatarGroup component displays multiple avatars in a stack with automatic overflow handling.
+
+```vue
+<template>
+  <UAvatarGroup>
+    <UAvatar src="/avatar1.jpg" alt="John Doe" />
+    <UAvatar src="/avatar2.jpg" alt="Jane Smith" />
+    <UAvatar src="/avatar3.jpg" alt="Bob Johnson" />
+  </UAvatarGroup>
+</template>
+```
+
+## Props
+
+<ParamField path="as" type="any" default="'div'">
+  The element or component this component should render as.
+</ParamField>
+
+<ParamField path="size" type="'3xs' | '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'" default="'md'">
+  The size of all avatars in the group. This size is inherited by all child Avatar components.
+</ParamField>
+
+<ParamField path="max" type="number | string">
+  The maximum number of avatars to display. Additional avatars are hidden and their count is shown in a "+N" avatar.
+</ParamField>
+
+<ParamField path="class" type="any">
+  Additional CSS classes to apply.
+</ParamField>
+
+<ParamField path="ui" type="object">
+  UI customization object for styling avatar group slots (root, base).
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="{}">
+  The avatar components to display in the group.
+</ParamField>
+
+## Examples
+
+### Basic Group
+
+```vue
+<template>
+  <UAvatarGroup>
+    <UAvatar src="https://i.pravatar.cc/150?img=1" alt="Jane Cooper" />
+    <UAvatar src="https://i.pravatar.cc/150?img=2" alt="John Doe" />
+    <UAvatar src="https://i.pravatar.cc/150?img=3" alt="Bob Smith" />
+  </UAvatarGroup>
+</template>
+```
+
+### Size Control
+
+The group's size prop is inherited by all child avatars:
+
+```vue
+<template>
+  <UAvatarGroup size="lg">
+    <UAvatar src="/avatar1.jpg" alt="User 1" />
+    <UAvatar src="/avatar2.jpg" alt="User 2" />
+    <UAvatar src="/avatar3.jpg" alt="User 3" />
+  </UAvatarGroup>
+</template>
+```
+
+### Max Count with Overflow
+
+Limit the number of visible avatars and display the overflow count:
+
+```vue
+<template>
+  <UAvatarGroup :max="3">
+    <UAvatar src="/avatar1.jpg" alt="User 1" />
+    <UAvatar src="/avatar2.jpg" alt="User 2" />
+    <UAvatar src="/avatar3.jpg" alt="User 3" />
+    <UAvatar src="/avatar4.jpg" alt="User 4" />
+    <UAvatar src="/avatar5.jpg" alt="User 5" />
+    <!-- Only first 3 avatars shown, "+2" displayed -->
+  </UAvatarGroup>
+</template>
+```
+
+### Different Sizes
+
+```vue
+<template>
+  <div class="space-y-4">
+    <UAvatarGroup size="xs">
+      <UAvatar src="/avatar1.jpg" alt="User 1" />
+      <UAvatar src="/avatar2.jpg" alt="User 2" />
+      <UAvatar src="/avatar3.jpg" alt="User 3" />
+    </UAvatarGroup>
+    
+    <UAvatarGroup size="md">
+      <UAvatar src="/avatar1.jpg" alt="User 1" />
+      <UAvatar src="/avatar2.jpg" alt="User 2" />
+      <UAvatar src="/avatar3.jpg" alt="User 3" />
+    </UAvatarGroup>
+    
+    <UAvatarGroup size="xl">
+      <UAvatar src="/avatar1.jpg" alt="User 1" />
+      <UAvatar src="/avatar2.jpg" alt="User 2" />
+      <UAvatar src="/avatar3.jpg" alt="User 3" />
+    </UAvatarGroup>
+  </div>
+</template>
+```
+
+### With Fallbacks
+
+```vue
+<template>
+  <UAvatarGroup :max="4">
+    <UAvatar src="/avatar1.jpg" alt="John Doe" />
+    <UAvatar alt="Jane Smith" />
+    <UAvatar icon="i-heroicons-user" />
+    <UAvatar text="AB" />
+    <UAvatar src="/avatar5.jpg" alt="User 5" />
+    <!-- Shows 4 avatars and "+1" -->
+  </UAvatarGroup>
+</template>
+```
+
+### Dynamic List
+
+```vue
+<script setup>
+const users = [
+  { id: 1, name: 'John Doe', avatar: '/avatar1.jpg' },
+  { id: 2, name: 'Jane Smith', avatar: '/avatar2.jpg' },
+  { id: 3, name: 'Bob Johnson', avatar: '/avatar3.jpg' },
+  { id: 4, name: 'Alice Brown', avatar: '/avatar4.jpg' },
+  { id: 5, name: 'Charlie Wilson', avatar: '/avatar5.jpg' }
+]
+</script>
+
+<template>
+  <UAvatarGroup :max="3">
+    <UAvatar 
+      v-for="user in users" 
+      :key="user.id"
+      :src="user.avatar" 
+      :alt="user.name" 
+    />
+  </UAvatarGroup>
+</template>
+```
+
+## Behavior
+
+- Avatars are displayed in reverse order (last avatar on top) for proper z-index stacking
+- When `max` is set, only the first N avatars are shown
+- Hidden avatars are counted and displayed in a "+N" avatar
+- The `size` prop is automatically provided to all child Avatar components via context
+- Conditional avatars (with `v-if`) are properly filtered out
+
+## Styling
+
+The avatar group applies overlapping styles to create a stacked effect. The overlap amount is automatically adjusted based on the size.

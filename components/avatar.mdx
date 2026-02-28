@@ -1,0 +1,187 @@
+---
+title: Avatar
+description: Display user profile images with automatic fallbacks.
+---
+
+## Usage
+
+The Avatar component displays user profile images with automatic fallback to initials or icons when images fail to load.
+
+```vue
+<template>
+  <UAvatar src="/avatar.jpg" alt="John Doe" />
+</template>
+```
+
+## Props
+
+<ParamField path="as" type="any | { root?: any, img?: any }" default="'span'">
+  The element or component this component should render as. Can be a string/component for the root, or an object with `root` and `img` properties to customize both elements.
+</ParamField>
+
+<ParamField path="src" type="string">
+  The source URL of the avatar image.
+</ParamField>
+
+<ParamField path="alt" type="string">
+  Alternative text for the image. Also used to generate fallback initials.
+</ParamField>
+
+<ParamField path="icon" type="string">
+  Icon name to display as fallback instead of initials. Supports any Iconify icon.
+</ParamField>
+
+<ParamField path="text" type="string">
+  Custom text to display as fallback. Overrides the initials generated from `alt`.
+</ParamField>
+
+<ParamField path="size" type="'3xs' | '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'" default="'md'">
+  The size of the avatar.
+</ParamField>
+
+<ParamField path="chip" type="boolean | ChipProps">
+  Display a chip (notification badge) on the avatar. Pass `true` for default styling or an object with ChipProps for customization.
+</ParamField>
+
+<ParamField path="class" type="any">
+  Additional CSS classes to apply.
+</ParamField>
+
+<ParamField path="style" type="any">
+  Inline styles to apply.
+</ParamField>
+
+<ParamField path="ui" type="object">
+  UI customization object for styling avatar slots (root, image, icon, fallback).
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="{}">
+  Custom content to display inside the avatar. Overrides the default image/icon/text fallback behavior.
+</ParamField>
+
+## Examples
+
+### Basic Avatar
+
+```vue
+<template>
+  <UAvatar src="https://i.pravatar.cc/150?img=1" alt="Jane Cooper" />
+</template>
+```
+
+### Sizes
+
+```vue
+<template>
+  <div class="flex items-center gap-2">
+    <UAvatar size="3xs" src="/avatar.jpg" alt="User" />
+    <UAvatar size="2xs" src="/avatar.jpg" alt="User" />
+    <UAvatar size="xs" src="/avatar.jpg" alt="User" />
+    <UAvatar size="sm" src="/avatar.jpg" alt="User" />
+    <UAvatar size="md" src="/avatar.jpg" alt="User" />
+    <UAvatar size="lg" src="/avatar.jpg" alt="User" />
+    <UAvatar size="xl" src="/avatar.jpg" alt="User" />
+    <UAvatar size="2xl" src="/avatar.jpg" alt="User" />
+    <UAvatar size="3xl" src="/avatar.jpg" alt="User" />
+  </div>
+</template>
+```
+
+### Fallback to Initials
+
+When an image fails to load or is not provided, the avatar displays initials from the `alt` prop:
+
+```vue
+<template>
+  <UAvatar alt="John Doe" />
+  <!-- Displays "JD" -->
+</template>
+```
+
+### Custom Fallback Text
+
+```vue
+<template>
+  <UAvatar text="AB" />
+</template>
+```
+
+### Icon Fallback
+
+```vue
+<template>
+  <UAvatar icon="i-heroicons-user" />
+</template>
+```
+
+### With Chip (Status Badge)
+
+```vue
+<template>
+  <UAvatar 
+    src="/avatar.jpg" 
+    alt="Jane Cooper" 
+    :chip="true" 
+  />
+</template>
+```
+
+### Custom Chip
+
+```vue
+<template>
+  <UAvatar 
+    src="/avatar.jpg" 
+    alt="Jane Cooper" 
+    :chip="{ color: 'green', position: 'bottom-right' }" 
+  />
+</template>
+```
+
+### Custom Content
+
+```vue
+<template>
+  <UAvatar>
+    <img src="/custom-avatar.svg" alt="Custom" />
+  </UAvatar>
+</template>
+```
+
+### As Different Elements
+
+```vue
+<template>
+  <!-- Render as a div -->
+  <UAvatar as="div" src="/avatar.jpg" alt="User" />
+  
+  <!-- Customize both root and img elements -->
+  <UAvatar 
+    :as="{ root: 'div', img: 'img' }" 
+    src="/avatar.jpg" 
+    alt="User" 
+  />
+</template>
+```
+
+## Avatar Group Integration
+
+When used inside an `AvatarGroup`, the avatar automatically inherits the group's size:
+
+```vue
+<template>
+  <UAvatarGroup size="lg">
+    <UAvatar src="/avatar1.jpg" alt="User 1" />
+    <UAvatar src="/avatar2.jpg" alt="User 2" />
+    <UAvatar src="/avatar3.jpg" alt="User 3" />
+  </UAvatarGroup>
+</template>
+```
+
+## Notes
+
+- The avatar automatically generates initials from the `alt` prop by taking the first character of each word (up to 2 characters)
+- Image loading errors are handled gracefully with automatic fallback to initials or icons
+- Size dimensions (in pixels): 3xs=16, 2xs=20, xs=24, sm=28, md=32, lg=36, xl=40, 2xl=44, 3xl=48

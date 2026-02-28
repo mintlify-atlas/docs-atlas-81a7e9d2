@@ -1,0 +1,276 @@
+---
+title: 'Drawer'
+description: 'A slide-in overlay panel from screen edges, powered by vaul-vue'
+icon: 'sidebar'
+---
+
+## Overview
+
+The Drawer component provides a slide-in panel from screen edges, ideal for navigation menus, filters, or additional content. Built on vaul-vue for smooth mobile-friendly interactions.
+
+## Basic Usage
+
+```vue
+<template>
+  <UDrawer v-model:open="isOpen" title="Drawer Title" description="Drawer description">
+    <template #default>
+      <UButton>Open Drawer</UButton>
+    </template>
+    <template #body>
+      <p>Drawer content goes here</p>
+    </template>
+  </UDrawer>
+</template>
+
+<script setup>
+const isOpen = ref(false)
+</script>
+```
+
+## Props
+
+<ParamField path="title" type="string">
+  The title of the drawer displayed in the header.
+</ParamField>
+
+<ParamField path="description" type="string">
+  The description text displayed below the title.
+</ParamField>
+
+<ParamField path="direction" type="'top' | 'bottom' | 'left' | 'right'" default="'bottom'">
+  The direction from which the drawer slides in.
+</ParamField>
+
+<ParamField path="inset" type="boolean" default="false">
+  Whether to inset the drawer from the edges.
+</ParamField>
+
+<ParamField path="overlay" type="boolean" default="true">
+  Render an overlay behind the drawer.
+</ParamField>
+
+<ParamField path="handle" type="boolean" default="true">
+  Render a drag handle on the drawer.
+</ParamField>
+
+<ParamField path="portal" type="boolean | string | HTMLElement" default="true">
+  Render the drawer in a portal.
+</ParamField>
+
+<ParamField path="nested" type="boolean" default="false">
+  Whether the drawer is nested in another drawer.
+</ParamField>
+
+<ParamField path="dismissible" type="boolean" default="true">
+  When `false`, the drawer will not close when clicking outside or pressing escape.
+</ParamField>
+
+<ParamField path="open" type="boolean">
+  Controls the open state of the drawer (v-model:open).
+</ParamField>
+
+<ParamField path="defaultOpen" type="boolean">
+  The default open state when uncontrolled.
+</ParamField>
+
+<ParamField path="modal" type="boolean" default="true">
+  When `true`, interaction outside the drawer will be disabled.
+</ParamField>
+
+<ParamField path="shouldScaleBackground" type="boolean">
+  Whether to scale the background when the drawer opens.
+</ParamField>
+
+<ParamField path="snapPoints" type="(number | string)[]">
+  Array of snap points that the drawer can snap to.
+</ParamField>
+
+<ParamField path="activeSnapPoint" type="number | string | null">
+  The currently active snap point.
+</ParamField>
+
+<ParamField path="closeThreshold" type="number">
+  The threshold for closing the drawer on swipe.
+</ParamField>
+
+<ParamField path="scrollLockTimeout" type="number">
+  Timeout for scroll lock in milliseconds.
+</ParamField>
+
+<ParamField path="fixed" type="boolean">
+  Whether the drawer uses fixed positioning.
+</ParamField>
+
+<ParamField path="handleOnly" type="boolean">
+  When `true`, only the handle can be used to drag the drawer.
+</ParamField>
+
+<ParamField path="noBodyStyles" type="boolean">
+  Prevent default body styles from being applied.
+</ParamField>
+
+<ParamField path="preventScrollRestoration" type="boolean">
+  Prevent scroll restoration when drawer closes.
+</ParamField>
+
+<ParamField path="as" type="any" default="'div'">
+  The element or component this component should render as.
+</ParamField>
+
+<ParamField path="content" type="DialogContentProps">
+  Additional props passed to the drawer content element.
+</ParamField>
+
+<ParamField path="class" type="any">
+  CSS class for styling the trigger element.
+</ParamField>
+
+<ParamField path="ui" type="object">
+  Theme customization object for component slots.
+</ParamField>
+
+## Events
+
+<ParamField path="update:open" type="(open: boolean) => void">
+  Emitted when the open state changes.
+</ParamField>
+
+<ParamField path="update:activeSnapPoint" type="(snapPoint: number | string | null) => void">
+  Emitted when the active snap point changes.
+</ParamField>
+
+<ParamField path="close:prevent" type="() => void">
+  Emitted when a close attempt is prevented (when `dismissible` is `false`).
+</ParamField>
+
+<ParamField path="drag" type="(event: PointerEvent, percentageDragged: number) => void">
+  Emitted during drag interactions.
+</ParamField>
+
+<ParamField path="release" type="(event: PointerEvent, open: boolean) => void">
+  Emitted when the drawer is released after dragging.
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="{}">
+  The trigger element for opening the drawer.
+</ParamField>
+
+<ParamField path="content" type="{}">
+  Complete control over the drawer content, replacing the default structure.
+</ParamField>
+
+<ParamField path="header" type="{}">
+  Customizes the header section of the drawer.
+</ParamField>
+
+<ParamField path="title" type="{}">
+  Customizes the title text.
+</ParamField>
+
+<ParamField path="description" type="{}">
+  Customizes the description text.
+</ParamField>
+
+<ParamField path="body" type="{}">
+  The main content area of the drawer.
+</ParamField>
+
+<ParamField path="footer" type="{}">
+  Footer section for actions or additional content.
+</ParamField>
+
+## Examples
+
+### Drawer from Different Directions
+
+```vue
+<template>
+  <UDrawer direction="left" v-model:open="isOpen" title="Left Drawer">
+    <template #default>
+      <UButton>Open from Left</UButton>
+    </template>
+    <template #body>
+      <p>This drawer slides in from the left.</p>
+    </template>
+  </UDrawer>
+</template>
+```
+
+### With Snap Points
+
+```vue
+<template>
+  <UDrawer 
+    v-model:open="isOpen" 
+    :snap-points="[0.5, 1]"
+    v-model:activeSnapPoint="activeSnap"
+    title="Snappable Drawer"
+  >
+    <template #default>
+      <UButton>Open Snappable Drawer</UButton>
+    </template>
+    <template #body>
+      <p>This drawer can snap to 50% or 100% height.</p>
+    </template>
+  </UDrawer>
+</template>
+
+<script setup>
+const isOpen = ref(false)
+const activeSnap = ref(0.5)
+</script>
+```
+
+### Nested Drawers
+
+```vue
+<template>
+  <UDrawer v-model:open="outerOpen" title="Outer Drawer">
+    <template #default>
+      <UButton>Open Outer Drawer</UButton>
+    </template>
+    <template #body>
+      <p>Outer drawer content</p>
+      <UDrawer nested v-model:open="innerOpen" title="Inner Drawer">
+        <template #default>
+          <UButton>Open Inner Drawer</UButton>
+        </template>
+        <template #body>
+          <p>Nested drawer content</p>
+        </template>
+      </UDrawer>
+    </template>
+  </UDrawer>
+</template>
+
+<script setup>
+const outerOpen = ref(false)
+const innerOpen = ref(false)
+</script>
+```
+
+### Without Handle
+
+```vue
+<template>
+  <UDrawer v-model:open="isOpen" :handle="false" title="No Handle">
+    <template #default>
+      <UButton>Open Drawer</UButton>
+    </template>
+    <template #body>
+      <p>This drawer has no drag handle.</p>
+    </template>
+    <template #footer>
+      <UButton @click="isOpen = false">Close</UButton>
+    </template>
+  </UDrawer>
+</template>
+```
+
+## Related Components
+
+- [Modal](/components/modal) - For centered dialog overlays
+- [Sheet](/components/sheet) - Alternative drawer implementation
+- [Drawer](https://github.com/unovue/vaul-vue) - vaul-vue documentation

@@ -1,0 +1,355 @@
+---
+title: 'Input'
+description: 'A versatile text input component with support for icons, avatars, validation, and various types.'
+---
+
+## Overview
+
+The Input component provides a flexible text input with support for leading/trailing icons, avatars, different variants, sizes, and seamless integration with Form components.
+
+## Basic Usage
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const value = ref('')
+</script>
+
+<template>
+  <UInput v-model="value" placeholder="Enter text..." />
+</template>
+```
+
+## Input Types
+
+```vue
+<template>
+  <UInput type="text" placeholder="Text" />
+  <UInput type="email" placeholder="Email" />
+  <UInput type="password" placeholder="Password" />
+  <UInput type="number" placeholder="Number" />
+  <UInput type="tel" placeholder="Phone" />
+  <UInput type="url" placeholder="URL" />
+  <UInput type="search" placeholder="Search" />
+</template>
+```
+
+## With Icons
+
+```vue
+<template>
+  <!-- Leading icon -->
+  <UInput
+    leading-icon="i-heroicons-magnifying-glass"
+    placeholder="Search..."
+  />
+  
+  <!-- Trailing icon -->
+  <UInput
+    trailing-icon="i-heroicons-check"
+    placeholder="Username"
+  />
+  
+  <!-- Both icons -->
+  <UInput
+    leading-icon="i-heroicons-envelope"
+    trailing-icon="i-heroicons-check-circle"
+    placeholder="Email"
+  />
+</template>
+```
+
+## With Avatar
+
+```vue
+<template>
+  <UInput
+    :avatar="{ src: 'https://i.pravatar.cc/150?img=1' }"
+    placeholder="Enter your name"
+  />
+</template>
+```
+
+## Custom Leading/Trailing Content
+
+```vue
+<template>
+  <UInput placeholder="Amount">
+    <template #leading>
+      <span class="text-gray-500">$</span>
+    </template>
+  </UInput>
+  
+  <UInput placeholder="Website">
+    <template #trailing>
+      <span class="text-gray-500">.com</span>
+    </template>
+  </UInput>
+</template>
+```
+
+## Colors
+
+```vue
+<template>
+  <UInput color="primary" placeholder="Primary" />
+  <UInput color="secondary" placeholder="Secondary" />
+  <UInput color="success" placeholder="Success" />
+  <UInput color="warning" placeholder="Warning" />
+  <UInput color="error" placeholder="Error" />
+  <UInput color="neutral" placeholder="Neutral" />
+</template>
+```
+
+## Variants
+
+```vue
+<template>
+  <UInput variant="outline" placeholder="Outline" />
+  <UInput variant="soft" placeholder="Soft" />
+  <UInput variant="ghost" placeholder="Ghost" />
+  <UInput variant="none" placeholder="None" />
+</template>
+```
+
+## Sizes
+
+```vue
+<template>
+  <UInput size="xs" placeholder="Extra Small" />
+  <UInput size="sm" placeholder="Small" />
+  <UInput size="md" placeholder="Medium" />
+  <UInput size="lg" placeholder="Large" />
+  <UInput size="xl" placeholder="Extra Large" />
+</template>
+```
+
+## States
+
+```vue
+<template>
+  <!-- Disabled -->
+  <UInput disabled placeholder="Disabled" />
+  
+  <!-- Required -->
+  <UInput required placeholder="Required field" />
+  
+  <!-- Highlighted -->
+  <UInput highlight placeholder="Highlighted" />
+  
+  <!-- Loading -->
+  <UInput loading placeholder="Loading..." />
+</template>
+```
+
+## Model Modifiers
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const trimmed = ref('')
+const number = ref(0)
+const nullable = ref(null)
+</script>
+
+<template>
+  <!-- Trim whitespace -->
+  <UInput v-model.trim="trimmed" />
+  
+  <!-- Convert to number -->
+  <UInput v-model.number="number" type="number" />
+  
+  <!-- Nullable (empty = null) -->
+  <UInput v-model.nullable="nullable" />
+  
+  <!-- Optional (empty = undefined) -->
+  <UInput v-model.optional="optional" />
+  
+  <!-- Lazy (update on change, not input) -->
+  <UInput v-model.lazy="lazy" />
+</template>
+```
+
+## Autofocus
+
+```vue
+<template>
+  <!-- Immediate autofocus -->
+  <UInput autofocus placeholder="Focused on mount" />
+  
+  <!-- Delayed autofocus -->
+  <UInput autofocus :autofocus-delay="500" placeholder="Focused after 500ms" />
+</template>
+```
+
+## With Form
+
+```vue
+<script setup lang="ts">
+import { z } from 'zod'
+import { ref } from 'vue'
+
+const schema = z.object({
+  email: z.string().email('Invalid email'),
+  username: z.string().min(3, 'Must be at least 3 characters')
+})
+
+const state = ref({
+  email: '',
+  username: ''
+})
+</script>
+
+<template>
+  <UForm :schema="schema" :state="state">
+    <UFormField label="Email" name="email">
+      <UInput
+        v-model="state.email"
+        type="email"
+        leading-icon="i-heroicons-envelope"
+      />
+    </UFormField>
+    
+    <UFormField label="Username" name="username">
+      <UInput
+        v-model="state.username"
+        leading-icon="i-heroicons-user"
+      />
+    </UFormField>
+  </UForm>
+</template>
+```
+
+## Props
+
+<ParamField path="modelValue" type="string | number | null">
+  The controlled value. Can be bound with v-model.
+</ParamField>
+
+<ParamField path="defaultValue" type="string | number | null">
+  The default value when initially rendered.
+</ParamField>
+
+<ParamField path="type" type="string" default="text">
+  The HTML input type (text, email, password, number, tel, url, search, etc.).
+</ParamField>
+
+<ParamField path="placeholder" type="string">
+  Placeholder text when the input is empty.
+</ParamField>
+
+<ParamField path="name" type="string">
+  The name attribute for the input.
+</ParamField>
+
+<ParamField path="id" type="string">
+  The id attribute for the input.
+</ParamField>
+
+<ParamField path="color" type="'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'neutral'" default="primary">
+  Color variant of the input.
+</ParamField>
+
+<ParamField path="variant" type="'outline' | 'soft' | 'ghost' | 'none'" default="outline">
+  Visual variant of the input.
+</ParamField>
+
+<ParamField path="size" type="'xs' | 'sm' | 'md' | 'lg' | 'xl'" default="md">
+  Size variant of the input.
+</ParamField>
+
+<ParamField path="leadingIcon" type="string">
+  Icon name to display at the start of the input.
+</ParamField>
+
+<ParamField path="trailingIcon" type="string">
+  Icon name to display at the end of the input.
+</ParamField>
+
+<ParamField path="avatar" type="AvatarProps">
+  Avatar configuration to display at the start of the input.
+</ParamField>
+
+<ParamField path="loading" type="boolean">
+  Show loading indicator.
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  Disable the input.
+</ParamField>
+
+<ParamField path="required" type="boolean">
+  Mark the input as required.
+</ParamField>
+
+<ParamField path="highlight" type="boolean">
+  Highlight the ring color like a focus state.
+</ParamField>
+
+<ParamField path="fixed" type="boolean">
+  Keep the mobile text size on all breakpoints.
+</ParamField>
+
+<ParamField path="autofocus" type="boolean">
+  Automatically focus the input on mount.
+</ParamField>
+
+<ParamField path="autofocusDelay" type="number" default="0">
+  Delay in milliseconds before autofocus.
+</ParamField>
+
+<ParamField path="autocomplete" type="string" default="off">
+  HTML autocomplete attribute.
+</ParamField>
+
+<ParamField path="modelModifiers" type="{ trim?: boolean, number?: boolean, lazy?: boolean, nullable?: boolean, optional?: boolean }">
+  Model modifiers for value transformation.
+</ParamField>
+
+<ParamField path="as" type="any" default="div">
+  The element or component this component should render as.
+</ParamField>
+
+<ParamField path="class" type="any">
+  Additional CSS classes.
+</ParamField>
+
+<ParamField path="ui" type="object">
+  UI customization object for styling slots.
+</ParamField>
+
+## Events
+
+<ParamField path="@update:modelValue" type="(value: string | number | null) => void">
+  Emitted when the input value changes.
+</ParamField>
+
+<ParamField path="@blur" type="(event: FocusEvent) => void">
+  Emitted when the input loses focus.
+</ParamField>
+
+<ParamField path="@change" type="(event: Event) => void">
+  Emitted when the input value is committed.
+</ParamField>
+
+## Slots
+
+<ParamField path="leading" type="{ ui: object }">
+  Custom content for the leading slot.
+</ParamField>
+
+<ParamField path="trailing" type="{ ui: object }">
+  Custom content for the trailing slot.
+</ParamField>
+
+<ParamField path="default" type="{ ui: object }">
+  Default slot (rarely used, input is the main element).
+</ParamField>
+
+## Exposed
+
+<ParamField path="inputRef" type="Ref<HTMLInputElement>">
+  Reference to the underlying input element.
+</ParamField>

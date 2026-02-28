@@ -1,0 +1,389 @@
+---
+title: 'Server-Side Rendering'
+description: 'Use Nuxt UI in server-side rendered applications'
+icon: 'server'
+---
+
+## Overview
+
+Nuxt UI is built with server-side rendering (SSR) in mind and works seamlessly with Nuxt's SSR capabilities. All components are designed to render correctly on both server and client.
+
+## SSR Compatibility
+
+Nuxt UI components are fully compatible with SSR:
+
+- Components render on the server without hydration mismatches
+- Styles are extracted and delivered with the initial HTML
+- Icons are rendered server-side via `@nuxt/icon`
+- Color mode preferences are respected without flash
+- Localization works on both server and client
+
+## Color Mode SSR
+
+The color mode module handles SSR gracefully:
+
+```vue
+<script setup>
+const colorMode = useColorMode()
+
+// Safe to use in SSR
+const isDark = computed(() => colorMode.value === 'dark')
+</script>
+```
+
+### Preventing Flash
+
+The `@nuxtjs/color-mode` module prevents the "flash of incorrect theme" by:
+
+1. Injecting a script in the HTML head
+2. Reading preference from `localStorage` before render
+3. Applying the correct class before hydration
+
+<Note>
+  The initial server render uses the `fallback` mode (default: `'light'`). The correct mode is applied immediately during client-side hydration.
+</Note>
+
+## Icons in SSR
+
+The `@nuxt/icon` module handles server-side icon rendering:
+
+```vue
+<template>
+  <!-- Renders correctly on both server and client -->
+  <UIcon name="i-heroicons-check" />
+</template>
+```
+
+Icons are:
+- Rendered as SVG on both server and client
+- Cached for performance
+- Automatically optimized during build
+
+## Client-Only Components
+
+Some features require client-side JavaScript. Use Nuxt's `<ClientOnly>` wrapper:
+
+```vue
+<template>
+  <div>
+    <!-- Server-rendered content -->
+    <UCard title="Welcome">
+      <p>This renders on the server</p>
+    </UCard>
+    
+    <!-- Client-only component -->
+    <ClientOnly>
+      <UModal v-model="isOpen">
+        <!-- Modals only render on client -->
+      </UModal>
+    </ClientOnly>
+  </div>
+</template>
+```
+
+### When to Use ClientOnly
+
+Use `<ClientOnly>` for:
+
+- Components using browser APIs (`window`, `document`, etc.)
+- Third-party libraries without SSR support
+- Features that rely on client state
+
+<CodeGroup>
+```vue Client-Only Modal
+<ClientOnly>
+  <UModal v-model="isOpen">
+    <p>Modal content</p>
+  </UModal>
+</ClientOnly>
+```
+
+```vue Client-Only Command Palette
+<ClientOnly>
+  <UCommandPalette v-model="query" :groups="groups" />
+</ClientOnly>
+```
+</CodeGroup>
+
+## Composables in SSR
+
+Nuxt UI composables work in SSR:
+
+### useToast
+
+Toasts are client-only but the composable is SSR-safe:
+
+```vue
+<script setup>
+const toast = useToast()
+
+// Safe to call in SSR (no-op on server)
+function showNotification() {
+  toast.add({
+    title: 'Success',
+    description: 'Operation completed'
+  })
+}
+</script>
+```
+
+### useLocale
+
+Locale system works on both server and client:
+
+```vue
+<script setup>
+const { t } = useLocale()
+
+// Translations work in SSR
+const closeLabel = t('modal.close')
+</script>
+```
+
+### useColorMode
+
+Color mode composable is SSR-safe:
+
+```vue
+<script setup>
+const colorMode = useColorMode()
+
+// Returns fallback value on server
+const preference = colorMode.preference
+</script>
+```
+
+## Form Handling in SSR
+
+Forms work correctly in SSR:
+
+```vue
+<script setup>
+import { z } from 'zod'
+
+const schema = z.object({
+  email: z.string().email()
+})
+
+const state = reactive({
+  email: ''
+})
+
+// Form submission only happens on client
+async function onSubmit(event) {
+  console.log('Submit:', event.data)
+}
+</script>
+
+<template>
+  <!-- Form renders on server, submission on client -->
+  <UForm :schema="schema" :state="state" @submit="onSubmit">
+    <UFormField name="email" label="Email">
+      <UInput v-model="state.email" />
+    </UFormField>
+    <UButton type="submit">Subscribe</UButton>
+  </UForm>
+</template>
+```
+
+## Tailwind CSS in SSR
+
+Tailwind CSS v4 (used by Nuxt UI) works seamlessly with SSR:
+
+- Styles are generated at build time
+- CSS is extracted and included in the HTML
+- No Flash of Unstyled Content (FOUC)
+
+```vue
+<template>
+  <!-- Styles apply immediately on server render -->
+  <div class="bg-elevated text-foreground p-4 rounded-lg">
+    Server-rendered styled content
+  </div>
+</template>
+```
+
+## Portal Components
+
+Components using Teleport/Portal are client-only:
+
+```vue
+<template>
+  <div>
+    <!-- These components use portals internally -->
+    <ClientOnly>
+      <UModal v-model="isOpen" />
+      <UDrawer v-model="isDrawerOpen" />
+      <USlideover v-model="isSlideoverOpen" />
+    </ClientOnly>
+  </div>
+</template>
+```
+
+<Warning>
+  Components that render in portals (Modal, Drawer, Slideover, Toast, etc.) should be wrapped in `<ClientOnly>` to prevent hydration mismatches.
+</Warning>
+
+## Static Site Generation
+
+Nuxt UI works with static site generation (SSG):
+
+```typescript nuxt.config.ts
+export default defineNuxtConfig({
+  modules: ['@nuxt/ui'],
+  
+  // Enable SSG
+  ssr: true,
+  
+  nitro: {
+    preset: 'static'
+  }
+})
+```
+
+All components are pre-rendered at build time:
+
+```bash
+npm run generate
+```
+
+## Hybrid Rendering
+
+Use route rules for hybrid rendering:
+
+```typescript nuxt.config.ts
+export default defineNuxtConfig({
+  modules: ['@nuxt/ui'],
+  
+  routeRules: {
+    // Static pages
+    '/': { prerender: true },
+    '/about': { prerender: true },
+    
+    // Server-rendered pages
+    '/dashboard/**': { ssr: true },
+    
+    // Client-only pages
+    '/admin/**': { ssr: false }
+  }
+})
+```
+
+## Performance Optimization
+
+### Code Splitting
+
+Nuxt automatically code-splits components:
+
+```vue
+<script setup>
+// Lazy-load heavy components
+const UEditor = defineAsyncComponent(() =>
+  import('@nuxt/ui/components/Editor.vue')
+)
+</script>
+```
+
+### Tree Shaking
+
+Only used components are included in the bundle:
+
+```typescript nuxt.config.ts
+export default defineNuxtConfig({
+  modules: ['@nuxt/ui'],
+  
+  ui: {
+    experimental: {
+      // Enable component detection for tree-shaking
+      componentDetection: true
+    }
+  }
+})
+```
+
+## Hydration Errors
+
+### Common Issues
+
+1. **Server/client content mismatch**
+   ```vue
+   <!-- ❌ Don't use Date.now() directly -->
+   <div>{{ Date.now() }}</div>
+   
+   <!-- ✅ Use onMounted or ClientOnly -->
+   <ClientOnly>
+     <div>{{ Date.now() }}</div>
+   </ClientOnly>
+   ```
+
+2. **Browser-only APIs**
+   ```vue
+   <script setup>
+   // ❌ Don't use window during setup
+   const width = window.innerWidth
+   
+   // ✅ Use onMounted
+   const width = ref(0)
+   onMounted(() => {
+     width.value = window.innerWidth
+   })
+   </script>
+   ```
+
+3. **Random values**
+   ```vue
+   <!-- ❌ Server and client generate different IDs -->
+   <div :id="Math.random()">Content</div>
+   
+   <!-- ✅ Use useId() composable -->
+   <div :id="useId()">Content</div>
+   ```
+
+## Best Practices
+
+<Steps>
+  <Step title="Wrap portals in ClientOnly">
+    Always wrap Modal, Drawer, Slideover, and Toast in `<ClientOnly>`.
+  </Step>
+  
+  <Step title="Use onMounted for browser APIs">
+    Access `window`, `document`, etc. only in `onMounted` hooks.
+  </Step>
+  
+  <Step title="Avoid dynamic values in SSR">
+    Don't use `Date.now()`, `Math.random()`, or other non-deterministic values in templates.
+  </Step>
+  
+  <Step title="Test SSR builds">
+    Run `npm run build && npm run preview` to test SSR behavior.
+  </Step>
+</Steps>
+
+## Debugging SSR Issues
+
+Enable SSR debugging:
+
+```typescript nuxt.config.ts
+export default defineNuxtConfig({
+  debug: true,
+  
+  vite: {
+    logLevel: 'info'
+  }
+})
+```
+
+Check for hydration mismatches in browser console:
+
+```
+Hydration node mismatch:
+- rendered on server: <div>
+- expected on client: <span>
+```
+
+## Learn More
+
+- [Nuxt SSR Documentation](https://nuxt.com/docs/guide/concepts/rendering)
+- [Client-Only Components](https://nuxt.com/docs/api/components/client-only)
+- [useId Composable](https://nuxt.com/docs/api/composables/use-id)
+- [Hybrid Rendering](https://nuxt.com/docs/guide/concepts/rendering#hybrid-rendering)

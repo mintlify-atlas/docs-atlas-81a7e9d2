@@ -1,0 +1,368 @@
+---
+title: "Vue Installation"
+description: "Complete guide to installing and configuring Nuxt UI in your standalone Vue application"
+---
+
+# Vue Installation
+
+Install and configure Nuxt UI in your standalone Vue 3 application with Vite.
+
+## Prerequisites
+
+- Node.js `^20.19.0` or `>=22.12.0`
+- Vue `^3.5.0`
+- Vite-based project setup
+
+## Installation
+
+<Steps>
+  <Step title="Install the Package">
+    Install Nuxt UI and Tailwind CSS:
+    
+    <CodeGroup>
+      ```bash npm
+      npm install @nuxt/ui tailwindcss vue-router
+      ```
+      
+      ```bash pnpm
+      pnpm add @nuxt/ui tailwindcss vue-router
+      ```
+      
+      ```bash yarn
+      yarn add @nuxt/ui tailwindcss vue-router
+      ```
+      
+      ```bash bun
+      bun add @nuxt/ui tailwindcss vue-router
+      ```
+    </CodeGroup>
+    
+    <Note>
+      `vue-router` is required for Nuxt UI's Link component functionality.
+    </Note>
+  </Step>
+  
+  <Step title="Add the Vite Plugin">
+    Add the Nuxt UI Vite plugin to your `vite.config.ts`:
+    
+    ```ts vite.config.ts
+    import { defineConfig } from 'vite'
+    import vue from '@vitejs/plugin-vue'
+    import ui from '@nuxt/ui/vite'
+    
+    export default defineConfig({
+      plugins: [
+        vue(),
+        ui()
+      ]
+    })
+    ```
+  </Step>
+  
+  <Step title="Use the Vue Plugin">
+    Register the Nuxt UI Vue plugin in your `main.ts`:
+    
+    ```ts main.ts
+    import { createApp } from 'vue'
+    import { createRouter, createWebHistory } from 'vue-router'
+    import ui from '@nuxt/ui/vue-plugin'
+    import App from './App.vue'
+    
+    const app = createApp(App)
+    
+    const router = createRouter({
+      routes: [],
+      history: createWebHistory()
+    })
+    
+    app.use(router)
+    app.use(ui)
+    
+    app.mount('#app')
+    ```
+  </Step>
+  
+  <Step title="Import CSS">
+    Import Tailwind CSS and Nuxt UI in your main CSS file:
+    
+    ```css assets/main.css
+    @import "tailwindcss";
+    @import "@nuxt/ui";
+    ```
+    
+    Then import this CSS file in your `main.ts`:
+    
+    ```ts main.ts
+    import './assets/main.css'
+    ```
+  </Step>
+</Steps>
+
+## Plugin Configuration
+
+Customize Nuxt UI by passing options to the Vite plugin:
+
+```ts vite.config.ts
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import ui from '@nuxt/ui/vite'
+
+export default defineConfig({
+  plugins: [
+    vue(),
+    ui({
+      // Plugin options
+      prefix: 'U',
+      colorMode: true,
+      theme: {
+        colors: ['primary', 'secondary', 'success', 'info', 'warning', 'error'],
+        transitions: true,
+        defaultVariants: {
+          color: 'primary',
+          size: 'md'
+        }
+      }
+    })
+  ]
+})
+```
+
+## Configuration Options
+
+### prefix
+
+Customize the component prefix (default: `U`).
+
+```ts vite.config.ts
+ui({
+  prefix: 'UI' // Components will be <UIButton>, <UICard>, etc.
+})
+```
+
+### colorMode
+
+Enable or disable color mode integration with `@vueuse/core` (default: `true`).
+
+```ts vite.config.ts
+ui({
+  colorMode: false // Disable dark mode support
+})
+```
+
+<Tip>
+  When enabled, Nuxt UI integrates with VueUse's `useDark` and `useColorMode` composables.
+</Tip>
+
+### theme.colors
+
+Define available color aliases for components (default: `['primary', 'secondary', 'success', 'info', 'warning', 'error']`).
+
+```ts vite.config.ts
+ui({
+  theme: {
+    colors: ['primary', 'secondary', 'custom']
+  }
+})
+```
+
+### theme.transitions
+
+Enable or disable component transitions (default: `true`).
+
+```ts vite.config.ts
+ui({
+  theme: {
+    transitions: false // Disable all transitions
+  }
+})
+```
+
+### theme.defaultVariants
+
+Set default variants for all components.
+
+```ts vite.config.ts
+ui({
+  theme: {
+    defaultVariants: {
+      color: 'secondary', // Default color for all components
+      size: 'lg'          // Default size for all components
+    }
+  }
+})
+```
+
+### theme.prefix
+
+Add a prefix to Tailwind CSS utility classes.
+
+```ts vite.config.ts
+ui({
+  theme: {
+    prefix: 'tw' // Utility classes become tw:text-center, tw:bg-primary, etc.
+  }
+})
+```
+
+### dts
+
+Generate TypeScript declaration files for auto-imported components (default: based on environment).
+
+```ts vite.config.ts
+ui({
+  dts: true // Always generate .d.ts files
+})
+```
+
+### router
+
+Configure router integration mode.
+
+```ts vite.config.ts
+ui({
+  router: true // Use vue-router (default)
+})
+
+ui({
+  router: false // Disable routing, use anchor tags
+})
+
+ui({
+  router: 'inertia' // Use Inertia.js compatibility
+})
+```
+
+### autoImport
+
+Customize `unplugin-auto-import` options.
+
+```ts vite.config.ts
+ui({
+  autoImport: {
+    imports: [
+      // Add custom auto-imports
+    ]
+  }
+})
+```
+
+### components
+
+Customize `unplugin-vue-components` options.
+
+```ts vite.config.ts
+ui({
+  components: {
+    resolvers: [
+      // Add custom component resolvers
+    ]
+  }
+})
+```
+
+### scanPackages
+
+Scan additional packages for Nuxt UI components.
+
+```ts vite.config.ts
+ui({
+  scanPackages: ['my-custom-package']
+})
+```
+
+## Auto-Imports
+
+The Vite plugin automatically imports:
+
+- **Components**: All UI components are auto-imported with your configured prefix
+- **Composables**: Utility composables from Nuxt UI and VueUse
+- **Types**: TypeScript types for components and composables
+
+<Note>
+  Auto-imports are powered by `unplugin-auto-import` and `unplugin-vue-components`, which are included with Nuxt UI.
+</Note>
+
+## Color Mode Integration
+
+When `colorMode: true` (default), Nuxt UI integrates with VueUse's color mode:
+
+```vue
+<script setup>
+import { useDark, useToggle } from '@vueuse/core'
+
+const isDark = useDark()
+const toggleDark = useToggle(isDark)
+</script>
+
+<template>
+  <UButton
+    :icon="isDark ? 'i-heroicons-moon' : 'i-heroicons-sun'"
+    @click="toggleDark()"
+  />
+</template>
+```
+
+## Inertia.js Integration
+
+For Inertia.js applications, use the `router: 'inertia'` option:
+
+```ts vite.config.ts
+ui({
+  router: 'inertia'
+})
+```
+
+Then set up Inertia.js normally:
+
+```ts main.ts
+import { createApp, h } from 'vue'
+import { createInertiaApp } from '@inertiajs/vue3'
+import ui from '@nuxt/ui/vue-plugin'
+
+createInertiaApp({
+  resolve: name => {
+    const pages = import.meta.glob('./Pages/**/*.vue', { eager: true })
+    return pages[`./Pages/${name}.vue`]
+  },
+  setup({ el, App, props, plugin }) {
+    createApp({ render: () => h(App, props) })
+      .use(plugin)
+      .use(ui)
+      .mount(el)
+  },
+})
+```
+
+## TypeScript Support
+
+For full TypeScript support, ensure your `tsconfig.json` includes:
+
+```json tsconfig.json
+{
+  "compilerOptions": {
+    "types": [
+      "@nuxt/ui/vue-plugin"
+    ]
+  }
+}
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Component Library" icon="grid" href="/components">
+    Explore all available components.
+  </Card>
+  
+  <Card title="Theming" icon="paintbrush" href="/theming">
+    Customize component styles and create your design system.
+  </Card>
+  
+  <Card title="Composables" icon="code" href="/composables">
+    Learn about utility composables and hooks.
+  </Card>
+  
+  <Card title="Examples" icon="code-branch" href="/examples">
+    See real-world usage examples.
+  </Card>
+</CardGroup>

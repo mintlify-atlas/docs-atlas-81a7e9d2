@@ -1,0 +1,346 @@
+---
+title: defineShortcuts
+description: Define keyboard shortcuts for your Nuxt UI application with support for modifier keys, chained shortcuts, and input handling.
+---
+
+The `defineShortcuts` composable allows you to register keyboard shortcuts in your application. It supports modifier keys (Meta, Ctrl, Shift, Alt), chained shortcuts, and intelligent input field handling.
+
+## Usage
+
+```vue
+<script setup>
+defineShortcuts({
+  'meta_k': () => {
+    // Open command palette on Cmd+K (Mac) or Ctrl+K (Windows/Linux)
+    console.log('Command palette opened')
+  },
+  'escape': () => {
+    // Close modal on Escape
+    console.log('Modal closed')
+  }
+})
+</script>
+```
+
+## Function Signature
+
+```ts
+function defineShortcuts(
+  config: MaybeRef<ShortcutsConfig>,
+  options?: ShortcutsOptions
+): () => void
+```
+
+### Parameters
+
+<ParamField path="config" type="MaybeRef<ShortcutsConfig>" required>
+  Configuration object mapping keyboard shortcuts to handler functions. Can be a reactive ref.
+</ParamField>
+
+<ParamField path="options" type="ShortcutsOptions">
+  Optional configuration for shortcut behavior.
+
+  <ParamField path="options.chainDelay" type="number" default="800">
+    Delay in milliseconds before chained shortcuts are reset.
+  </ParamField>
+
+  <ParamField path="options.layoutIndependent" type="boolean" default="false">
+    When true, shortcuts use keyboard codes instead of keys, making them independent of keyboard layout (QWERTY, AZERTY, etc.).
+  </ParamField>
+</ParamField>
+
+## ShortcutsConfig
+
+```ts
+interface ShortcutsConfig {
+  [key: string]: ShortcutConfig | Handler | false | null | undefined
+}
+
+interface ShortcutConfig {
+  handler: (e?: KeyboardEvent) => void
+  usingInput?: string | boolean
+}
+
+type Handler = (e?: KeyboardEvent) => void
+```
+
+## Shortcut Key Format
+
+### Single Keys
+
+Use the key name directly:
+
+```vue
+<script setup>
+defineShortcuts({
+  'escape': () => console.log('Escape pressed'),
+  'enter': () => console.log('Enter pressed'),
+  'a': () => console.log('A pressed')
+})
+</script>
+```
+
+### Modifier Keys
+
+Combine keys with underscores (`_`):
+
+```vue
+<script setup>
+defineShortcuts({
+  'meta_k': () => console.log('Cmd/Ctrl + K'),
+  'meta_shift_p': () => console.log('Cmd/Ctrl + Shift + P'),
+  'ctrl_a': () => console.log('Ctrl + A'),
+  'alt_f': () => console.log('Alt + F')
+})
+</script>
+```
+
+Supported modifiers:
+- `meta` or `command` - Command key on Mac, Ctrl on Windows/Linux
+- `ctrl` or `control` - Control key
+- `shift` - Shift key
+- `alt` or `option` - Alt/Option key
+
+### Chained Shortcuts
+
+Create vim-like shortcuts with hyphens (`-`):
+
+```vue
+<script setup>
+defineShortcuts({
+  'g-h': () => navigateTo('/'),
+  'g-d': () => navigateTo('/dashboard'),
+  'g-s': () => navigateTo('/settings')
+})
+</script>
+```
+
+Chained shortcuts require pressing keys in sequence within the chain delay (default 800ms).
+
+## Examples
+
+### Basic Shortcuts
+
+```vue
+<script setup>
+defineShortcuts({
+  'meta_s': () => {
+    // Save document
+    saveDocument()
+  },
+  'meta_shift_z': () => {
+    // Redo
+    redo()
+  },
+  'escape': () => {
+    // Close overlay
+    isOpen.value = false
+  }
+})
+</script>
+```
+
+### Conditional Shortcuts
+
+```vue
+<script setup>
+const isModalOpen = ref(false)
+
+defineShortcuts({
+  'escape': isModalOpen.value ? () => {
+    isModalOpen.value = false
+  } : false,
+  'meta_k': () => {
+    isModalOpen.value = true
+  }
+})
+</script>
+```
+
+### Input Field Handling
+
+By default, shortcuts are disabled when typing in input fields. You can customize this behavior:
+
+```vue
+<script setup>
+defineShortcuts({
+  // Disabled in all input fields (default)
+  'meta_k': () => {
+    openCommandPalette()
+  },
+  
+  // Always enabled, even in input fields
+  'escape': {
+    handler: () => {
+      closeModal()
+    },
+    usingInput: true
+  },
+  
+  // Only enabled in specific input field by name
+  'meta_enter': {
+    handler: () => {
+      submitForm()
+    },
+    usingInput: 'comment'
+  }
+})
+</script>
+
+<template>
+  <input name="comment" />
+</template>
+```
+
+### Navigation Shortcuts
+
+```vue
+<script setup>
+defineShortcuts({
+  'g-h': () => navigateTo('/'),
+  'g-d': () => navigateTo('/dashboard'),
+  'g-p': () => navigateTo('/profile'),
+  'g-s': () => navigateTo('/settings')
+})
+</script>
+```
+
+### Reactive Shortcuts
+
+```vue
+<script setup>
+const mode = ref<'view' | 'edit'>('view')
+
+const shortcuts = computed(() => {
+  if (mode.value === 'edit') {
+    return {
+      'meta_s': () => save(),
+      'escape': () => { mode.value = 'view' }
+    }
+  }
+  
+  return {
+    'e': () => { mode.value = 'edit' },
+    'delete': () => deleteItem()
+  }
+})
+
+defineShortcuts(shortcuts)
+</script>
+```
+
+### Layout Independent Shortcuts
+
+Useful for international keyboards:
+
+```vue
+<script setup>
+defineShortcuts({
+  'meta_k': () => {
+    openSearch()
+  }
+}, {
+  layoutIndependent: true
+})
+</script>
+```
+
+With `layoutIndependent: true`, shortcuts use keyboard codes (e.g., `KeyA`) instead of key values, ensuring they work consistently across different keyboard layouts (QWERTY, AZERTY, etc.).
+
+### Custom Chain Delay
+
+```vue
+<script setup>
+defineShortcuts({
+  'g-h': () => navigateTo('/')
+}, {
+  chainDelay: 1200 // 1.2 seconds
+})
+</script>
+```
+
+### Extracting Shortcuts from Menu Items
+
+The `extractShortcuts` utility extracts shortcuts from menu items:
+
+```vue
+<script setup>
+import { extractShortcuts, defineShortcuts } from '#ui'
+
+const menuItems = [
+  {
+    label: 'Home',
+    kbds: ['g', 'h'],
+    onSelect: () => navigateTo('/')
+  },
+  {
+    label: 'Dashboard',
+    kbds: ['g', 'd'],
+    onSelect: () => navigateTo('/dashboard')
+  }
+]
+
+const shortcuts = extractShortcuts(menuItems)
+defineShortcuts(shortcuts)
+</script>
+```
+
+## Special Keys
+
+Supported special key names:
+
+- `space`
+- `enter`
+- `escape`
+- `tab`
+- `backspace`
+- `delete`
+- `arrowup`, `arrowdown`, `arrowleft`, `arrowright`
+- `pageup`, `pagedown`
+- `home`, `end`
+- `f1` through `f12`
+
+## Platform Differences
+
+The `meta` modifier automatically adapts:
+- **macOS**: Command key (⌘)
+- **Windows/Linux**: Ctrl key
+
+This ensures cross-platform compatibility for common shortcuts like `meta_s` for save.
+
+## TypeScript
+
+```ts
+import type { ShortcutsConfig, ShortcutsOptions } from '#ui'
+import { defineShortcuts } from '#ui'
+
+const config: ShortcutsConfig = {
+  'meta_k': () => {
+    console.log('Command palette')
+  }
+}
+
+const options: ShortcutsOptions = {
+  chainDelay: 800,
+  layoutIndependent: false
+}
+
+defineShortcuts(config, options)
+```
+
+## Return Value
+
+The composable returns a cleanup function that removes the keyboard event listener:
+
+```vue
+<script setup>
+const cleanup = defineShortcuts({
+  'meta_k': () => openPalette()
+})
+
+// Later, remove the shortcuts
+onBeforeUnmount(() => {
+  cleanup()
+})
+</script>
+```

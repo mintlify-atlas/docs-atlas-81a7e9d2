@@ -1,0 +1,303 @@
+---
+title: useColorMode
+description: Integration with Nuxt Color Mode module for managing dark and light themes in Nuxt UI.
+---
+
+Nuxt UI integrates with the [@nuxtjs/color-mode](https://color-mode.nuxtjs.org/) module to provide seamless dark mode and light mode support. The `useColorMode` composable gives you access to the current color mode and methods to change it.
+
+## Installation
+
+The `@nuxtjs/color-mode` module is automatically installed with Nuxt UI. No additional setup is required.
+
+## Usage
+
+```vue
+<script setup>
+const colorMode = useColorMode()
+</script>
+```
+
+## Return Value
+
+The composable returns an object with the following properties:
+
+<ParamField path="preference" type="Ref<'light' | 'dark' | 'system'>">
+  User's color mode preference. Can be set to change the theme.
+</ParamField>
+
+<ParamField path="value" type="Ref<'light' | 'dark'>">
+  Current active color mode (computed from preference and system settings).
+</ParamField>
+
+<ParamField path="forced" type="boolean">
+  Whether the color mode is forced for the current page.
+</ParamField>
+
+## Examples
+
+### Display Current Color Mode
+
+```vue
+<script setup>
+const colorMode = useColorMode()
+</script>
+
+<template>
+  <div>
+    <p>Preference: {{ colorMode.preference }}</p>
+    <p>Current mode: {{ colorMode.value }}</p>
+  </div>
+</template>
+```
+
+### Toggle Color Mode
+
+```vue
+<script setup>
+const colorMode = useColorMode()
+
+function toggleColorMode() {
+  colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'
+}
+</script>
+
+<template>
+  <button @click="toggleColorMode">
+    {{ colorMode.value === 'dark' ? '🌙' : '☀️' }}
+  </button>
+</template>
+```
+
+### Color Mode Selector
+
+```vue
+<script setup>
+const colorMode = useColorMode()
+
+const modes = [
+  { value: 'light', label: 'Light', icon: 'i-lucide-sun' },
+  { value: 'dark', label: 'Dark', icon: 'i-lucide-moon' },
+  { value: 'system', label: 'System', icon: 'i-lucide-monitor' }
+]
+</script>
+
+<template>
+  <div>
+    <button
+      v-for="mode in modes"
+      :key="mode.value"
+      @click="colorMode.preference = mode.value"
+      :class="{ active: colorMode.preference === mode.value }"
+    >
+      <Icon :name="mode.icon" />
+      {{ mode.label }}
+    </button>
+  </div>
+</template>
+```
+
+### Using Nuxt UI Color Mode Components
+
+Nuxt UI provides pre-built components for color mode management:
+
+#### ColorModeButton
+
+```vue
+<template>
+  <UColorModeButton />
+</template>
+```
+
+#### ColorModeSwitch
+
+```vue
+<template>
+  <UColorModeSwitch />
+</template>
+```
+
+#### ColorModeSelect
+
+```vue
+<template>
+  <UColorModeSelect />
+</template>
+```
+
+#### ColorModeAvatar
+
+```vue
+<template>
+  <UColorModeAvatar />
+</template>
+```
+
+### Conditional Rendering Based on Color Mode
+
+```vue
+<script setup>
+const colorMode = useColorMode()
+</script>
+
+<template>
+  <div>
+    <img v-if="colorMode.value === 'dark'" src="/logo-dark.png" alt="Logo" />
+    <img v-else src="/logo-light.png" alt="Logo" />
+  </div>
+</template>
+```
+
+### Custom Theme Toggle with Icon
+
+```vue
+<script setup>
+import { useColorMode } from '#ui'
+
+const colorMode = useColorMode()
+
+const isDark = computed(() => colorMode.value === 'dark')
+
+function toggle() {
+  colorMode.preference = isDark.value ? 'light' : 'dark'
+}
+</script>
+
+<template>
+  <UButton
+    :icon="isDark ? 'i-lucide-moon' : 'i-lucide-sun'"
+    color="neutral"
+    variant="ghost"
+    :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
+    @click="toggle"
+  />
+</template>
+```
+
+### Watching Color Mode Changes
+
+```vue
+<script setup>
+const colorMode = useColorMode()
+
+watch(() => colorMode.value, (newMode) => {
+  console.log('Color mode changed to:', newMode)
+  // Perform actions on color mode change
+  if (newMode === 'dark') {
+    // Enable dark mode features
+  }
+})
+</script>
+```
+
+### Force Color Mode on Specific Page
+
+```vue
+<script setup>
+definePageMeta({
+  colorMode: 'dark'
+})
+</script>
+```
+
+### System Preference Detection
+
+```vue
+<script setup>
+const colorMode = useColorMode()
+
+const isSystem = computed(() => colorMode.preference === 'system')
+const systemPreference = computed(() => {
+  if (import.meta.client) {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  }
+  return 'light'
+})
+</script>
+
+<template>
+  <div>
+    <p v-if="isSystem">
+      Using system preference: {{ systemPreference }}
+    </p>
+  </div>
+</template>
+```
+
+## Configuration
+
+Configure the color mode module in your `nuxt.config.ts`:
+
+```ts
+export default defineNuxtConfig({
+  colorMode: {
+    preference: 'system', // default value of $colorMode.preference
+    fallback: 'light', // fallback value if not system preference found
+    hid: 'nuxt-color-mode-script',
+    globalName: '__NUXT_COLOR_MODE__',
+    componentName: 'ColorScheme',
+    classPrefix: '',
+    classSuffix: '',
+    storageKey: 'nuxt-color-mode'
+  }
+})
+```
+
+### Configuration Options
+
+<ParamField path="preference" type="'light' | 'dark' | 'system'" default="'system'">
+  Default color mode preference.
+</ParamField>
+
+<ParamField path="fallback" type="'light' | 'dark'" default="'light'">
+  Fallback color mode when system preference cannot be detected.
+</ParamField>
+
+<ParamField path="storageKey" type="string" default="'nuxt-color-mode'">
+  Local storage key for persisting user preference.
+</ParamField>
+
+<ParamField path="classPrefix" type="string" default="''">
+  Prefix for the color mode class added to `<html>`.
+</ParamField>
+
+<ParamField path="classSuffix" type="string" default="''">
+  Suffix for the color mode class. For example, with suffix `-mode`, classes become `light-mode` and `dark-mode`.
+</ParamField>
+
+## Styling with Color Mode
+
+Nuxt UI uses semantic color tokens that automatically adapt to the color mode:
+
+```vue
+<template>
+  <div class="bg-elevated text-default">
+    This background and text automatically adapt to light/dark mode
+  </div>
+</template>
+```
+
+Common semantic tokens:
+- `text-default`, `text-muted`, `text-inverted`
+- `bg-default`, `bg-elevated`, `bg-inverted`
+- `border-default`, `border-muted`
+
+## TypeScript
+
+```ts
+import type { BasicColorMode, ColorMode } from '#color-mode'
+import { useColorMode } from '#imports'
+
+const colorMode = useColorMode()
+
+// Type-safe preference setting
+colorMode.preference = 'dark' // 'light' | 'dark' | 'system'
+
+// Type-safe value access
+const current: 'light' | 'dark' = colorMode.value
+```
+
+## Learn More
+
+- [@nuxtjs/color-mode documentation](https://color-mode.nuxtjs.org/)
+- [Nuxt UI Color Mode Components](/components/color-mode-button)
+- [Tailwind CSS Dark Mode](https://tailwindcss.com/docs/dark-mode)

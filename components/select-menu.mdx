@@ -1,0 +1,488 @@
+---
+title: 'SelectMenu'
+description: 'A searchable select dropdown with filtering, custom item creation, and advanced menu features.'
+---
+
+## Overview
+
+The SelectMenu component combines a select dropdown with search functionality, providing filtering, custom item creation, multiple selection, and virtualization for large lists.
+
+## Basic Usage
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const selected = ref(null)
+const items = [
+  'Apple',
+  'Banana',
+  'Cherry',
+  'Date',
+  'Elderberry'
+]
+</script>
+
+<template>
+  <USelectMenu v-model="selected" :items="items" placeholder="Select a fruit" />
+</template>
+```
+
+## With Objects
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const selected = ref(null)
+const items = [
+  { id: 1, label: 'Wade Cooper', description: 'Software Engineer' },
+  { id: 2, label: 'Arlene Mccoy', description: 'Product Manager' },
+  { id: 3, label: 'Devon Webb', description: 'Designer' }
+]
+</script>
+
+<template>
+  <USelectMenu
+    v-model="selected"
+    :items="items"
+    value-key="id"
+    placeholder="Select a person"
+  />
+</template>
+```
+
+## With Search Input
+
+```vue
+<template>
+  <!-- Default search -->
+  <USelectMenu v-model="selected" :items="items" search-input />
+  
+  <!-- Custom search placeholder -->
+  <USelectMenu
+    v-model="selected"
+    :items="items"
+    :search-input="{ placeholder: 'Search people...' }"
+  />
+  
+  <!-- No search -->
+  <USelectMenu v-model="selected" :items="items" :search-input="false" />
+</template>
+```
+
+## Multiple Selection
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const selected = ref([])
+const items = ['React', 'Vue', 'Angular', 'Svelte', 'Solid']
+</script>
+
+<template>
+  <USelectMenu
+    v-model="selected"
+    :items="items"
+    multiple
+    placeholder="Select frameworks"
+  />
+</template>
+```
+
+## Grouped Items
+
+```vue
+<script setup lang="ts">
+const items = [
+  [
+    { type: 'label', label: 'Fruits' },
+    { label: 'Apple', value: 'apple' },
+    { label: 'Banana', value: 'banana' }
+  ],
+  [
+    { type: 'label', label: 'Vegetables' },
+    { label: 'Carrot', value: 'carrot' },
+    { label: 'Potato', value: 'potato' }
+  ]
+]
+</script>
+
+<template>
+  <USelectMenu v-model="selected" :items="items" />
+</template>
+```
+
+## Create Custom Items
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const selected = ref(null)
+const items = ref(['Apple', 'Banana', 'Cherry'])
+
+function onCreate(item: string) {
+  items.value.push(item)
+  selected.value = item
+}
+</script>
+
+<template>
+  <USelectMenu
+    v-model="selected"
+    :items="items"
+    create-item
+    @create="onCreate"
+    placeholder="Type to create..."
+  />
+</template>
+```
+
+## Custom Filtering
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const selected = ref(null)
+const searchTerm = ref('')
+const items = ref([])
+
+// Fetch items from API based on search
+watchDebounced(searchTerm, async (value) => {
+  if (!value) return
+  const { data } = await useFetch('/api/search', {
+    query: { q: value }
+  })
+  items.value = data.value
+}, { debounce: 300 })
+</script>
+
+<template>
+  <USelectMenu
+    v-model="selected"
+    v-model:search-term="searchTerm"
+    :items="items"
+    ignore-filter
+    placeholder="Search..."
+  />
+</template>
+```
+
+## Virtualization
+
+Efficiently render large lists:
+
+```vue
+<script setup lang="ts">
+const items = Array.from({ length: 10000 }, (_, i) => ({
+  label: `Item ${i + 1}`,
+  value: i
+}))
+</script>
+
+<template>
+  <USelectMenu
+    v-model="selected"
+    :items="items"
+    virtualize
+    placeholder="Select from 10k items"
+  />
+</template>
+```
+
+## With Clear Button
+
+```vue
+<template>
+  <USelectMenu
+    v-model="selected"
+    :items="items"
+    clear
+    placeholder="Select an item"
+    @clear="console.log('Cleared')"
+  />
+</template>
+```
+
+## With Icons and Avatars
+
+```vue
+<script setup lang="ts">
+const items = [
+  {
+    label: 'Profile',
+    icon: 'i-heroicons-user',
+    value: 'profile'
+  },
+  {
+    label: 'Settings',
+    icon: 'i-heroicons-cog',
+    value: 'settings'
+  },
+  {
+    label: 'Team',
+    avatar: { src: 'https://i.pravatar.cc/150?img=1' },
+    value: 'team'
+  }
+]
+</script>
+
+<template>
+  <USelectMenu v-model="selected" :items="items" />
+</template>
+```
+
+## Colors and Variants
+
+```vue
+<template>
+  <!-- Colors -->
+  <USelectMenu :items="items" color="primary" />
+  <USelectMenu :items="items" color="secondary" />
+  <USelectMenu :items="items" color="success" />
+  
+  <!-- Variants -->
+  <USelectMenu :items="items" variant="outline" />
+  <USelectMenu :items="items" variant="soft" />
+  <USelectMenu :items="items" variant="ghost" />
+</template>
+```
+
+## Custom Slots
+
+```vue
+<template>
+  <USelectMenu v-model="selected" :items="items">
+    <template #item="{ item }">
+      <div class="flex items-center justify-between w-full">
+        <span>{{ item.label }}</span>
+        <UBadge>{{ item.count }}</UBadge>
+      </div>
+    </template>
+    
+    <template #empty="{ searchTerm }">
+      <p>No results for "{{ searchTerm }}"</p>
+    </template>
+  </USelectMenu>
+</template>
+```
+
+## With Form
+
+```vue
+<script setup lang="ts">
+import { z } from 'zod'
+import { ref } from 'vue'
+
+const schema = z.object({
+  country: z.string().min(1, 'Please select a country'),
+  skills: z.array(z.string()).min(1, 'Select at least one skill')
+})
+
+const state = ref({
+  country: '',
+  skills: []
+})
+
+const countries = [
+  { value: 'us', label: 'United States' },
+  { value: 'ca', label: 'Canada' },
+  { value: 'mx', label: 'Mexico' }
+]
+
+const skills = [
+  'JavaScript', 'TypeScript', 'Vue', 'React', 'Node.js'
+]
+</script>
+
+<template>
+  <UForm :schema="schema" :state="state">
+    <UFormField label="Country" name="country">
+      <USelectMenu v-model="state.country" :items="countries" />
+    </UFormField>
+    
+    <UFormField label="Skills" name="skills">
+      <USelectMenu v-model="state.skills" :items="skills" multiple />
+    </UFormField>
+  </UForm>
+</template>
+```
+
+## Props
+
+<ParamField path="modelValue" type="any">
+  The controlled value. Can be bound with v-model.
+</ParamField>
+
+<ParamField path="defaultValue" type="any">
+  The default value when initially rendered.
+</ParamField>
+
+<ParamField path="items" type="array">
+  Array of items or nested arrays for grouped items.
+</ParamField>
+
+<ParamField path="valueKey" type="string">
+  Field to use as the value when items are objects.
+</ParamField>
+
+<ParamField path="labelKey" type="string" default="label">
+  Field to use as the label when items are objects.
+</ParamField>
+
+<ParamField path="descriptionKey" type="string" default="description">
+  Field to use as the description when items are objects.
+</ParamField>
+
+<ParamField path="placeholder" type="string">
+  Placeholder text when no item is selected.
+</ParamField>
+
+<ParamField path="searchInput" type="boolean | object" default="true">
+  Display the search input. Can be an object to pass additional props.
+</ParamField>
+
+<ParamField path="multiple" type="boolean">
+  Allow multiple items to be selected.
+</ParamField>
+
+<ParamField path="createItem" type="boolean | 'always' | object">
+  Allow creating custom items.
+</ParamField>
+
+<ParamField path="filterFields" type="string[]">
+  Fields to filter items by.
+</ParamField>
+
+<ParamField path="ignoreFilter" type="boolean">
+  Disable default filtering.
+</ParamField>
+
+<ParamField path="virtualize" type="boolean | object">
+  Enable virtualization for large lists.
+</ParamField>
+
+<ParamField path="searchTerm" type="string">
+  The current search term. Can be bound with v-model:search-term.
+</ParamField>
+
+<ParamField path="clear" type="boolean | object">
+  Show a clear button.
+</ParamField>
+
+<ParamField path="clearIcon" type="string">
+  Icon for the clear button.
+</ParamField>
+
+<ParamField path="selectedIcon" type="string">
+  Icon shown for selected items.
+</ParamField>
+
+<ParamField path="trailingIcon" type="string">
+  Icon displayed at the end.
+</ParamField>
+
+<ParamField path="color" type="string" default="primary">
+  Color variant.
+</ParamField>
+
+<ParamField path="variant" type="string" default="outline">
+  Visual variant.
+</ParamField>
+
+<ParamField path="size" type="string" default="md">
+  Size variant.
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  Disable the select.
+</ParamField>
+
+<ParamField path="portal" type="boolean | string | HTMLElement" default="true">
+  Render the menu in a portal.
+</ParamField>
+
+<ParamField path="content" type="object">
+  Content props (side, sideOffset, etc.).
+</ParamField>
+
+<ParamField path="arrow" type="boolean | object">
+  Display an arrow alongside the menu.
+</ParamField>
+
+## Events
+
+<ParamField path="@update:modelValue" type="(value: any) => void">
+  Emitted when the selected value changes.
+</ParamField>
+
+<ParamField path="@update:searchTerm" type="(value: string) => void">
+  Emitted when the search term changes.
+</ParamField>
+
+<ParamField path="@create" type="(item: string) => void">
+  Emitted when a new item is created.
+</ParamField>
+
+<ParamField path="@clear" type="() => void">
+  Emitted when the clear button is clicked.
+</ParamField>
+
+<ParamField path="@change" type="(event: Event) => void">
+  Emitted when the value is committed.
+</ParamField>
+
+<ParamField path="@blur" type="(event: FocusEvent) => void">
+  Emitted when focus is lost.
+</ParamField>
+
+<ParamField path="@focus" type="(event: FocusEvent) => void">
+  Emitted when focused.
+</ParamField>
+
+## Slots
+
+<ParamField path="leading" type="{ modelValue: any, open: boolean, ui: object }">
+  Custom leading content.
+</ParamField>
+
+<ParamField path="default" type="{ modelValue: any, open: boolean, ui: object }">
+  Custom trigger content.
+</ParamField>
+
+<ParamField path="trailing" type="{ modelValue: any, open: boolean, ui: object }">
+  Custom trailing content.
+</ParamField>
+
+<ParamField path="item" type="{ item: any, index: number, ui: object }">
+  Custom item rendering.
+</ParamField>
+
+<ParamField path="item-leading" type="{ item: any, index: number, ui: object }">
+  Custom item leading content.
+</ParamField>
+
+<ParamField path="item-trailing" type="{ item: any, index: number, ui: object }">
+  Custom item trailing content.
+</ParamField>
+
+<ParamField path="empty" type="{ searchTerm: string }">
+  Custom empty state.
+</ParamField>
+
+<ParamField path="create-item-label" type="{ item: string }">
+  Custom create item label.
+</ParamField>
+
+## Exposed
+
+<ParamField path="triggerRef" type="Ref<HTMLButtonElement>">
+  Reference to the trigger button.
+</ParamField>
+
+<ParamField path="viewportRef" type="Ref<HTMLElement>">
+  Reference to the viewport element.
+</ParamField>

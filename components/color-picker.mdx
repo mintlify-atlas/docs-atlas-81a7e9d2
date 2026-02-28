@@ -1,0 +1,296 @@
+---
+title: 'ColorPicker'
+description: 'A visual color picker component for selecting colors.'
+icon: 'palette'
+---
+
+## Usage
+
+The ColorPicker component provides a visual interface for selecting colors with support for multiple color formats.
+
+```vue
+<template>
+  <div>
+    <UColorPicker v-model="color" />
+    <p class="mt-4">Selected color: {{ color }}</p>
+  </div>
+</template>
+
+<script setup>
+const color = ref('#3B82F6')
+</script>
+```
+
+## Color Formats
+
+The ColorPicker supports various color formats:
+
+### Hex Format (default)
+
+```vue
+<template>
+  <UColorPicker v-model="color" format="hex" />
+</template>
+
+<script setup>
+const color = ref('#3B82F6')
+</script>
+```
+
+### RGB Format
+
+```vue
+<template>
+  <UColorPicker v-model="color" format="rgb" />
+</template>
+
+<script setup>
+const color = ref('rgb(59, 130, 246)')
+</script>
+```
+
+### HSL Format
+
+```vue
+<template>
+  <UColorPicker v-model="color" format="hsl" />
+</template>
+
+<script setup>
+const color = ref('hsl(217, 91%, 60%)')
+</script>
+```
+
+### CMYK Format
+
+```vue
+<template>
+  <UColorPicker v-model="color" format="cmyk" />
+</template>
+
+<script setup>
+const color = ref('cmyk(76%, 47%, 0%, 4%)')
+</script>
+```
+
+### LAB Format
+
+```vue
+<template>
+  <UColorPicker v-model="color" format="lab" />
+</template>
+
+<script setup>
+const color = ref('lab(56%, 10, -51)')
+</script>
+```
+
+## Sizes
+
+```vue
+<template>
+  <div class="space-y-8">
+    <UColorPicker v-model="color" size="sm" />
+    <UColorPicker v-model="color" size="md" />
+    <UColorPicker v-model="color" size="lg" />
+  </div>
+</template>
+
+<script setup>
+const color = ref('#3B82F6')
+</script>
+```
+
+## Disabled State
+
+```vue
+<template>
+  <UColorPicker v-model="color" disabled />
+</template>
+
+<script setup>
+const color = ref('#3B82F6')
+</script>
+```
+
+## Default Value
+
+Set a default color when the component is initially rendered:
+
+```vue
+<template>
+  <UColorPicker v-model="color" default-value="#10B981" />
+</template>
+
+<script setup>
+const color = ref()
+</script>
+```
+
+## Throttle Updates
+
+Control how frequently the color value updates during dragging:
+
+```vue
+<template>
+  <UColorPicker
+    v-model="color"
+    :throttle="100"
+  />
+</template>
+
+<script setup>
+const color = ref('#3B82F6')
+</script>
+```
+
+## With Form Integration
+
+```vue
+<template>
+  <form @submit.prevent="handleSubmit">
+    <div class="space-y-4">
+      <div>
+        <label class="block mb-2">Primary Color</label>
+        <UColorPicker v-model="form.primaryColor" />
+      </div>
+      <div>
+        <label class="block mb-2">Secondary Color</label>
+        <UColorPicker v-model="form.secondaryColor" />
+      </div>
+      <button type="submit">Save Colors</button>
+    </div>
+  </form>
+</template>
+
+<script setup>
+const form = ref({
+  primaryColor: '#3B82F6',
+  secondaryColor: '#10B981'
+})
+
+const handleSubmit = () => {
+  console.log('Colors:', form.value)
+}
+</script>
+```
+
+## Live Preview
+
+Use the selected color to update UI in real-time:
+
+```vue
+<template>
+  <div>
+    <UColorPicker v-model="color" />
+    <div
+      class="mt-4 p-8 rounded-lg"
+      :style="{ backgroundColor: color }"
+    >
+      <p class="text-white font-bold">Preview</p>
+    </div>
+  </div>
+</template>
+
+<script setup>
+const color = ref('#3B82F6')
+</script>
+```
+
+## Multiple Color Pickers
+
+```vue
+<template>
+  <div class="space-y-8">
+    <div>
+      <label class="block mb-2 font-semibold">Background Color</label>
+      <UColorPicker v-model="colors.background" />
+    </div>
+    <div>
+      <label class="block mb-2 font-semibold">Text Color</label>
+      <UColorPicker v-model="colors.text" />
+    </div>
+    <div>
+      <label class="block mb-2 font-semibold">Accent Color</label>
+      <UColorPicker v-model="colors.accent" />
+    </div>
+    <div
+      class="p-8 rounded-lg"
+      :style="{
+        backgroundColor: colors.background,
+        color: colors.text
+      }"
+    >
+      <h3 class="text-xl font-bold">Color Preview</h3>
+      <p class="mt-2">This is how your colors look together</p>
+      <button
+        class="mt-4 px-4 py-2 rounded"
+        :style="{ backgroundColor: colors.accent, color: colors.background }"
+      >
+        Accent Button
+      </button>
+    </div>
+  </div>
+</template>
+
+<script setup>
+const colors = ref({
+  background: '#FFFFFF',
+  text: '#1F2937',
+  accent: '#3B82F6'
+})
+</script>
+```
+
+## Props
+
+<ParamField path="modelValue" type="string">
+  The controlled value of the color picker. Can be bound with `v-model`.
+</ParamField>
+
+<ParamField path="defaultValue" type="string" default="#FFFFFF">
+  The default value of the color picker when initially rendered.
+</ParamField>
+
+<ParamField path="format" type="string" default="hex">
+  Format of the color. Options: `hex`, `rgb`, `hsl`, `cmyk`, `lab`.
+</ParamField>
+
+<ParamField path="size" type="string" default="md">
+  The size of the color picker. Options: `sm`, `md`, `lg`.
+</ParamField>
+
+<ParamField path="throttle" type="number" default="50">
+  Throttle time in milliseconds for the color picker updates.
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  When `true`, prevents user interaction with the color picker.
+</ParamField>
+
+<ParamField path="as" type="any" default="div">
+  The element or component this component should render as.
+</ParamField>
+
+<ParamField path="class" type="any">
+  Additional CSS classes to apply to the root element.
+</ParamField>
+
+<ParamField path="ui" type="object">
+  UI customization object for styling different parts of the color picker.
+</ParamField>
+
+## Events
+
+<ParamField path="@update:modelValue" type="(value: string) => void">
+  Emitted when the selected color changes.
+</ParamField>
+
+## Component Structure
+
+The ColorPicker component consists of two main parts:
+
+1. **Selector**: A 2D gradient area for selecting saturation and brightness
+2. **Track**: A vertical hue slider for selecting the base color
+
+Users can interact with both parts by clicking or dragging to select their desired color.

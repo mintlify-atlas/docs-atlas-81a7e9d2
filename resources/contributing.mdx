@@ -1,0 +1,171 @@
+---
+title: Contributing
+description: Learn how to contribute to Nuxt UI and help make it better.
+---
+
+## Getting Started
+
+Thank you for considering contributing to Nuxt UI! We welcome contributions from the community to help improve the library.
+
+### Ways to Contribute
+
+<CardGroup cols="2">
+  <Card title="Report Bugs" icon="i-lucide-bug">
+    Found a bug? Check the existing issues and submit a detailed bug report to help us fix it.
+  </Card>
+  
+  <Card title="Suggest Features" icon="i-lucide-lightbulb">
+    Have ideas to enhance Nuxt UI? Share your suggestions and feature requests with the community.
+  </Card>
+  
+  <Card title="Submit PRs" icon="i-lucide-git-pull-request">
+    Contribute code improvements, bug fixes, or new features through pull requests.
+  </Card>
+  
+  <Card title="Improve Docs" icon="i-lucide-file-text">
+    Help make our documentation better by fixing errors or adding missing information.
+  </Card>
+</CardGroup>
+
+## Local Development
+
+### Prerequisites
+
+Before you begin, ensure you have:
+
+- Node.js (latest LTS version recommended)
+- pnpm (package manager)
+- Git
+
+### Setup Instructions
+
+1. **Fork and Clone**
+
+```bash
+# Fork the repository on GitHub, then clone your fork
+git clone https://github.com/YOUR_USERNAME/ui.git
+cd ui
+```
+
+2. **Install Dependencies**
+
+```bash
+pnpm install
+```
+
+3. **Generate Type Stubs**
+
+```bash
+pnpm run dev:prepare
+```
+
+This command generates TypeScript type stubs needed for development. Run this after installing dependencies.
+
+### Development Commands
+
+```bash
+# Start Nuxt playground
+pnpm run dev
+
+# Start Vue playground
+pnpm run dev:vue
+
+# Run documentation site
+pnpm run docs
+
+# Check linting
+pnpm run lint
+
+# Fix linting issues
+pnpm run lint:fix
+
+# Run type checking
+pnpm run typecheck
+
+# Run tests
+pnpm run test
+```
+
+## Project Structure
+
+Understanding the project structure will help you navigate the codebase:
+
+```
+src/runtime/components/   # Vue components (PascalCase.vue)
+src/runtime/composables/  # Composables (use*.ts)
+src/runtime/types/        # TypeScript types
+src/theme/                # Tailwind Variants themes (kebab-case.ts)
+test/components/          # Component tests (*.spec.ts)
+docs/content/docs/2.components/  # Documentation (*.md)
+playgrounds/nuxt/app/pages/components/  # Playground pages
+```
+
+## Key Conventions
+
+Follow these conventions when contributing:
+
+### Conventional Commits
+
+All commit messages must follow [conventional commits](https://conventionalcommits.org) format:
+
+```bash
+# Examples
+fix(Button): resolve hover state
+feat(Modal): add fullscreen prop
+docs(Select): update examples
+```
+
+### Code Style
+
+- **Type imports**: Always use separate `import type { X }` statements
+- **Semantic colors**: Use `text-default`, `bg-elevated`, etc. — never raw Tailwind palette colors like `text-gray-500`
+- **Template slots**: Add `data-slot="name"` attributes on all template elements
+- **Component theming**: Use `computed(() => tv(...))` for reactive theming with Tailwind Variants
+
+## Creating New Components
+
+Scaffold new components using the CLI:
+
+```bash
+# Link the CLI first (one-time setup)
+npm link
+
+# Create a new component
+nuxt-ui make component <name>
+```
+
+Available options:
+- `--primitive` - Create a primitive component
+- `--prose` - Create a prose component
+- `--content` - Create a content component
+- `--template <name>` - Use a specific template
+
+## Before Submitting
+
+Ensure your contribution meets these requirements:
+
+- [ ] `pnpm run lint` passes
+- [ ] `pnpm run typecheck` passes
+- [ ] `pnpm run test` passes
+- [ ] Documentation is updated if applicable
+- [ ] Commit messages follow conventional commits
+
+<Note>
+Multiple commits are fine — PRs are squash merged, so no need to rebase or force push.
+</Note>
+
+## AI Contributing Skill
+
+We provide a [contributing skill](https://github.com/nuxt/ui/tree/v4/.claude/skills/contributing) for AI assistants to help you contribute to Nuxt UI. It will automatically guide you through component structure, theming patterns, testing conventions, and documentation guidelines when working in this repository.
+
+## Need Help?
+
+If you have questions or need assistance:
+
+- Check the [documentation](https://ui.nuxt.com)
+- Browse [existing issues](https://github.com/nuxt/ui/issues)
+- Join the [Nuxt Discord](https://discord.nuxt.com)
+
+## License
+
+By contributing to Nuxt UI, you agree that your contributions will be licensed under the [MIT license](https://github.com/nuxt/ui/blob/v4/LICENSE.md).

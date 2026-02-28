@@ -1,0 +1,230 @@
+---
+title: 'Container'
+description: 'Center and constrain content width with responsive padding'
+icon: 'rectangle-wide'
+---
+
+## Overview
+
+The Container component provides a centered, max-width constrained wrapper for your content with responsive horizontal padding. It's essential for creating consistent page layouts and maintaining readable line lengths.
+
+## Usage
+
+Wrap your content with the Container component:
+
+```vue
+<template>
+  <UContainer>
+    <h1>Welcome to my site</h1>
+    <p>This content is centered and constrained to a maximum width.</p>
+  </UContainer>
+</template>
+```
+
+### Full-width sections with contained content
+
+```vue
+<template>
+  <div class="bg-gray-100">
+    <UContainer>
+      <h2>Section Title</h2>
+      <p>Content is contained while the background extends full width.</p>
+    </UContainer>
+  </div>
+</template>
+```
+
+### Multiple containers in a layout
+
+```vue
+<template>
+  <div>
+    <header class="bg-white border-b">
+      <UContainer>
+        <nav>Navigation items</nav>
+      </UContainer>
+    </header>
+    
+    <main>
+      <UContainer>
+        <h1>Page Content</h1>
+        <p>Main content area</p>
+      </UContainer>
+    </main>
+    
+    <footer class="bg-gray-900 text-white">
+      <UContainer>
+        <p>Footer content</p>
+      </UContainer>
+    </footer>
+  </div>
+</template>
+```
+
+### Custom element type
+
+```vue
+<template>
+  <UContainer as="section">
+    <h2>This renders as a section element</h2>
+  </UContainer>
+</template>
+```
+
+## Props
+
+<ParamField path="as" type="string | Component" default="'div'">
+  The element or component this component should render as. Useful for semantic HTML.
+</ParamField>
+
+<ParamField path="class" type="any">
+  Additional CSS classes to apply to the container element.
+</ParamField>
+
+<ParamField path="ui" type="object">
+  Override the default styling for the container.
+  
+  <Expandable title="properties">
+    <ResponseField name="base" type="string">
+      Custom classes to override the base container styling.
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+## Slots
+
+<ParamField path="default">
+  The content to be centered and constrained within the container.
+</ParamField>
+
+## Theming
+
+The Container component uses the following default theme:
+
+```typescript
+{
+  base: 'w-full max-w-(--ui-container) mx-auto px-4 sm:px-6 lg:px-8'
+}
+```
+
+### CSS variable
+
+The maximum width is controlled by the `--ui-container` CSS variable, which you can customize in your theme:
+
+```css
+:root {
+  --ui-container: 1280px; /* Default max width */
+}
+```
+
+### Responsive padding
+
+The container includes responsive horizontal padding:
+- Mobile: `px-4` (1rem)
+- Small screens: `px-6` (1.5rem)
+- Large screens: `px-8` (2rem)
+
+## Customization
+
+<Tabs>
+  <Tab title="Global theme">
+    Customize the container globally via `app.config.ts`:
+
+    ```typescript app.config.ts
+    export default defineAppConfig({
+      ui: {
+        container: {
+          base: 'w-full max-w-6xl mx-auto px-4'
+        }
+      }
+    })
+    ```
+  </Tab>
+  <Tab title="Per instance">
+    Override styling for a specific container:
+
+    ```vue
+    <template>
+      <UContainer :ui="{ base: 'max-w-4xl px-6' }">
+        Custom styled container
+      </UContainer>
+    </template>
+    ```
+  </Tab>
+  <Tab title="CSS variable">
+    Change the max width using CSS variables:
+
+    ```css
+    /* For specific sections */
+    .narrow-section {
+      --ui-container: 800px;
+    }
+
+    .wide-section {
+      --ui-container: 1400px;
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## Best practices
+
+<Tip>
+  Use Container for all major content sections to maintain consistent margins and max-width throughout your application.
+</Tip>
+
+<Note>
+  The container is fully responsive and automatically adjusts padding based on screen size, so you don't need to manage breakpoints manually.
+</Note>
+
+<Warning>
+  Avoid nesting multiple Container components inside each other, as this can lead to overly constrained content widths.
+</Warning>
+
+## Examples
+
+### Blog post layout
+
+```vue
+<template>
+  <article>
+    <div class="bg-gradient-to-b from-purple-50 to-white">
+      <UContainer>
+        <h1 class="text-4xl font-bold">Article Title</h1>
+        <p class="text-gray-600">Published on Jan 1, 2024</p>
+      </UContainer>
+    </div>
+    
+    <UContainer>
+      <div class="prose prose-lg">
+        <p>Article content goes here...</p>
+      </div>
+    </UContainer>
+  </article>
+</template>
+```
+
+### Marketing page
+
+```vue
+<template>
+  <div>
+    <!-- Hero section -->
+    <section class="bg-blue-600 text-white py-20">
+      <UContainer>
+        <h1 class="text-5xl font-bold">Welcome</h1>
+        <p class="text-xl">Build amazing things</p>
+      </UContainer>
+    </section>
+    
+    <!-- Features section -->
+    <section class="py-16">
+      <UContainer>
+        <div class="grid grid-cols-3 gap-8">
+          <!-- Feature cards -->
+        </div>
+      </UContainer>
+    </section>
+  </div>
+</template>
+```

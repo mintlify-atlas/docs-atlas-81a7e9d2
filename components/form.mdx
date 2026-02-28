@@ -1,0 +1,355 @@
+---
+title: 'Form'
+description: 'A form component with schema-based validation, nested forms support, and comprehensive state management.'
+---
+
+## Overview
+
+The Form component provides a robust form wrapper with built-in validation support for multiple schema libraries (Yup, Joi, Zod, Valibot, etc.), nested forms, field-level validation, and comprehensive state tracking.
+
+## Basic Usage
+
+```vue
+<script setup lang="ts">
+import { z } from 'zod'
+import { ref } from 'vue'
+
+const schema = z.object({
+  email: z.string().email('Invalid email'),
+  password: z.string().min(8, 'Must be at least 8 characters')
+})
+
+const state = ref({
+  email: '',
+  password: ''
+})
+
+function onSubmit(event) {
+  console.log('Form submitted:', event.data)
+}
+</script>
+
+<template>
+  <UForm :schema="schema" :state="state" @submit="onSubmit">
+    <UFormField label="Email" name="email">
+      <UInput v-model="state.email" />
+    </UFormField>
+    
+    <UFormField label="Password" name="password">
+      <UInput v-model="state.password" type="password" />
+    </UFormField>
+    
+    <UButton type="submit">Submit</UButton>
+  </UForm>
+</template>
+```
+
+## Schema Validation
+
+The Form component supports any Standard Schema-compliant library:
+
+### Zod
+
+```vue
+<script setup lang="ts">
+import { z } from 'zod'
+
+const schema = z.object({
+  username: z.string().min(3),
+  age: z.number().min(18)
+})
+</script>
+```
+
+### Yup
+
+```vue
+<script setup lang="ts">
+import * as yup from 'yup'
+
+const schema = yup.object({
+  username: yup.string().min(3).required(),
+  age: yup.number().min(18).required()
+})
+</script>
+```
+
+### Valibot
+
+```vue
+<script setup lang="ts">
+import * as v from 'valibot'
+
+const schema = v.object({
+  username: v.pipe(v.string(), v.minLength(3)),
+  age: v.pipe(v.number(), v.minValue(18))
+})
+</script>
+```
+
+## Custom Validation
+
+Provide a custom validation function for advanced use cases:
+
+```vue
+<script setup lang="ts">
+import type { FormError } from '#ui/types'
+
+const state = ref({ password: '', confirmPassword: '' })
+
+function validate(state): FormError[] {
+  const errors: FormError[] = []
+  
+  if (state.password !== state.confirmPassword) {
+    errors.push({
+      name: 'confirmPassword',
+      message: 'Passwords do not match'
+    })
+  }
+  
+  return errors
+}
+</script>
+
+<template>
+  <UForm :state="state" :validate="validate" @submit="onSubmit">
+    <!-- form fields -->
+  </UForm>
+</template>
+```
+
+## Validation Triggers
+
+Control when validation occurs:
+
+```vue
+<template>
+  <!-- Validate on blur only -->
+  <UForm :validate-on="['blur']" :state="state" :schema="schema">
+    <!-- fields -->
+  </UForm>
+  
+  <!-- Validate on change and input -->
+  <UForm :validate-on="['change', 'input']" :state="state" :schema="schema">
+    <!-- fields -->
+  </UForm>
+  
+  <!-- Delay validation on input -->
+  <UForm :validate-on-input-delay="500" :state="state" :schema="schema">
+    <!-- fields -->
+  </UForm>
+</template>
+```
+
+## Nested Forms
+
+Create complex forms with nested validation:
+
+```vue
+<script setup lang="ts">
+const parentState = ref({
+  user: {
+    name: '',
+    email: ''
+  },
+  address: {
+    street: '',
+    city: ''
+  }
+})
+
+const userSchema = z.object({
+  name: z.string().min(1),
+  email: z.string().email()
+})
+
+const addressSchema = z.object({
+  street: z.string().min(1),
+  city: z.string().min(1)
+})
+</script>
+
+<template>
+  <UForm :state="parentState">
+    <UForm :schema="userSchema" name="user" nested>
+      <UFormField label="Name" name="name">
+        <UInput v-model="parentState.user.name" />
+      </UFormField>
+      <UFormField label="Email" name="email">
+        <UInput v-model="parentState.user.email" />
+      </UFormField>
+    </UForm>
+    
+    <UForm :schema="addressSchema" name="address" nested>
+      <UFormField label="Street" name="street">
+        <UInput v-model="parentState.address.street" />
+      </UFormField>
+      <UFormField label="City" name="city">
+        <UInput v-model="parentState.address.city" />
+      </UFormField>
+    </UForm>
+    
+    <UButton type="submit">Submit</UButton>
+  </UForm>
+</template>
+```
+
+## Form API
+
+Access the form API using a template ref:
+
+```vue
+<script setup lang="ts">
+const form = ref()
+
+async function validateForm() {
+  try {
+    const data = await form.value.validate()
+    console.log('Valid:', data)
+  } catch (error) {
+    console.log('Validation failed')
+  }
+}
+
+function setCustomErrors() {
+  form.value.setErrors([{
+    name: 'email',
+    message: 'This email is already taken'
+  }])
+}
+
+function clearErrors() {
+  form.value.clear()
+}
+</script>
+
+<template>
+  <UForm ref="form" :state="state" :schema="schema">
+    <!-- fields -->
+  </UForm>
+  
+  <UButton @click="validateForm">Validate</UButton>
+  <UButton @click="setCustomErrors">Set Errors</UButton>
+  <UButton @click="clearErrors">Clear Errors</UButton>
+</template>
+```
+
+## Props
+
+<ParamField path="schema" type="FormSchema">
+  Schema to validate the form state. Supports Standard Schema objects, Yup, Joi, and Superstructs.
+</ParamField>
+
+<ParamField path="state" type="object">
+  An object representing the current state of the form.
+</ParamField>
+
+<ParamField path="validate" type="function">
+  Custom validation function to validate the form state. Returns a promise or array of FormError objects.
+</ParamField>
+
+<ParamField path="validateOn" type="FormInputEvents[]" default="['blur', 'change', 'input']">
+  The list of input events that trigger form validation. The form always validates on submit.
+</ParamField>
+
+<ParamField path="validateOnInputDelay" type="number" default="300">
+  Delay in milliseconds before validating the form on input events.
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  Disable all inputs inside the form.
+</ParamField>
+
+<ParamField path="transform" type="boolean" default="true">
+  If true, applies schema transformations on submit.
+</ParamField>
+
+<ParamField path="nested" type="boolean" default="false">
+  If true, this form will attach to its parent Form and validate at the same time.
+</ParamField>
+
+<ParamField path="name" type="string">
+  Path of the form's state within its parent form. Required when `nested` is true.
+</ParamField>
+
+<ParamField path="loadingAuto" type="boolean" default="true">
+  When true, all form elements will be disabled on submit event.
+</ParamField>
+
+<ParamField path="id" type="string | number">
+  Unique identifier for the form.
+</ParamField>
+
+<ParamField path="class" type="any">
+  Additional CSS classes to apply to the form.
+</ParamField>
+
+<ParamField path="ui" type="object">
+  UI customization object with `base` slot.
+</ParamField>
+
+## Events
+
+<ParamField path="@submit" type="(event: FormSubmitEvent) => void">
+  Emitted when the form is submitted and validation passes. The event contains the validated data.
+</ParamField>
+
+<ParamField path="@error" type="(event: FormErrorEvent) => void">
+  Emitted when form validation fails on submit. The event contains all validation errors.
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="{ errors: FormError[], loading: boolean }">
+  Default slot for form content. Receives errors array and loading state.
+</ParamField>
+
+## Exposed API
+
+<ParamField path="validate" type="function">
+  Manually trigger form validation. Returns validated data or throws FormValidationException.
+</ParamField>
+
+<ParamField path="setErrors" type="(errors: FormError[], name?: string | RegExp) => void">
+  Set custom errors for the form or specific fields.
+</ParamField>
+
+<ParamField path="getErrors" type="(name?: string | RegExp) => FormError[]">
+  Get current form errors, optionally filtered by field name or pattern.
+</ParamField>
+
+<ParamField path="clear" type="(name?: string | RegExp) => void">
+  Clear form errors, optionally for specific fields.
+</ParamField>
+
+<ParamField path="submit" type="function">
+  Programmatically submit the form.
+</ParamField>
+
+<ParamField path="errors" type="Ref<FormError[]>">
+  Reactive reference to current form errors.
+</ParamField>
+
+<ParamField path="loading" type="Ref<boolean>">
+  Reactive reference to form loading state.
+</ParamField>
+
+<ParamField path="disabled" type="ComputedRef<boolean>">
+  Computed reference to form disabled state.
+</ParamField>
+
+<ParamField path="dirty" type="ComputedRef<boolean>">
+  True if any field has been modified.
+</ParamField>
+
+<ParamField path="dirtyFields" type="ReadonlySet<string>">
+  Set of field names that have been modified.
+</ParamField>
+
+<ParamField path="touchedFields" type="ReadonlySet<string>">
+  Set of field names that have been interacted with.
+</ParamField>
+
+<ParamField path="blurredFields" type="ReadonlySet<string>">
+  Set of field names that have been blurred.
+</ParamField>

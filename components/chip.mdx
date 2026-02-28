@@ -1,0 +1,236 @@
+---
+title: Chip
+description: Display notification badges on other components.
+---
+
+## Usage
+
+The Chip component wraps other components and displays a notification badge (usually a number or status indicator) in a corner.
+
+```vue
+<template>
+  <UChip text="5">
+    <UButton label="Notifications" />
+  </UChip>
+</template>
+```
+
+## Props
+
+<ParamField path="as" type="any" default="'div'">
+  The element or component this component should render as.
+</ParamField>
+
+<ParamField path="text" type="string | number">
+  Display some text or number inside the chip.
+</ParamField>
+
+<ParamField path="color" type="string" default="'primary'">
+  The color variant of the chip (e.g., 'primary', 'secondary', 'success', 'warning', 'error').
+</ParamField>
+
+<ParamField path="size" type="string" default="'md'">
+  The size of the chip. When used inside an AvatarGroup, the size is automatically inherited.
+</ParamField>
+
+<ParamField path="position" type="'top-right' | 'top-left' | 'bottom-right' | 'bottom-left'" default="'top-right'">
+  The position of the chip relative to its container.
+</ParamField>
+
+<ParamField path="inset" type="boolean" default="false">
+  When `true`, keep the chip inside the component boundaries. Useful for rounded elements like avatars.
+</ParamField>
+
+<ParamField path="standalone" type="boolean" default="false">
+  When `true`, render the chip with relative positioning instead of absolute.
+</ParamField>
+
+<ParamField path="class" type="any">
+  Additional CSS classes to apply.
+</ParamField>
+
+<ParamField path="ui" type="object">
+  UI customization object for styling chip slots (root, base).
+</ParamField>
+
+## Models (v-model)
+
+<ParamField path="v-model:show" type="boolean" default="true">
+  Control the visibility of the chip.
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="{}">
+  The component to wrap with the chip.
+</ParamField>
+
+<ParamField path="content" type="{}">
+  Custom content to display inside the chip badge, replacing the text prop.
+</ParamField>
+
+## Examples
+
+### Basic Chip
+
+```vue
+<template>
+  <UChip text="3">
+    <UButton icon="i-heroicons-bell" />
+  </UChip>
+</template>
+```
+
+### Positions
+
+```vue
+<template>
+  <div class="flex gap-4">
+    <UChip text="1" position="top-right">
+      <UButton label="Top Right" />
+    </UChip>
+    
+    <UChip text="2" position="top-left">
+      <UButton label="Top Left" />
+    </UChip>
+    
+    <UChip text="3" position="bottom-right">
+      <UButton label="Bottom Right" />
+    </UChip>
+    
+    <UChip text="4" position="bottom-left">
+      <UButton label="Bottom Left" />
+    </UChip>
+  </div>
+</template>
+```
+
+### Colors
+
+```vue
+<template>
+  <div class="flex gap-4">
+    <UChip text="5" color="primary">
+      <UButton label="Primary" />
+    </UChip>
+    
+    <UChip text="9" color="error">
+      <UButton label="Error" />
+    </UChip>
+    
+    <UChip text="12" color="success">
+      <UButton label="Success" />
+    </UChip>
+  </div>
+</template>
+```
+
+### With Avatar (Inset)
+
+```vue
+<template>
+  <UChip text="3" :inset="true" position="bottom-right" color="success">
+    <UAvatar src="/avatar.jpg" alt="User" />
+  </UChip>
+</template>
+```
+
+### Custom Content
+
+```vue
+<template>
+  <UChip>
+    <template #content>
+      <span class="text-xs">NEW</span>
+    </template>
+    <UButton label="Featured" />
+  </UChip>
+</template>
+```
+
+### Controlled Visibility
+
+```vue
+<script setup>
+const showChip = ref(true)
+
+function dismissChip() {
+  showChip.value = false
+}
+</script>
+
+<template>
+  <UChip v-model:show="showChip" text="5">
+    <UButton label="Notifications" @click="dismissChip" />
+  </UChip>
+</template>
+```
+
+### No Text (Status Indicator)
+
+```vue
+<template>
+  <UChip color="success">
+    <UAvatar src="/avatar.jpg" alt="Online User" />
+  </UChip>
+</template>
+```
+
+### Large Numbers
+
+```vue
+<template>
+  <div class="flex gap-4">
+    <UChip text="99+">
+      <UButton icon="i-heroicons-envelope" />
+    </UChip>
+    
+    <UChip :text="1234">
+      <UButton icon="i-heroicons-bell" />
+    </UChip>
+  </div>
+</template>
+```
+
+### Standalone Mode
+
+Use standalone mode when you want the chip to be part of the normal document flow:
+
+```vue
+<template>
+  <div class="flex items-center gap-2">
+    <span>Status:</span>
+    <UChip text="Online" :standalone="true" color="success" />
+  </div>
+</template>
+```
+
+### Different Sizes in Avatar Group
+
+```vue
+<template>
+  <UAvatarGroup size="lg">
+    <UChip text="3" color="error">
+      <UAvatar src="/avatar1.jpg" alt="User 1" />
+    </UChip>
+    <UAvatar src="/avatar2.jpg" alt="User 2" />
+    <UAvatar src="/avatar3.jpg" alt="User 3" />
+  </UAvatarGroup>
+</template>
+```
+
+## Use Cases
+
+- Notification counts on buttons or icons
+- Status indicators on avatars (online/offline)
+- Unread message counts
+- New feature badges
+- Shopping cart item counts
+- Activity indicators
+
+## Notes
+
+- By default, the chip is positioned absolutely relative to its parent
+- Use `inset` prop for rounded containers like avatars to prevent the chip from overflowing
+- When `show` is `false`, the chip badge is hidden but the wrapped content remains visible
+- The chip automatically inherits size from AvatarGroup context when nested

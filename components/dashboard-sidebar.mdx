@@ -1,0 +1,263 @@
+---
+title: DashboardSidebar
+description: A resizable and collapsible sidebar component for dashboard layouts with responsive menu modes.
+---
+
+## Usage
+
+The DashboardSidebar component provides a flexible sidebar for dashboard layouts with support for resizing, collapsing, and responsive menu modes.
+
+```vue
+<template>
+  <UDashboardSidebar v-model:open="sidebarOpen">
+    <nav>
+      <UButton label="Dashboard" variant="ghost" block />
+      <UButton label="Settings" variant="ghost" block />
+      <UButton label="Profile" variant="ghost" block />
+    </nav>
+  </UDashboardSidebar>
+</template>
+
+<script setup lang="ts">
+const sidebarOpen = ref(false)
+</script>
+```
+
+## Resizable
+
+Enable resizing to allow users to adjust the sidebar width.
+
+```vue
+<UDashboardSidebar
+  id="main-sidebar"
+  resizable
+  :min-size="10"
+  :max-size="30"
+  :default-size="20"
+>
+  <nav>
+    <!-- Navigation items -->
+  </nav>
+</UDashboardSidebar>
+```
+
+## Collapsible
+
+Enable collapsing to minimize the sidebar.
+
+```vue
+<UDashboardSidebar
+  v-model:collapsed="isCollapsed"
+  collapsible
+  :collapsed-size="5"
+>
+  <template #default="{ collapsed }">
+    <nav>
+      <UButton 
+        :icon="collapsed ? 'i-heroicons-home' : undefined"
+        :label="collapsed ? undefined : 'Dashboard'"
+        variant="ghost" 
+        block 
+      />
+    </nav>
+  </template>
+</UDashboardSidebar>
+
+<script setup lang="ts">
+const isCollapsed = ref(false)
+</script>
+```
+
+## Menu Modes
+
+The sidebar supports different responsive menu modes: `modal`, `slideover`, and `drawer`.
+
+```vue
+<UDashboardSidebar
+  v-model:open="sidebarOpen"
+  mode="slideover"
+  :menu="{ side: 'left' }"
+>
+  <nav>
+    <!-- Navigation items -->
+  </nav>
+</UDashboardSidebar>
+```
+
+### Modal Mode
+
+```vue
+<UDashboardSidebar
+  mode="modal"
+  :menu="{ fullscreen: true }"
+>
+  <!-- Content -->
+</UDashboardSidebar>
+```
+
+### Drawer Mode
+
+```vue
+<UDashboardSidebar
+  mode="drawer"
+>
+  <!-- Content -->
+</UDashboardSidebar>
+```
+
+## Side
+
+Control which side the sidebar appears on.
+
+```vue
+<UDashboardSidebar side="right">
+  <nav>
+    <!-- Navigation items -->
+  </nav>
+</UDashboardSidebar>
+```
+
+## Header and Footer
+
+Add header and footer sections to the sidebar.
+
+```vue
+<UDashboardSidebar>
+  <template #header>
+    <div class="p-4">
+      <h2 class="font-bold">My App</h2>
+    </div>
+  </template>
+  
+  <nav>
+    <!-- Navigation items -->
+  </nav>
+  
+  <template #footer>
+    <div class="p-4">
+      <UButton label="Logout" block />
+    </div>
+  </template>
+</UDashboardSidebar>
+```
+
+## Custom Toggle
+
+Customize the toggle button.
+
+```vue
+<UDashboardSidebar
+  :toggle="{ color: 'primary', variant: 'solid' }"
+  toggle-side="right"
+>
+  <!-- Content -->
+</UDashboardSidebar>
+```
+
+## Auto Close
+
+The sidebar automatically closes when the route changes by default. Disable this behavior:
+
+```vue
+<UDashboardSidebar :auto-close="false">
+  <!-- Content -->
+</UDashboardSidebar>
+```
+
+## Props
+
+<ParamField path="id" type="string">
+  Unique identifier for the sidebar (used for persistence).
+</ParamField>
+
+<ParamField path="side" type="'left' | 'right'" default="'left'">
+  Which side of the screen the sidebar appears on.
+</ParamField>
+
+<ParamField path="mode" type="'modal' | 'slideover' | 'drawer'" default="'slideover'">
+  The mode of the sidebar menu for responsive layouts.
+</ParamField>
+
+<ParamField path="menu" type="ModalProps | SlideoverProps | DrawerProps">
+  Props for the sidebar menu component (based on mode).
+</ParamField>
+
+<ParamField path="toggle" type="boolean | ButtonProps" default="true">
+  Customize the toggle button to open the sidebar.
+</ParamField>
+
+<ParamField path="toggleSide" type="'left' | 'right'" default="'left'">
+  The side to render the toggle button on.
+</ParamField>
+
+<ParamField path="autoClose" type="boolean" default="true">
+  Automatically close when route changes.
+</ParamField>
+
+<ParamField path="resizable" type="boolean" default="false">
+  Enable sidebar resizing.
+</ParamField>
+
+<ParamField path="collapsible" type="boolean" default="false">
+  Enable sidebar collapsing.
+</ParamField>
+
+<ParamField path="minSize" type="number" default="10">
+  Minimum size percentage.
+</ParamField>
+
+<ParamField path="maxSize" type="number" default="20">
+  Maximum size percentage.
+</ParamField>
+
+<ParamField path="defaultSize" type="number" default="15">
+  Default size percentage.
+</ParamField>
+
+<ParamField path="collapsedSize" type="number" default="0">
+  Size percentage when collapsed.
+</ParamField>
+
+<ParamField path="class" type="any">
+  Custom class to apply to the root element.
+</ParamField>
+
+<ParamField path="ui" type="Partial<typeof theme>">
+  Override default theme classes.
+</ParamField>
+
+## Models
+
+<ParamField path="v-model:open" type="boolean" default="false">
+  Controls whether the sidebar menu is open.
+</ParamField>
+
+<ParamField path="v-model:collapsed" type="boolean" default="false">
+  Controls whether the sidebar is collapsed.
+</ParamField>
+
+## Slots
+
+<ParamField path="header" type="{ collapsed, collapse }">
+  Customize the sidebar header.
+</ParamField>
+
+<ParamField path="default" type="{ collapsed, collapse }">
+  Customize the main sidebar content.
+</ParamField>
+
+<ParamField path="footer" type="{ collapsed, collapse }">
+  Customize the sidebar footer.
+</ParamField>
+
+<ParamField path="toggle" type="{ open, toggle, ui }">
+  Customize the toggle button.
+</ParamField>
+
+<ParamField path="content" type="{ close }">
+  Customize the menu content.
+</ParamField>
+
+<ParamField path="resize-handle" type="{ onMouseDown, onTouchStart, onDoubleClick, ui }">
+  Customize the resize handle.
+</ParamField>

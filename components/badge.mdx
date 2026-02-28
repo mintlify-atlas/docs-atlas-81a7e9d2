@@ -1,0 +1,227 @@
+---
+title: Badge
+description: Display small count or status indicators.
+---
+
+## Usage
+
+The Badge component is used to highlight information such as status, categories, or counts.
+
+```vue
+<template>
+  <UBadge label="New" />
+</template>
+```
+
+## Props
+
+<ParamField path="as" type="any" default="'span'">
+  The element or component this component should render as.
+</ParamField>
+
+<ParamField path="label" type="string | number">
+  The text or number to display in the badge.
+</ParamField>
+
+<ParamField path="color" type="string" default="'primary'">
+  The color variant of the badge (e.g., 'primary', 'secondary', 'success', 'warning', 'error', 'neutral').
+</ParamField>
+
+<ParamField path="variant" type="string" default="'solid'">
+  The style variant of the badge (e.g., 'solid', 'outline', 'soft').
+</ParamField>
+
+<ParamField path="size" type="'xs' | 'sm' | 'md' | 'lg'" default="'md'">
+  The size of the badge.
+</ParamField>
+
+<ParamField path="square" type="boolean">
+  Render the badge with equal padding on all sides. Automatically enabled when there's no label or default slot content.
+</ParamField>
+
+<ParamField path="leadingIcon" type="string">
+  Icon name to display before the label. Supports any Iconify icon.
+</ParamField>
+
+<ParamField path="trailingIcon" type="string">
+  Icon name to display after the label. Supports any Iconify icon.
+</ParamField>
+
+<ParamField path="avatar" type="AvatarProps">
+  Avatar configuration to display before the label instead of an icon.
+</ParamField>
+
+<ParamField path="class" type="any">
+  Additional CSS classes to apply.
+</ParamField>
+
+<ParamField path="ui" type="object">
+  UI customization object for styling badge slots.
+</ParamField>
+
+## Slots
+
+<ParamField path="leading" type="{ ui }">
+  Custom content to display before the label.
+</ParamField>
+
+<ParamField path="default" type="{ ui }">
+  Custom content to display instead of the label.
+</ParamField>
+
+<ParamField path="trailing" type="{ ui }">
+  Custom content to display after the label.
+</ParamField>
+
+## Examples
+
+### Basic Badge
+
+```vue
+<template>
+  <UBadge label="Badge" />
+</template>
+```
+
+### Colors
+
+```vue
+<template>
+  <div class="flex gap-2">
+    <UBadge color="primary" label="Primary" />
+    <UBadge color="secondary" label="Secondary" />
+    <UBadge color="success" label="Success" />
+    <UBadge color="warning" label="Warning" />
+    <UBadge color="error" label="Error" />
+    <UBadge color="neutral" label="Neutral" />
+  </div>
+</template>
+```
+
+### Variants
+
+```vue
+<template>
+  <div class="flex gap-2">
+    <UBadge variant="solid" label="Solid" />
+    <UBadge variant="outline" label="Outline" />
+    <UBadge variant="soft" label="Soft" />
+  </div>
+</template>
+```
+
+### Sizes
+
+```vue
+<template>
+  <div class="flex items-center gap-2">
+    <UBadge size="xs" label="Extra Small" />
+    <UBadge size="sm" label="Small" />
+    <UBadge size="md" label="Medium" />
+    <UBadge size="lg" label="Large" />
+  </div>
+</template>
+```
+
+### With Icons
+
+```vue
+<template>
+  <div class="flex gap-2">
+    <UBadge leadingIcon="i-heroicons-star" label="Featured" />
+    <UBadge trailingIcon="i-heroicons-x-mark" label="Closeable" />
+    <UBadge 
+      leadingIcon="i-heroicons-check" 
+      trailingIcon="i-heroicons-arrow-right" 
+      label="Complete" 
+    />
+  </div>
+</template>
+```
+
+### Icon Only (Square)
+
+```vue
+<template>
+  <div class="flex gap-2">
+    <UBadge leadingIcon="i-heroicons-star" square />
+    <UBadge leadingIcon="i-heroicons-heart" square />
+    <UBadge leadingIcon="i-heroicons-bell" square />
+  </div>
+</template>
+```
+
+### With Avatar
+
+```vue
+<template>
+  <UBadge 
+    :avatar="{ src: '/avatar.jpg', alt: 'User' }" 
+    label="John Doe" 
+  />
+</template>
+```
+
+### Number Badges
+
+```vue
+<template>
+  <div class="flex gap-2">
+    <UBadge :label="5" color="error" />
+    <UBadge :label="99" color="primary" />
+    <UBadge :label="100" color="success" />
+  </div>
+</template>
+```
+
+### Custom Content
+
+```vue
+<template>
+  <UBadge>
+    <template #leading>
+      <span class="animate-pulse">⚡</span>
+    </template>
+    <span class="font-bold">Live</span>
+    <template #trailing>
+      <span class="text-xs">●</span>
+    </template>
+  </UBadge>
+</template>
+```
+
+### Status Indicators
+
+```vue
+<template>
+  <div class="flex gap-2">
+    <UBadge color="success" label="Active" />
+    <UBadge color="warning" label="Pending" />
+    <UBadge color="error" label="Inactive" />
+    <UBadge color="neutral" label="Draft" />
+  </div>
+</template>
+```
+
+### As Button
+
+```vue
+<template>
+  <UBadge 
+    as="button" 
+    label="Clickable" 
+    trailingIcon="i-heroicons-x-mark"
+    @click="handleClose"
+  />
+</template>
+```
+
+## Field Group Integration
+
+When used inside a FieldGroup component, the badge automatically inherits size and orientation from the group context.
+
+## Notes
+
+- The `square` prop is automatically enabled when neither `label` nor default slot content is provided
+- Icons use the Iconify icon system - any icon from [Icônes](https://icones.js.org/) can be used
+- The avatar's size is automatically calculated based on the badge size

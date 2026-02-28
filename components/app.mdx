@@ -1,0 +1,150 @@
+---
+title: 'App'
+description: 'Global configuration provider for Nuxt UI components'
+icon: 'grid-2-plus'
+---
+
+## Overview
+
+The App component wraps your entire application to provide global configurations for all Nuxt UI components. It implements Reka UI's ConfigProvider, ToastProvider, and TooltipProvider to enable consistent behavior across your application.
+
+## Usage
+
+Wrap your entire application with the App component in your `app.vue` file:
+
+```vue app.vue
+<template>
+  <UApp>
+    <NuxtPage />
+  </UApp>
+</template>
+```
+
+### With locale configuration
+
+Control the locale and reading direction for your application:
+
+```vue app.vue
+<template>
+  <UApp :locale="{ code: 'en', dir: 'ltr' }">
+    <NuxtPage />
+  </UApp>
+</template>
+```
+
+### Custom tooltip configuration
+
+Configure global tooltip behavior:
+
+```vue app.vue
+<template>
+  <UApp :tooltip="{ delayDuration: 200, skipDelayDuration: 300 }">
+    <NuxtPage />
+  </UApp>
+</template>
+```
+
+### Disable toaster
+
+If you don't need toast notifications:
+
+```vue app.vue
+<template>
+  <UApp :toaster="null">
+    <NuxtPage />
+  </UApp>
+</template>
+```
+
+## Props
+
+<ParamField path="scrollBody" type="boolean">
+  Controls whether the body element should scroll when modals or overlays are open.
+</ParamField>
+
+<ParamField path="dir" type="'ltr' | 'rtl'">
+  The global reading direction for all components. Inherited by all child components.
+</ParamField>
+
+<ParamField path="tooltip" type="object">
+  Global configuration for tooltips throughout the application.
+  
+  <Expandable title="properties">
+    <ResponseField name="delayDuration" type="number">
+      Time in milliseconds before tooltip appears on hover.
+    </ResponseField>
+    <ResponseField name="skipDelayDuration" type="number">
+      Time in milliseconds to skip delay when moving between tooltips.
+    </ResponseField>
+    <ResponseField name="disableHoverableContent" type="boolean">
+      Whether to prevent hovering over tooltip content.
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="toaster" type="object | null">
+  Configuration for toast notifications. Set to `null` to disable toaster entirely.
+  
+  <Expandable title="properties">
+    <ResponseField name="position" type="string">
+      Position of the toast container: 'top-left', 'top-center', 'top-right', 'bottom-left', 'bottom-center', 'bottom-right'.
+    </ResponseField>
+    <ResponseField name="duration" type="number">
+      Default duration in milliseconds for toast notifications.
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="locale" type="object">
+  Locale configuration for internationalization and formatting.
+  
+  <Expandable title="properties">
+    <ResponseField name="code" type="string">
+      Locale code (e.g., 'en', 'fr', 'es'). Controls date/time formatting in components like Calendar, InputDate, and InputTime.
+    </ResponseField>
+    <ResponseField name="dir" type="'ltr' | 'rtl'">
+      Reading direction for the locale.
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="portal" type="boolean | string | HTMLElement" default="'body'">
+  Target element for portal-rendered content like modals and popovers. Can be a boolean, CSS selector string, or DOM element.
+</ParamField>
+
+## Slots
+
+<ParamField path="default">
+  The main content of your application (typically `<NuxtPage />` or your root component).
+</ParamField>
+
+## Features
+
+### Global reading direction
+
+Enables all components to inherit and respect the global reading direction (LTR/RTL), ensuring proper layout and text direction throughout your application.
+
+### Scroll body control
+
+Prevents layout shifts by managing body scroll behavior when overlays (modals, dialogs, etc.) are open.
+
+### Unified providers
+
+- **ConfigProvider**: Provides global configuration to all Reka UI primitives
+- **TooltipProvider**: Enables smart tooltip behavior with delay management
+- **ToastProvider**: Powers the notification system with programmatic toast control
+- **OverlayProvider**: Manages modals and slideovers
+
+## Best practices
+
+<Tip>
+  Always wrap your root component with `<UApp>` to ensure all Nuxt UI components function correctly with proper global context.
+</Tip>
+
+<Note>
+  The App component uses Reka UI's `useId()` function to generate unique IDs for accessibility, ensuring proper ARIA relationships across your application.
+</Note>
+
+<Info>
+  The locale configuration affects date and time formatting in components like Calendar, InputDate, and InputTime. Make sure to set it according to your application's requirements.
+</Info>

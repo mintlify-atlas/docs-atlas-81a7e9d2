@@ -1,0 +1,455 @@
+---
+title: 'Separator'
+description: 'Divide content horizontally or vertically with customizable separators'
+icon: 'minus'
+---
+
+## Overview
+
+The Separator component divides content either horizontally or vertically. It supports labels, icons, and avatars in the middle, making it perfect for section breaks, content divisions, and visual organization.
+
+## Usage
+
+Use the Separator component as-is to create a simple horizontal divider:
+
+```vue
+<template>
+  <div>
+    <p>Content above</p>
+    <USeparator />
+    <p>Content below</p>
+  </div>
+</template>
+```
+
+### With label
+
+```vue
+<template>
+  <USeparator label="OR" />
+</template>
+```
+
+### With icon
+
+```vue
+<template>
+  <USeparator icon="i-simple-icons-nuxtdotjs" />
+</template>
+```
+
+### With avatar
+
+```vue
+<template>
+  <USeparator :avatar="{ src: 'https://github.com/nuxt.png' }" />
+</template>
+```
+
+## Props
+
+<ParamField path="as" type="string | Component" default="'div'">
+  The element or component this component should render as.
+</ParamField>
+
+<ParamField path="label" type="string">
+  Display a text label in the middle of the separator.
+</ParamField>
+
+<ParamField path="icon" type="string">
+  Display an icon in the middle of the separator. Accepts Iconify icon names.
+</ParamField>
+
+<ParamField path="avatar" type="object">
+  Display an avatar in the middle of the separator.
+  
+  <Expandable title="properties">
+    <ResponseField name="src" type="string">
+      Avatar image URL.
+    </ResponseField>
+    <ResponseField name="alt" type="string">
+      Alternative text for the avatar image.
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="color" type="string" default="'neutral'">
+  The color of the separator. Accepts theme color names (e.g., 'primary', 'secondary', 'neutral').
+</ParamField>
+
+<ParamField path="size" type="'xs' | 'sm' | 'md' | 'lg' | 'xl'" default="'xs'">
+  The thickness of the separator line.
+  
+  - **xs**: 1px border
+  - **sm**: 2px border
+  - **md**: 3px border
+  - **lg**: 4px border
+  - **xl**: 5px border
+</ParamField>
+
+<ParamField path="type" type="'solid' | 'dashed' | 'dotted'" default="'solid'">
+  The style of the separator line.
+</ParamField>
+
+<ParamField path="orientation" type="'horizontal' | 'vertical'" default="'horizontal'">
+  The orientation of the separator.
+</ParamField>
+
+<ParamField path="decorative" type="boolean">
+  When true, the separator is treated as decorative and hidden from screen readers.
+</ParamField>
+
+<ParamField path="class" type="any">
+  Additional CSS classes to apply to the separator root element.
+</ParamField>
+
+<ParamField path="ui" type="object">
+  Override the default styling for specific separator slots.
+  
+  <Expandable title="properties">
+    <ResponseField name="root" type="string">
+      Custom classes for the separator root element.
+    </ResponseField>
+    <ResponseField name="border" type="string">
+      Custom classes for the border/line elements.
+    </ResponseField>
+    <ResponseField name="container" type="string">
+      Custom classes for the content container (label/icon/avatar).
+    </ResponseField>
+    <ResponseField name="label" type="string">
+      Custom classes for the label text.
+    </ResponseField>
+    <ResponseField name="icon" type="string">
+      Custom classes for the icon.
+    </ResponseField>
+    <ResponseField name="avatar" type="string">
+      Custom classes for the avatar.
+    </ResponseField>
+    <ResponseField name="avatarSize" type="string">
+      Override the default avatar size.
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+## Slots
+
+<ParamField path="default">
+  Custom content to display in the middle of the separator. Receives `ui` object as a prop for styling.
+  
+  When using the default slot, the `label`, `icon`, and `avatar` props are ignored.
+</ParamField>
+
+## Orientation
+
+<Tabs>
+  <Tab title="Horizontal">
+    Default horizontal separator:
+
+    ```vue
+    <template>
+      <div class="space-y-4">
+        <p>Section 1</p>
+        <USeparator />
+        <p>Section 2</p>
+      </div>
+    </template>
+    ```
+  </Tab>
+  <Tab title="Vertical">
+    Vertical separator for side-by-side content:
+
+    ```vue
+    <template>
+      <div class="flex items-center gap-4">
+        <p>Left content</p>
+        <USeparator orientation="vertical" class="h-20" />
+        <p>Right content</p>
+      </div>
+    </template>
+    ```
+
+    <Note>
+      For vertical separators, you need to set a height using the `class` prop.
+    </Note>
+  </Tab>
+</Tabs>
+
+## Colors
+
+<Tabs>
+  <Tab title="Neutral">
+    Default neutral color:
+
+    ```vue
+    <template>
+      <USeparator color="neutral" />
+    </template>
+    ```
+  </Tab>
+  <Tab title="Primary">
+    Primary theme color:
+
+    ```vue
+    <template>
+      <USeparator color="primary" type="solid" />
+    </template>
+    ```
+  </Tab>
+  <Tab title="Custom">
+    Use any color from your theme:
+
+    ```vue
+    <template>
+      <USeparator color="red" />
+    </template>
+    ```
+  </Tab>
+</Tabs>
+
+## Line styles
+
+<Tabs>
+  <Tab title="Solid">
+    Default solid line:
+
+    ```vue
+    <template>
+      <USeparator type="solid" />
+    </template>
+    ```
+  </Tab>
+  <Tab title="Dashed">
+    Dashed line style:
+
+    ```vue
+    <template>
+      <USeparator type="dashed" />
+    </template>
+    ```
+  </Tab>
+  <Tab title="Dotted">
+    Dotted line style:
+
+    ```vue
+    <template>
+      <USeparator type="dotted" />
+    </template>
+    ```
+  </Tab>
+</Tabs>
+
+## Sizes
+
+```vue
+<template>
+  <div class="space-y-4">
+    <USeparator size="xs" />
+    <USeparator size="sm" />
+    <USeparator size="md" />
+    <USeparator size="lg" />
+    <USeparator size="xl" />
+  </div>
+</template>
+```
+
+## Theming
+
+The Separator component uses the following theme structure:
+
+```typescript
+{
+  slots: {
+    root: 'flex items-center align-center text-center',
+    border: '',
+    container: 'font-medium text-default flex',
+    icon: 'shrink-0 size-5',
+    avatar: 'shrink-0',
+    avatarSize: '2xs',
+    label: 'text-sm'
+  },
+  variants: {
+    color: {
+      neutral: { border: 'border-default' },
+      // + theme colors (primary, secondary, etc.)
+    },
+    orientation: {
+      horizontal: {
+        root: 'w-full flex-row',
+        border: 'w-full',
+        container: 'mx-3 whitespace-nowrap'
+      },
+      vertical: {
+        root: 'h-full flex-col',
+        border: 'h-full',
+        container: 'my-2'
+      }
+    },
+    size: {
+      xs: { border: 'border-t' },    // 1px
+      sm: { border: 'border-t-[2px]' },
+      md: { border: 'border-t-[3px]' },
+      lg: { border: 'border-t-[4px]' },
+      xl: { border: 'border-t-[5px]' }
+    },
+    type: {
+      solid: { border: 'border-solid' },
+      dashed: { border: 'border-dashed' },
+      dotted: { border: 'border-dotted' }
+    }
+  },
+  defaultVariants: {
+    color: 'neutral',
+    size: 'xs',
+    type: 'solid'
+  }
+}
+```
+
+## Examples
+
+### Form section divider
+
+```vue
+<template>
+  <form class="space-y-6">
+    <div>
+      <h3 class="text-lg font-semibold">Personal Information</h3>
+      <!-- form fields -->
+    </div>
+    
+    <USeparator label="Account Settings" />
+    
+    <div>
+      <!-- more form fields -->
+    </div>
+  </form>
+</template>
+```
+
+### Login options separator
+
+```vue
+<template>
+  <div class="space-y-4">
+    <button class="w-full">Continue with Google</button>
+    <button class="w-full">Continue with GitHub</button>
+    
+    <USeparator label="OR" />
+    
+    <form>
+      <input type="email" placeholder="Email" />
+      <input type="password" placeholder="Password" />
+      <button type="submit">Sign in</button>
+    </form>
+  </div>
+</template>
+```
+
+### Sidebar navigation divider
+
+```vue
+<template>
+  <nav class="space-y-2">
+    <a href="/">Home</a>
+    <a href="/about">About</a>
+    
+    <USeparator class="my-4" />
+    
+    <a href="/settings">Settings</a>
+    <a href="/logout">Logout</a>
+  </nav>
+</template>
+```
+
+### Custom slot content
+
+```vue
+<template>
+  <USeparator>
+    <template #default="{ ui }">
+      <div :class="ui.container()">
+        <span class="text-xs uppercase tracking-wide text-gray-500">
+          Chapter 2
+        </span>
+      </div>
+    </template>
+  </USeparator>
+</template>
+```
+
+### Vertical toolbar divider
+
+```vue
+<template>
+  <div class="flex items-center gap-2 p-2 border rounded">
+    <button>Bold</button>
+    <button>Italic</button>
+    <button>Underline</button>
+    
+    <USeparator orientation="vertical" class="h-6" />
+    
+    <button>Link</button>
+    <button>Image</button>
+  </div>
+</template>
+```
+
+## Customization
+
+<Tabs>
+  <Tab title="Global theme">
+    Customize separators globally via `app.config.ts`:
+
+    ```typescript app.config.ts
+    export default defineAppConfig({
+      ui: {
+        separator: {
+          slots: {
+            label: 'text-xs uppercase tracking-wider',
+            container: 'px-4'
+          },
+          defaultVariants: {
+            size: 'sm',
+            color: 'primary'
+          }
+        }
+      }
+    })
+    ```
+  </Tab>
+  <Tab title="Per instance">
+    Override styling for a specific separator:
+
+    ```vue
+    <template>
+      <USeparator 
+        :ui="{ 
+          border: 'border-blue-500',
+          label: 'text-blue-600 font-bold'
+        }"
+        label="Important Section"
+      />
+    </template>
+    ```
+  </Tab>
+</Tabs>
+
+## Accessibility
+
+<Info>
+  The Separator component is based on Reka UI's Separator primitive and follows WAI-ARIA separator pattern.
+</Info>
+
+<Tip>
+  Use the `decorative` prop for purely visual separators that don't convey meaningful content structure. This hides the separator from screen readers.
+</Tip>
+
+```vue
+<template>
+  <!-- Decorative separator -->
+  <USeparator decorative />
+  
+  <!-- Semantic separator (announces to screen readers) -->
+  <USeparator />
+</template>
+```

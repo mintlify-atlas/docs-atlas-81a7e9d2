@@ -1,0 +1,262 @@
+---
+title: Kbd
+description: Display keyboard shortcuts and key combinations.
+---
+
+## Usage
+
+The Kbd component displays keyboard shortcuts in a styled format, perfect for documentation or keyboard shortcut hints.
+
+```vue
+<template>
+  <UKbd value="cmd" />
+</template>
+```
+
+## Props
+
+<ParamField path="as" type="any" default="'kbd'">
+  The element or component this component should render as.
+</ParamField>
+
+<ParamField path="value" type="KbdKey | string">
+  The keyboard key to display. Supports special keys like 'meta', 'cmd', 'ctrl', 'shift', 'alt', 'enter', etc., which are automatically mapped to appropriate symbols or labels.
+</ParamField>
+
+<ParamField path="color" type="string" default="'neutral'">
+  The color variant of the keyboard key display.
+</ParamField>
+
+<ParamField path="variant" type="string" default="'outline'">
+  The style variant (e.g., 'outline', 'solid', 'soft').
+</ParamField>
+
+<ParamField path="size" type="'xs' | 'sm' | 'md' | 'lg'" default="'md'">
+  The size of the keyboard key display.
+</ParamField>
+
+<ParamField path="class" type="any">
+  Additional CSS classes to apply.
+</ParamField>
+
+<ParamField path="ui" type="object">
+  UI customization object for styling.
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="{}">
+  Custom content to display instead of the value.
+</ParamField>
+
+## Examples
+
+### Basic Keyboard Keys
+
+```vue
+<template>
+  <div class="flex gap-2">
+    <UKbd value="A" />
+    <UKbd value="B" />
+    <UKbd value="C" />
+  </div>
+</template>
+```
+
+### Special Keys
+
+The component automatically converts special key names to symbols:
+
+```vue
+<template>
+  <div class="flex gap-2">
+    <UKbd value="meta" />
+    <UKbd value="cmd" />
+    <UKbd value="ctrl" />
+    <UKbd value="shift" />
+    <UKbd value="alt" />
+    <UKbd value="enter" />
+    <UKbd value="escape" />
+    <UKbd value="tab" />
+  </div>
+</template>
+```
+
+### Keyboard Shortcuts
+
+Combine multiple Kbd components to show keyboard shortcuts:
+
+```vue
+<template>
+  <div class="flex items-center gap-1">
+    <UKbd value="cmd" />
+    <span>+</span>
+    <UKbd value="K" />
+  </div>
+</template>
+```
+
+### Sizes
+
+```vue
+<template>
+  <div class="flex items-center gap-2">
+    <UKbd size="xs" value="cmd" />
+    <UKbd size="sm" value="cmd" />
+    <UKbd size="md" value="cmd" />
+    <UKbd size="lg" value="cmd" />
+  </div>
+</template>
+```
+
+### Variants
+
+```vue
+<template>
+  <div class="flex gap-2">
+    <UKbd variant="outline" value="cmd" />
+    <UKbd variant="solid" value="cmd" />
+    <UKbd variant="soft" value="cmd" />
+  </div>
+</template>
+```
+
+### Colors
+
+```vue
+<template>
+  <div class="flex gap-2">
+    <UKbd color="neutral" value="cmd" />
+    <UKbd color="primary" value="cmd" />
+    <UKbd color="success" value="cmd" />
+    <UKbd color="warning" value="cmd" />
+    <UKbd color="error" value="cmd" />
+  </div>
+</template>
+```
+
+### Custom Content
+
+```vue
+<template>
+  <UKbd>
+    <span class="text-xs">⌘</span>
+  </UKbd>
+</template>
+```
+
+### In Documentation
+
+```vue
+<template>
+  <div class="space-y-2">
+    <div class="flex items-center gap-2">
+      <div class="flex items-center gap-1">
+        <UKbd value="cmd" />
+        <span>+</span>
+        <UKbd value="K" />
+      </div>
+      <span class="text-muted">Open command palette</span>
+    </div>
+    
+    <div class="flex items-center gap-2">
+      <div class="flex items-center gap-1">
+        <UKbd value="cmd" />
+        <span>+</span>
+        <UKbd value="S" />
+      </div>
+      <span class="text-muted">Save file</span>
+    </div>
+    
+    <div class="flex items-center gap-2">
+      <div class="flex items-center gap-1">
+        <UKbd value="shift" />
+        <span>+</span>
+        <UKbd value="enter" />
+      </div>
+      <span class="text-muted">Submit form</span>
+    </div>
+  </div>
+</template>
+```
+
+### Arrow Keys
+
+```vue
+<template>
+  <div class="flex gap-2">
+    <UKbd value="↑" />
+    <UKbd value="↓" />
+    <UKbd value="←" />
+    <UKbd value="→" />
+  </div>
+</template>
+```
+
+### Function Keys
+
+```vue
+<template>
+  <div class="flex gap-2">
+    <UKbd value="F1" />
+    <UKbd value="F2" />
+    <UKbd value="F12" />
+  </div>
+</template>
+```
+
+### Multi-Key Sequences
+
+```vue
+<template>
+  <div class="flex flex-col gap-3">
+    <div class="flex items-center gap-2">
+      <span class="text-sm font-medium">Copy:</span>
+      <div class="flex items-center gap-1">
+        <UKbd value="ctrl" />
+        <span>+</span>
+        <UKbd value="C" />
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-2">
+      <span class="text-sm font-medium">Paste:</span>
+      <div class="flex items-center gap-1">
+        <UKbd value="ctrl" />
+        <span>+</span>
+        <UKbd value="V" />
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-2">
+      <span class="text-sm font-medium">Select All:</span>
+      <div class="flex items-center gap-1">
+        <UKbd value="ctrl" />
+        <span>+</span>
+        <UKbd value="A" />
+      </div>
+    </div>
+  </div>
+</template>
+```
+
+## Key Mapping
+
+The `useKbd()` composable provides automatic key mapping for common keys:
+
+- `meta`, `cmd`, `command` → Platform-specific command key symbol
+- `ctrl`, `control` → Ctrl
+- `shift` → Shift symbol
+- `alt`, `option` → Alt/Option symbol
+- `enter`, `return` → Enter symbol
+- `escape`, `esc` → Esc
+- `tab` → Tab symbol
+- `backspace` → Backspace symbol
+- `delete` → Delete symbol
+- `space` → Space
+
+## Notes
+
+- The component uses semantic HTML with the `<kbd>` element by default
+- Special keys are automatically converted to their symbolic representations
+- Perfect for showing keyboard shortcuts in help text, tooltips, or documentation

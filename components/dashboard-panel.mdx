@@ -1,0 +1,175 @@
+---
+title: DashboardPanel
+description: A resizable panel component for dashboard layouts with flexible content areas.
+---
+
+## Usage
+
+The DashboardPanel component provides a flexible panel for dashboard layouts with optional resizing capabilities.
+
+```vue
+<template>
+  <UDashboardPanel>
+    <div class="p-4">
+      <h2>Panel Content</h2>
+      <p>This is the main content area.</p>
+    </div>
+  </UDashboardPanel>
+</template>
+```
+
+## Resizable
+
+Enable resizing to allow users to adjust the panel width.
+
+```vue
+<UDashboardPanel
+  id="side-panel"
+  resizable
+  :min-size="15"
+  :max-size="40"
+  :default-size="25"
+>
+  <div class="p-4">
+    <h2>Resizable Panel</h2>
+    <p>Drag the resize handle to adjust width.</p>
+  </div>
+</UDashboardPanel>
+```
+
+## With Header, Body, and Footer
+
+Organize panel content using the structured slots.
+
+```vue
+<UDashboardPanel resizable>
+  <template #header>
+    <div class="p-4 border-b">
+      <h2 class="font-bold">Panel Header</h2>
+    </div>
+  </template>
+  
+  <template #body>
+    <div class="p-4">
+      <p>Main panel content goes here.</p>
+    </div>
+  </template>
+  
+  <template #footer>
+    <div class="p-4 border-t">
+      <UButton label="Action" block />
+    </div>
+  </template>
+</UDashboardPanel>
+```
+
+## Custom Resize Handle
+
+Customize the resize handle appearance.
+
+```vue
+<UDashboardPanel resizable>
+  <template #default>
+    <div class="p-4">
+      <h2>Content</h2>
+    </div>
+  </template>
+  
+  <template #resize-handle="{ onMouseDown, onTouchStart, onDoubleClick }">
+    <div
+      class="w-1 bg-primary cursor-col-resize hover:bg-primary-600"
+      @mousedown="onMouseDown"
+      @touchstart="onTouchStart"
+      @dblclick="onDoubleClick"
+    />
+  </template>
+</UDashboardPanel>
+```
+
+## Layout Example
+
+Combine multiple panels in a dashboard layout.
+
+```vue
+<template>
+  <div class="flex h-screen">
+    <UDashboardSidebar>
+      <!-- Sidebar content -->
+    </UDashboardSidebar>
+    
+    <main class="flex-1">
+      <!-- Main content -->
+    </main>
+    
+    <UDashboardPanel
+      id="right-panel"
+      resizable
+      :default-size="20"
+    >
+      <template #header>
+        <div class="p-4">
+          <h3>Details</h3>
+        </div>
+      </template>
+      
+      <template #body>
+        <div class="p-4">
+          <!-- Panel content -->
+        </div>
+      </template>
+    </UDashboardPanel>
+  </div>
+</template>
+```
+
+## Props
+
+<ParamField path="id" type="string">
+  Unique identifier for the panel (used for persistence of size).
+</ParamField>
+
+<ParamField path="resizable" type="boolean" default="false">
+  Enable panel resizing.
+</ParamField>
+
+<ParamField path="minSize" type="number" default="15">
+  Minimum size percentage when resizable.
+</ParamField>
+
+<ParamField path="maxSize" type="number">
+  Maximum size percentage when resizable.
+</ParamField>
+
+<ParamField path="defaultSize" type="number">
+  Default size percentage when resizable.
+</ParamField>
+
+<ParamField path="class" type="any">
+  Custom class to apply to the root element.
+</ParamField>
+
+<ParamField path="ui" type="Partial<typeof theme>">
+  Override default theme classes.
+</ParamField>
+
+## Slots
+
+<ParamField path="default">
+  Main content slot. If provided, overrides header, body, and footer slots.
+</ParamField>
+
+<ParamField path="header">
+  Header section of the panel.
+</ParamField>
+
+<ParamField path="body">
+  Body section of the panel.
+</ParamField>
+
+<ParamField path="footer">
+  Footer section of the panel.
+</ParamField>
+
+<ParamField path="resize-handle" type="{ onMouseDown, onTouchStart, onDoubleClick }">
+  Customize the resize handle appearance and behavior.
+</ParamField>

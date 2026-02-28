@@ -1,0 +1,185 @@
+---
+title: DashboardToolbar
+description: A toolbar component for dashboard layouts with left and right content areas.
+---
+
+## Usage
+
+The DashboardToolbar component provides a simple toolbar layout with left and right sections.
+
+```vue
+<template>
+  <UDashboardToolbar>
+    <template #left>
+      <UButton label="New" icon="i-heroicons-plus" />
+    </template>
+    
+    <template #right>
+      <UButton icon="i-heroicons-funnel" variant="ghost" />
+      <UButton icon="i-heroicons-magnifying-glass" variant="ghost" />
+    </template>
+  </UDashboardToolbar>
+</template>
+```
+
+## Default Slot
+
+Use the default slot to fully customize the toolbar layout.
+
+```vue
+<UDashboardToolbar>
+  <div class="flex items-center justify-between w-full">
+    <div class="flex gap-2">
+      <UButton label="Action 1" />
+      <UButton label="Action 2" />
+    </div>
+    
+    <div class="flex gap-2">
+      <UInput placeholder="Search..." />
+    </div>
+  </div>
+</UDashboardToolbar>
+```
+
+## With Breadcrumbs
+
+Combine toolbar with breadcrumbs for navigation.
+
+```vue
+<UDashboardToolbar>
+  <template #left>
+    <UBreadcrumb :items="breadcrumbs" />
+  </template>
+  
+  <template #right>
+    <UButton label="Settings" icon="i-heroicons-cog-6-tooth" variant="ghost" />
+  </template>
+</UDashboardToolbar>
+
+<script setup lang="ts">
+const breadcrumbs = [
+  { label: 'Home', to: '/' },
+  { label: 'Dashboard', to: '/dashboard' },
+  { label: 'Settings' }
+]
+</script>
+```
+
+## With Button Group
+
+Organize actions in button groups.
+
+```vue
+<UDashboardToolbar>
+  <template #left>
+    <h2 class="text-lg font-semibold">Projects</h2>
+  </template>
+  
+  <template #right>
+    <UButtonGroup>
+      <UButton label="List" icon="i-heroicons-list-bullet" />
+      <UButton label="Grid" icon="i-heroicons-squares-2x2" />
+    </UButtonGroup>
+    
+    <UButton label="New Project" color="primary" />
+  </template>
+</UDashboardToolbar>
+```
+
+## With Filters and Search
+
+```vue
+<UDashboardToolbar>
+  <template #left>
+    <USelectMenu
+      v-model="selectedStatus"
+      :options="statusOptions"
+      placeholder="Filter by status"
+    />
+    <USelectMenu
+      v-model="selectedTag"
+      :options="tagOptions"
+      placeholder="Filter by tag"
+    />
+  </template>
+  
+  <template #right>
+    <UInput
+      v-model="searchQuery"
+      icon="i-heroicons-magnifying-glass"
+      placeholder="Search..."
+    />
+  </template>
+</UDashboardToolbar>
+
+<script setup lang="ts">
+const selectedStatus = ref(null)
+const selectedTag = ref(null)
+const searchQuery = ref('')
+
+const statusOptions = ['Active', 'Completed', 'Archived']
+const tagOptions = ['Important', 'Bug', 'Feature']
+</script>
+```
+
+## Layout Example
+
+Combine toolbar with other dashboard components.
+
+```vue
+<template>
+  <div class="flex flex-col h-screen">
+    <UDashboardNavbar title="Dashboard" />
+    
+    <div class="flex flex-1">
+      <UDashboardSidebar>
+        <!-- Sidebar content -->
+      </UDashboardSidebar>
+      
+      <main class="flex-1 flex flex-col">
+        <UDashboardToolbar>
+          <template #left>
+            <h1 class="text-xl font-bold">My Projects</h1>
+          </template>
+          
+          <template #right>
+            <UButton label="New" icon="i-heroicons-plus" color="primary" />
+          </template>
+        </UDashboardToolbar>
+        
+        <div class="flex-1 p-4">
+          <!-- Main content -->
+        </div>
+      </main>
+    </div>
+  </div>
+</template>
+```
+
+## Props
+
+<ParamField path="as" type="any" default="'div'">
+  The element or component this component should render as.
+</ParamField>
+
+<ParamField path="class" type="any">
+  Custom class to apply to the root element.
+</ParamField>
+
+<ParamField path="ui" type="Partial<typeof theme>">
+  Override default theme classes.
+</ParamField>
+
+## Slots
+
+<ParamField path="default">
+  Main content slot. When provided, overrides left and right slots.
+</ParamField>
+
+<ParamField path="left">
+  Content for the left section of the toolbar.
+</ParamField>
+
+<ParamField path="right">
+  Content for the right section of the toolbar.
+</ParamField>

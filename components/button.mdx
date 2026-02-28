@@ -1,0 +1,547 @@
+---
+title: 'Button'
+description: 'Interactive button component with multiple variants, sizes, and icon support'
+---
+
+<Info>
+Button is a key component built on top of Link and supports all link functionality including navigation, external links, and disabled states.
+</Info>
+
+## Basic Usage
+
+The Button component renders an interactive button element with support for labels, icons, avatars, and loading states.
+
+```vue
+<template>
+  <UButton label="Click me" />
+</template>
+```
+
+## Props
+
+<ParamField path="label" type="string">
+  The text label to display inside the button.
+</ParamField>
+
+<ParamField path="color" type="string" default="primary">
+  The color theme of the button. Supports all theme colors plus `neutral`.
+  
+  Available colors: `primary`, `secondary`, `success`, `warning`, `error`, `info`, `neutral`
+</ParamField>
+
+<ParamField path="variant" type="string" default="solid">
+  The visual style variant of the button.
+  
+  Available variants:
+  - `solid` - Filled background with contrasting text
+  - `outline` - Border with transparent background
+  - `soft` - Subtle background tint
+  - `subtle` - Soft background with border
+  - `ghost` - Minimal styling, background on hover
+  - `link` - Text-only, underlined on hover
+</ParamField>
+
+<ParamField path="size" type="string" default="md">
+  The size of the button.
+  
+  Available sizes: `xs`, `sm`, `md`, `lg`, `xl`
+</ParamField>
+
+<ParamField path="square" type="boolean" default="false">
+  Render the button with equal padding on all sides. Automatically enabled when no label or default slot content is provided.
+</ParamField>
+
+<ParamField path="block" type="boolean" default="false">
+  Render the button full width with centered content.
+</ParamField>
+
+<ParamField path="icon" type="string">
+  Icon name to display. Position determined by `leading` or `trailing` prop.
+</ParamField>
+
+<ParamField path="leadingIcon" type="string">
+  Icon name to display before the label.
+</ParamField>
+
+<ParamField path="trailingIcon" type="string">
+  Icon name to display after the label.
+</ParamField>
+
+<ParamField path="leading" type="boolean">
+  Show the icon before the label.
+</ParamField>
+
+<ParamField path="trailing" type="boolean">
+  Show the icon after the label.
+</ParamField>
+
+<ParamField path="loading" type="boolean" default="false">
+  Display a loading spinner. The spinner replaces the leading or trailing icon.
+</ParamField>
+
+<ParamField path="loadingAuto" type="boolean" default="false">
+  Automatically set loading state based on the `@click` promise state. The button shows a loading state while the click handler promise is pending.
+</ParamField>
+
+<ParamField path="avatar" type="AvatarProps">
+  Avatar configuration object. Displays an avatar before the label instead of an icon.
+</ParamField>
+
+<ParamField path="activeColor" type="string">
+  Color to apply when the button is in an active state (e.g., active router link).
+</ParamField>
+
+<ParamField path="activeVariant" type="string">
+  Variant to apply when the button is in an active state.
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disable the button interaction.
+</ParamField>
+
+<ParamField path="type" type="string" default="button">
+  HTML button type attribute. Use `submit` for form submission.
+</ParamField>
+
+<ParamField path="to" type="string | object">
+  Navigation target. Supports Vue Router location objects.
+</ParamField>
+
+<ParamField path="href" type="string">
+  External link URL.
+</ParamField>
+
+<ParamField path="target" type="string">
+  Link target attribute (e.g., `_blank` for new tab).
+</ParamField>
+
+<ParamField path="ui" type="object">
+  Override component styles. Accepts partial UI configuration for customizing specific slots.
+</ParamField>
+
+<ParamField path="class" type="any">
+  Additional CSS classes to apply to the button.
+</ParamField>
+
+## Slots
+
+<ParamField path="leading" type="slot">
+  Custom content to display before the label. Receives `{ ui }` as slot props.
+  
+  ```vue
+  <UButton>
+    <template #leading>
+      <CustomIcon />
+    </template>
+    Label
+  </UButton>
+  ```
+</ParamField>
+
+<ParamField path="default" type="slot">
+  Custom button content. Receives `{ ui }` as slot props. When provided, the `label` prop is ignored.
+  
+  ```vue
+  <UButton>
+    <span>Custom <strong>Content</strong></span>
+  </UButton>
+  ```
+</ParamField>
+
+<ParamField path="trailing" type="slot">
+  Custom content to display after the label. Receives `{ ui }` as slot props.
+  
+  ```vue
+  <UButton>
+    Label
+    <template #trailing>
+      <CustomBadge />
+    </template>
+  </UButton>
+  ```
+</ParamField>
+
+## Events
+
+<ParamField path="@click" type="(event: MouseEvent) => void | Promise<void>">
+  Click event handler. Supports async functions. When used with `loadingAuto`, the button displays a loading state until the promise resolves.
+</ParamField>
+
+## Examples
+
+### Variants
+
+<Tabs>
+  <Tab title="Solid">
+    ```vue
+    <template>
+      <UButton variant="solid" color="primary" label="Solid Button" />
+    </template>
+    ```
+    
+    The default variant with a filled background. Ideal for primary actions.
+  </Tab>
+  
+  <Tab title="Outline">
+    ```vue
+    <template>
+      <UButton variant="outline" color="primary" label="Outline Button" />
+    </template>
+    ```
+    
+    Border-only style with transparent background. Good for secondary actions.
+  </Tab>
+  
+  <Tab title="Soft">
+    ```vue
+    <template>
+      <UButton variant="soft" color="primary" label="Soft Button" />
+    </template>
+    ```
+    
+    Subtle background tint. Perfect for tertiary actions.
+  </Tab>
+  
+  <Tab title="Subtle">
+    ```vue
+    <template>
+      <UButton variant="subtle" color="primary" label="Subtle Button" />
+    </template>
+    ```
+    
+    Combines soft background with a border. Balances prominence and subtlety.
+  </Tab>
+  
+  <Tab title="Ghost">
+    ```vue
+    <template>
+      <UButton variant="ghost" color="primary" label="Ghost Button" />
+    </template>
+    ```
+    
+    Minimal styling with background appearing on hover. Great for toolbars.
+  </Tab>
+  
+  <Tab title="Link">
+    ```vue
+    <template>
+      <UButton variant="link" color="primary" label="Link Button" />
+    </template>
+    ```
+    
+    Text-only appearance like a hyperlink. Use for inline actions.
+  </Tab>
+</Tabs>
+
+### Colors
+
+<Tabs>
+  <Tab title="Primary">
+    ```vue
+    <template>
+      <UButton color="primary" label="Primary" />
+    </template>
+    ```
+  </Tab>
+  
+  <Tab title="Secondary">
+    ```vue
+    <template>
+      <UButton color="secondary" label="Secondary" />
+    </template>
+    ```
+  </Tab>
+  
+  <Tab title="Success">
+    ```vue
+    <template>
+      <UButton color="success" label="Success" />
+    </template>
+    ```
+  </Tab>
+  
+  <Tab title="Warning">
+    ```vue
+    <template>
+      <UButton color="warning" label="Warning" />
+    </template>
+    ```
+  </Tab>
+  
+  <Tab title="Error">
+    ```vue
+    <template>
+      <UButton color="error" label="Error" />
+    </template>
+    ```
+  </Tab>
+  
+  <Tab title="Neutral">
+    ```vue
+    <template>
+      <UButton color="neutral" label="Neutral" />
+    </template>
+    ```
+  </Tab>
+</Tabs>
+
+### Sizes
+
+```vue
+<template>
+  <div class="flex items-center gap-2">
+    <UButton size="xs" label="XS" />
+    <UButton size="sm" label="SM" />
+    <UButton size="md" label="MD" />
+    <UButton size="lg" label="LG" />
+    <UButton size="xl" label="XL" />
+  </div>
+</template>
+```
+
+### With Icons
+
+<Tabs>
+  <Tab title="Leading Icon">
+    ```vue
+    <template>
+      <UButton 
+        leadingIcon="i-heroicons-plus" 
+        label="Add Item" 
+      />
+    </template>
+    ```
+  </Tab>
+  
+  <Tab title="Trailing Icon">
+    ```vue
+    <template>
+      <UButton 
+        label="Next" 
+        trailingIcon="i-heroicons-arrow-right" 
+      />
+    </template>
+    ```
+  </Tab>
+  
+  <Tab title="Icon Only">
+    ```vue
+    <template>
+      <UButton 
+        icon="i-heroicons-cog-6-tooth" 
+        square
+      />
+    </template>
+    ```
+    
+    When only an icon is provided, the button automatically becomes square.
+  </Tab>
+</Tabs>
+
+### Loading States
+
+<Tabs>
+  <Tab title="Manual Loading">
+    ```vue
+    <script setup>
+    import { ref } from 'vue'
+    
+    const isLoading = ref(false)
+    
+    async function handleClick() {
+      isLoading.value = true
+      await new Promise(resolve => setTimeout(resolve, 2000))
+      isLoading.value = false
+    }
+    </script>
+    
+    <template>
+      <UButton 
+        :loading="isLoading" 
+        label="Submit" 
+        @click="handleClick"
+      />
+    </template>
+    ```
+  </Tab>
+  
+  <Tab title="Auto Loading">
+    ```vue
+    <script setup>
+    async function handleSubmit() {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000))
+      console.log('Submitted!')
+    }
+    </script>
+    
+    <template>
+      <UButton 
+        loadingAuto 
+        label="Submit" 
+        @click="handleSubmit"
+      />
+    </template>
+    ```
+    
+    The button automatically shows a loading spinner while the async click handler runs.
+  </Tab>
+</Tabs>
+
+### With Avatar
+
+```vue
+<template>
+  <UButton 
+    :avatar="{ src: 'https://i.pravatar.cc/300', alt: 'User' }" 
+    label="Profile"
+  />
+</template>
+```
+
+### Block Button
+
+```vue
+<template>
+  <UButton 
+    block 
+    label="Full Width Button"
+  />
+</template>
+```
+
+### As Link
+
+<Tabs>
+  <Tab title="Internal Navigation">
+    ```vue
+    <template>
+      <UButton 
+        to="/dashboard" 
+        label="Go to Dashboard"
+      />
+    </template>
+    ```
+  </Tab>
+  
+  <Tab title="External Link">
+    ```vue
+    <template>
+      <UButton 
+        href="https://nuxt.com" 
+        target="_blank" 
+        label="Visit Nuxt"
+        trailingIcon="i-heroicons-arrow-top-right-on-square"
+      />
+    </template>
+    ```
+  </Tab>
+</Tabs>
+
+### Active State
+
+```vue
+<template>
+  <UButton 
+    to="/settings" 
+    label="Settings"
+    activeColor="success"
+    activeVariant="solid"
+  />
+</template>
+```
+
+When the button is used as a router link and matches the current route, it applies the active color and variant.
+
+### Disabled State
+
+```vue
+<template>
+  <UButton 
+    disabled 
+    label="Disabled Button"
+  />
+</template>
+```
+
+### Custom Slots
+
+```vue
+<template>
+  <UButton>
+    <template #leading>
+      <svg class="size-5"><!-- custom icon --></svg>
+    </template>
+    
+    <div class="flex flex-col items-start">
+      <span class="font-semibold">Multi-line</span>
+      <span class="text-xs opacity-75">With description</span>
+    </div>
+    
+    <template #trailing>
+      <span class="text-xs">⌘K</span>
+    </template>
+  </UButton>
+</template>
+```
+
+## Theming
+
+The Button component uses Tailwind Variants for theming. Size configuration:
+
+<Tabs>
+  <Tab title="xs">
+    - Padding: `px-2 py-1`
+    - Text: `text-xs`
+    - Gap: `gap-1`
+    - Icon size: `size-4`
+    - Avatar size: `3xs`
+  </Tab>
+  
+  <Tab title="sm">
+    - Padding: `px-2.5 py-1.5`
+    - Text: `text-xs`
+    - Gap: `gap-1.5`
+    - Icon size: `size-4`
+    - Avatar size: `3xs`
+  </Tab>
+  
+  <Tab title="md (default)">
+    - Padding: `px-2.5 py-1.5`
+    - Text: `text-sm`
+    - Gap: `gap-1.5`
+    - Icon size: `size-5`
+    - Avatar size: `2xs`
+  </Tab>
+  
+  <Tab title="lg">
+    - Padding: `px-3 py-2`
+    - Text: `text-sm`
+    - Gap: `gap-2`
+    - Icon size: `size-5`
+    - Avatar size: `2xs`
+  </Tab>
+  
+  <Tab title="xl">
+    - Padding: `px-3 py-2`
+    - Text: `text-base`
+    - Gap: `gap-2`
+    - Icon size: `size-6`
+    - Avatar size: `xs`
+  </Tab>
+</Tabs>
+
+## Accessibility
+
+- Buttons are keyboard accessible and can be activated with `Enter` or `Space`
+- Disabled buttons have `aria-disabled` attribute and reduced opacity
+- Loading state is communicated through visual spinner
+- Focus visible states with outline for keyboard navigation
+- Supports all standard link and button ARIA attributes
+
+## Related Components
+
+- [ButtonGroup](/components/button-group) - Group multiple buttons together
+- [Link](/components/link) - Base link component
+- [Icon](/components/icon) - Icon component used in buttons
+- [Avatar](/components/avatar) - Avatar component for button avatars

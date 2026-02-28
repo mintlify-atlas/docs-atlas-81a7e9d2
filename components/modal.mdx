@@ -1,0 +1,227 @@
+---
+title: 'Modal'
+description: 'A dialog component for displaying content in an overlay with backdrop'
+icon: 'square'
+---
+
+## Overview
+
+The Modal component displays content in an overlay dialog, typically used for important interactions that require user attention. Built on Reka UI's Dialog component.
+
+## Basic Usage
+
+```vue
+<template>
+  <UModal v-model:open="isOpen" title="My Modal" description="This is a modal description">
+    <template #default="{ open }">
+      <UButton @click="isOpen = true">Open Modal</UButton>
+    </template>
+    <template #body>
+      <p>Modal content goes here</p>
+    </template>
+  </UModal>
+</template>
+
+<script setup>
+const isOpen = ref(false)
+</script>
+```
+
+## Props
+
+<ParamField path="title" type="string">
+  The title of the modal displayed in the header.
+</ParamField>
+
+<ParamField path="description" type="string">
+  The description text displayed below the title.
+</ParamField>
+
+<ParamField path="overlay" type="boolean" default="true">
+  Render an overlay behind the modal.
+</ParamField>
+
+<ParamField path="scrollable" type="boolean" default="false">
+  When `true`, enables scrollable overlay mode where content scrolls within the overlay.
+</ParamField>
+
+<ParamField path="transition" type="boolean" default="true">
+  Animate the modal when opening or closing.
+</ParamField>
+
+<ParamField path="fullscreen" type="boolean" default="false">
+  When `true`, the modal will take up the full screen.
+</ParamField>
+
+<ParamField path="portal" type="boolean | string | HTMLElement" default="true">
+  Render the modal in a portal.
+</ParamField>
+
+<ParamField path="close" type="boolean | ButtonProps" default="true">
+  Display a close button to dismiss the modal. Can be configured with button props: `{ size: 'md', color: 'neutral', variant: 'ghost' }`
+</ParamField>
+
+<ParamField path="closeIcon" type="string" default="appConfig.ui.icons.close">
+  The icon displayed in the close button. Accepts Iconify icon names.
+</ParamField>
+
+<ParamField path="dismissible" type="boolean" default="true">
+  When `false`, the modal will not close when clicking outside or pressing escape.
+</ParamField>
+
+<ParamField path="open" type="boolean">
+  Controls the open state of the modal (v-model:open).
+</ParamField>
+
+<ParamField path="defaultOpen" type="boolean">
+  The default open state when uncontrolled.
+</ParamField>
+
+<ParamField path="modal" type="boolean" default="true">
+  The modality of the dialog. When set to `true`, interaction outside the element will be disabled.
+</ParamField>
+
+<ParamField path="content" type="DialogContentProps">
+  Additional props passed to the dialog content element.
+</ParamField>
+
+<ParamField path="class" type="any">
+  CSS class for styling the trigger element.
+</ParamField>
+
+<ParamField path="ui" type="object">
+  Theme customization object for component slots.
+</ParamField>
+
+## Events
+
+<ParamField path="update:open" type="(open: boolean) => void">
+  Emitted when the open state changes.
+</ParamField>
+
+<ParamField path="after:leave" type="() => void">
+  Emitted after the modal leave transition completes.
+</ParamField>
+
+<ParamField path="after:enter" type="() => void">
+  Emitted after the modal enter transition completes.
+</ParamField>
+
+<ParamField path="close:prevent" type="() => void">
+  Emitted when a close attempt is prevented (when `dismissible` is `false`).
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="{ open: boolean }">
+  The trigger element for opening the modal. Receives the current open state.
+</ParamField>
+
+<ParamField path="content" type="{ close: () => void }">
+  Complete control over the modal content, replacing the default structure.
+</ParamField>
+
+<ParamField path="header" type="{ close: () => void }">
+  Customizes the header section of the modal.
+</ParamField>
+
+<ParamField path="title" type="{}">
+  Customizes the title text.
+</ParamField>
+
+<ParamField path="description" type="{}">
+  Customizes the description text.
+</ParamField>
+
+<ParamField path="actions" type="{}">
+  Additional actions displayed in the header, typically between title and close button.
+</ParamField>
+
+<ParamField path="close" type="{ ui: object }">
+  Customizes the close button.
+</ParamField>
+
+<ParamField path="body" type="{ close: () => void }">
+  The main content area of the modal.
+</ParamField>
+
+<ParamField path="footer" type="{ close: () => void }">
+  Footer section for actions or additional content.
+</ParamField>
+
+## Examples
+
+### Fullscreen Modal
+
+```vue
+<template>
+  <UModal v-model:open="isOpen" fullscreen title="Fullscreen Modal">
+    <template #default>
+      <UButton>Open Fullscreen</UButton>
+    </template>
+    <template #body>
+      <p>This modal takes up the entire screen.</p>
+    </template>
+  </UModal>
+</template>
+```
+
+### Scrollable Modal
+
+```vue
+<template>
+  <UModal v-model:open="isOpen" scrollable title="Scrollable Modal">
+    <template #default>
+      <UButton>Open Scrollable</UButton>
+    </template>
+    <template #body>
+      <div style="height: 2000px">
+        <p>Long content that scrolls...</p>
+      </div>
+    </template>
+  </UModal>
+</template>
+```
+
+### Non-dismissible Modal
+
+```vue
+<template>
+  <UModal v-model:open="isOpen" :dismissible="false" title="Confirm Action">
+    <template #default>
+      <UButton>Open Non-dismissible</UButton>
+    </template>
+    <template #body>
+      <p>You must confirm or cancel.</p>
+    </template>
+    <template #footer="{ close }">
+      <UButton @click="close">Cancel</UButton>
+      <UButton @click="handleConfirm">Confirm</UButton>
+    </template>
+  </UModal>
+</template>
+```
+
+### Custom Header Actions
+
+```vue
+<template>
+  <UModal v-model:open="isOpen" title="Modal with Actions">
+    <template #default>
+      <UButton>Open Modal</UButton>
+    </template>
+    <template #actions>
+      <UButton size="sm" variant="ghost">Help</UButton>
+    </template>
+    <template #body>
+      <p>Modal content with custom header actions.</p>
+    </template>
+  </UModal>
+</template>
+```
+
+## Related Components
+
+- [Drawer](/components/drawer) - For slide-in overlays from screen edges
+- [Popover](/components/popover) - For contextual floating content
+- [Dialog](https://reka-ui.com/docs/components/dialog) - Reka UI Dialog documentation

@@ -1,0 +1,245 @@
+---
+title: 'Popover'
+description: 'A floating content container triggered by click or hover'
+icon: 'message-square'
+---
+
+## Overview
+
+The Popover component displays floating content anchored to a trigger element. Supports both click and hover modes with flexible positioning options.
+
+## Basic Usage
+
+```vue
+<template>
+  <UPopover>
+    <template #default="{ open }">
+      <UButton>{{ open ? 'Close' : 'Open' }} Popover</UButton>
+    </template>
+    <template #content>
+      <div class="p-4">
+        <p>Popover content goes here</p>
+      </div>
+    </template>
+  </UPopover>
+</template>
+```
+
+## Props
+
+<ParamField path="mode" type="'click' | 'hover'" default="'click'">
+  The display mode of the popover. Use `'hover'` for hover cards.
+</ParamField>
+
+<ParamField path="content" type="PopoverContentProps" default="{ side: 'bottom', sideOffset: 8, collisionPadding: 8 }">
+  Configuration object for popover content positioning and behavior.
+</ParamField>
+
+<ParamField path="arrow" type="boolean | PopoverArrowProps" default="false">
+  Display an arrow pointing to the trigger element.
+</ParamField>
+
+<ParamField path="portal" type="boolean | string | HTMLElement" default="true">
+  Render the popover in a portal.
+</ParamField>
+
+<ParamField path="reference" type="HTMLElement">
+  The reference (or anchor) element for positioning. If not provided, uses the trigger element.
+</ParamField>
+
+<ParamField path="dismissible" type="boolean" default="true">
+  When `false`, the popover will not close when clicking outside or pressing escape.
+</ParamField>
+
+<ParamField path="open" type="boolean">
+  Controls the open state of the popover (v-model:open).
+</ParamField>
+
+<ParamField path="defaultOpen" type="boolean">
+  The default open state when uncontrolled.
+</ParamField>
+
+<ParamField path="modal" type="boolean">
+  The modality of the popover (only for click mode).
+</ParamField>
+
+<ParamField path="openDelay" type="number" default="0">
+  Delay in milliseconds before opening (for hover mode).
+</ParamField>
+
+<ParamField path="closeDelay" type="number" default="0">
+  Delay in milliseconds before closing (for hover mode).
+</ParamField>
+
+<ParamField path="class" type="any">
+  CSS class for styling the trigger element.
+</ParamField>
+
+<ParamField path="ui" type="object">
+  Theme customization object for component slots.
+</ParamField>
+
+## Events
+
+<ParamField path="update:open" type="(open: boolean) => void">
+  Emitted when the open state changes.
+</ParamField>
+
+<ParamField path="close:prevent" type="() => void">
+  Emitted when a close attempt is prevented (when `dismissible` is `false`).
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="{ open: boolean }">
+  The trigger element for the popover. Receives the current open state.
+</ParamField>
+
+<ParamField path="content" type="{ close?: () => void }">
+  The content displayed inside the popover. In click mode, receives a `close` function.
+</ParamField>
+
+<ParamField path="anchor" type="{ close?: () => void }">
+  Optional anchor element for positioning (when different from trigger).
+</ParamField>
+
+## Examples
+
+### Hover Mode (Hover Card)
+
+```vue
+<template>
+  <UPopover mode="hover" :open-delay="200" :close-delay="100">
+    <template #default>
+      <span>Hover over me</span>
+    </template>
+    <template #content>
+      <div class="p-4">
+        <p>This appears on hover</p>
+      </div>
+    </template>
+  </UPopover>
+</template>
+```
+
+### With Arrow
+
+```vue
+<template>
+  <UPopover :arrow="true">
+    <template #default>
+      <UButton>Open Popover</UButton>
+    </template>
+    <template #content>
+      <div class="p-4">
+        <p>Popover with arrow pointer</p>
+      </div>
+    </template>
+  </UPopover>
+</template>
+```
+
+### Different Positions
+
+```vue
+<template>
+  <UPopover :content="{ side: 'top', sideOffset: 12 }">
+    <template #default>
+      <UButton>Open Above</UButton>
+    </template>
+    <template #content>
+      <div class="p-4">
+        <p>This opens above the trigger</p>
+      </div>
+    </template>
+  </UPopover>
+</template>
+```
+
+### With Custom Reference Element
+
+```vue
+<template>
+  <div>
+    <div ref="anchorRef" class="p-4 border">
+      Anchor Element
+    </div>
+    <UPopover :reference="anchorRef">
+      <template #default>
+        <UButton>Open at Anchor</UButton>
+      </template>
+      <template #content>
+        <div class="p-4">
+          <p>Positioned relative to anchor</p>
+        </div>
+      </template>
+    </UPopover>
+  </div>
+</template>
+
+<script setup>
+const anchorRef = ref(null)
+</script>
+```
+
+### Non-dismissible Popover
+
+```vue
+<template>
+  <UPopover :dismissible="false">
+    <template #default>
+      <UButton>Open Popover</UButton>
+    </template>
+    <template #content="{ close }">
+      <div class="p-4">
+        <p>You must close this explicitly</p>
+        <UButton @click="close" size="sm">Close</UButton>
+      </div>
+    </template>
+  </UPopover>
+</template>
+```
+
+### Rich Content Popover
+
+```vue
+<template>
+  <UPopover :content="{ side: 'right', align: 'start' }">
+    <template #default>
+      <UButton>User Info</UButton>
+    </template>
+    <template #content>
+      <div class="p-4 space-y-2 max-w-sm">
+        <div class="flex items-center gap-2">
+          <UAvatar src="/avatar.jpg" />
+          <div>
+            <p class="font-semibold">John Doe</p>
+            <p class="text-sm text-muted">john@example.com</p>
+          </div>
+        </div>
+        <p class="text-sm">Software developer with 5 years of experience.</p>
+        <UButton size="sm" block>View Profile</UButton>
+      </div>
+    </template>
+  </UPopover>
+</template>
+```
+
+## Content Props
+
+The `content` prop accepts the following positioning options:
+
+- `side`: `'top' | 'right' | 'bottom' | 'left'` - Which side to position the popover
+- `sideOffset`: `number` - Distance in pixels from the trigger
+- `align`: `'start' | 'center' | 'end'` - Alignment along the side
+- `alignOffset`: `number` - Offset along the alignment axis
+- `collisionPadding`: `number | Partial<Record<'top' | 'right' | 'bottom' | 'left', number>>` - Padding from viewport edges
+- `avoidCollisions`: `boolean` - Whether to adjust position to avoid collisions
+- `sticky`: `'partial' | 'always'` - Sticky behavior during scrolling
+
+## Related Components
+
+- [Tooltip](/components/tooltip) - For simple text hints
+- [Dropdown Menu](/components/dropdown-menu) - For action menus
+- [Context Menu](/components/context-menu) - For right-click menus
+- [Popover](https://reka-ui.com/docs/components/popover) - Reka UI Popover documentation

@@ -1,0 +1,154 @@
+---
+title: DashboardNavbar
+description: A navbar component for dashboard layouts with toggle button and flexible content areas.
+---
+
+## Usage
+
+The DashboardNavbar component provides a responsive navigation bar for dashboard layouts, with support for sidebar toggling.
+
+```vue
+<template>
+  <UDashboardNavbar
+    title="Dashboard"
+    icon="i-heroicons-home"
+  />
+</template>
+```
+
+## With Sidebar Toggle
+
+The navbar includes a toggle button to open/close the sidebar.
+
+```vue
+<UDashboardNavbar
+  title="My Dashboard"
+  toggle
+  toggle-side="left"
+/>
+```
+
+## Layout Slots
+
+The navbar has three main content areas: left, center (default), and right.
+
+```vue
+<UDashboardNavbar title="Dashboard">
+  <template #left>
+    <UButton label="Menu" />
+  </template>
+  
+  <template #default>
+    <nav>
+      <UButton label="Home" variant="link" />
+      <UButton label="Settings" variant="link" />
+    </nav>
+  </template>
+  
+  <template #right>
+    <UButton icon="i-heroicons-bell" variant="ghost" />
+    <UButton icon="i-heroicons-user" variant="ghost" />
+  </template>
+</UDashboardNavbar>
+```
+
+## Custom Toggle
+
+Customize the toggle button appearance.
+
+```vue
+<UDashboardNavbar
+  title="Dashboard"
+  :toggle="{ color: 'primary', variant: 'solid' }"
+  toggle-side="right"
+/>
+```
+
+## Without Toggle
+
+Disable the toggle button if you don't need sidebar functionality.
+
+```vue
+<UDashboardNavbar
+  title="Dashboard"
+  :toggle="false"
+/>
+```
+
+## Slots Example
+
+```vue
+<UDashboardNavbar>
+  <template #leading>
+    <UIcon name="i-heroicons-squares-2x2" class="size-5" />
+  </template>
+  
+  <template #title>
+    <h1 class="text-xl font-bold">Custom Title</h1>
+  </template>
+  
+  <template #trailing>
+    <UBadge label="New" color="primary" />
+  </template>
+</UDashboardNavbar>
+```
+
+## Props
+
+<ParamField path="as" type="any" default="'div'">
+  The element or component this component should render as.
+</ParamField>
+
+<ParamField path="icon" type="string">
+  The icon displayed next to the title.
+</ParamField>
+
+<ParamField path="title" type="string">
+  The title text displayed in the navbar.
+</ParamField>
+
+<ParamField path="toggle" type="boolean | ButtonProps" default="true">
+  Customize the toggle button to open the sidebar. Pass `false` to disable, or an object to customize the button.
+</ParamField>
+
+<ParamField path="toggleSide" type="'left' | 'right'" default="'left'">
+  The side to render the toggle button on.
+</ParamField>
+
+<ParamField path="class" type="any">
+  Custom class to apply to the root element.
+</ParamField>
+
+<ParamField path="ui" type="Partial<typeof theme>">
+  Override default theme classes.
+</ParamField>
+
+## Slots
+
+<ParamField path="title">
+  Customize the title content.
+</ParamField>
+
+<ParamField path="leading" type="{ ui, sidebarOpen, sidebarCollapsed }">
+  Customize the leading content (before the title).
+</ParamField>
+
+<ParamField path="trailing" type="{ ui, sidebarOpen, sidebarCollapsed }">
+  Customize the trailing content (after the title).
+</ParamField>
+
+<ParamField path="left" type="{ sidebarOpen, sidebarCollapsed }">
+  Customize the entire left section of the navbar.
+</ParamField>
+
+<ParamField path="default" type="{ sidebarOpen, sidebarCollapsed }">
+  Customize the center section of the navbar.
+</ParamField>
+
+<ParamField path="right" type="{ sidebarOpen, sidebarCollapsed }">
+  Customize the right section of the navbar.
+</ParamField>
+
+<ParamField path="toggle" type="{ ui, sidebarOpen, sidebarCollapsed }">
+  Customize the toggle button.
+</ParamField>

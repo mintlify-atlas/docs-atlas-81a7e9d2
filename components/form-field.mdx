@@ -1,0 +1,280 @@
+---
+title: 'FormField'
+description: 'A form field wrapper that provides label, description, help text, error display, and automatic form integration.'
+---
+
+## Overview
+
+The FormField component wraps form inputs to provide consistent labeling, descriptions, help text, and error message display. It automatically integrates with parent Form components for validation.
+
+## Basic Usage
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const state = ref({
+  email: ''
+})
+</script>
+
+<template>
+  <UFormField
+    label="Email Address"
+    name="email"
+    description="We'll never share your email"
+    help="Enter a valid email address"
+  >
+    <UInput v-model="state.email" type="email" />
+  </UFormField>
+</template>
+```
+
+## With Form Validation
+
+```vue
+<script setup lang="ts">
+import { z } from 'zod'
+import { ref } from 'vue'
+
+const schema = z.object({
+  email: z.string().email('Invalid email address'),
+  password: z.string().min(8, 'Password must be at least 8 characters')
+})
+
+const state = ref({
+  email: '',
+  password: ''
+})
+</script>
+
+<template>
+  <UForm :schema="schema" :state="state">
+    <UFormField 
+      label="Email" 
+      name="email"
+      required
+    >
+      <UInput v-model="state.email" />
+    </UFormField>
+    
+    <UFormField 
+      label="Password" 
+      name="password"
+      required
+      help="Must be at least 8 characters"
+    >
+      <UInput v-model="state.password" type="password" />
+    </UFormField>
+  </UForm>
+</template>
+```
+
+## Custom Error Messages
+
+Override form validation errors with custom messages:
+
+```vue
+<template>
+  <UFormField
+    label="Username"
+    name="username"
+    error="This username is already taken"
+  >
+    <UInput v-model="state.username" />
+  </UFormField>
+  
+  <!-- Conditionally show error -->
+  <UFormField
+    label="Email"
+    name="email"
+    :error="customError || undefined"
+  >
+    <UInput v-model="state.email" />
+  </UFormField>
+</template>
+```
+
+## Error Pattern Matching
+
+Match multiple error fields with a regular expression:
+
+```vue
+<script setup lang="ts">
+// This field will show errors for addresses.home, addresses.work, etc.
+const addressPattern = /^addresses\./
+</script>
+
+<template>
+  <UFormField
+    label="Addresses"
+    name="addresses"
+    :error-pattern="addressPattern"
+  >
+    <!-- nested address inputs -->
+  </UFormField>
+</template>
+```
+
+## Eager Validation
+
+Enable immediate validation without waiting for blur event:
+
+```vue
+<template>
+  <UFormField
+    label="Username"
+    name="username"
+    eager-validation
+  >
+    <UInput v-model="state.username" />
+  </UFormField>
+</template>
+```
+
+## Sizes
+
+```vue
+<template>
+  <UFormField label="Small" size="sm">
+    <UInput />
+  </UFormField>
+  
+  <UFormField label="Medium" size="md">
+    <UInput />
+  </UFormField>
+  
+  <UFormField label="Large" size="lg">
+    <UInput />
+  </UFormField>
+</template>
+```
+
+## Horizontal Orientation
+
+```vue
+<template>
+  <UFormField
+    label="Name"
+    orientation="horizontal"
+  >
+    <UInput v-model="state.name" />
+  </UFormField>
+</template>
+```
+
+## Custom Slots
+
+```vue
+<template>
+  <UFormField name="terms">
+    <template #label="{ label }">
+      <div class="flex items-center gap-2">
+        <UIcon name="i-heroicons-information-circle" />
+        <span>{{ label }}</span>
+      </div>
+    </template>
+    
+    <template #description="{ description }">
+      <p class="italic">{{ description }}</p>
+    </template>
+    
+    <template #error="{ error }">
+      <div class="flex items-center gap-1">
+        <UIcon name="i-heroicons-exclamation-triangle" />
+        <span>{{ error }}</span>
+      </div>
+    </template>
+    
+    <UCheckbox />
+  </UFormField>
+</template>
+```
+
+## Props
+
+<ParamField path="name" type="string">
+  The name of the FormField. Used to match form errors.
+</ParamField>
+
+<ParamField path="label" type="string">
+  Label text displayed above the field.
+</ParamField>
+
+<ParamField path="description" type="string">
+  Description text displayed below the label.
+</ParamField>
+
+<ParamField path="help" type="string">
+  Help text displayed below the input when there's no error.
+</ParamField>
+
+<ParamField path="hint" type="string">
+  Hint text displayed next to the label.
+</ParamField>
+
+<ParamField path="error" type="boolean | string">
+  Custom error message. Set to `false` to hide errors, or provide a string to override.
+</ParamField>
+
+<ParamField path="errorPattern" type="RegExp">
+  A regular expression to match form error names.
+</ParamField>
+
+<ParamField path="required" type="boolean">
+  Mark the field as required (visual indicator).
+</ParamField>
+
+<ParamField path="size" type="'sm' | 'md' | 'lg' | 'xl'" default="md">
+  Size variant of the form field.
+</ParamField>
+
+<ParamField path="orientation" type="'vertical' | 'horizontal'" default="vertical">
+  Layout orientation of the form field.
+</ParamField>
+
+<ParamField path="eagerValidation" type="boolean">
+  If true, validation on input will be active immediately instead of waiting for a blur event.
+</ParamField>
+
+<ParamField path="validateOnInputDelay" type="number" default="300">
+  Delay in milliseconds before validating on input events.
+</ParamField>
+
+<ParamField path="as" type="any" default="div">
+  The element or component this component should render as.
+</ParamField>
+
+<ParamField path="class" type="any">
+  Additional CSS classes.
+</ParamField>
+
+<ParamField path="ui" type="object">
+  UI customization object for styling slots (root, wrapper, labelWrapper, label, hint, description, container, error, help).
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="{ error?: boolean | string }">
+  Default slot for the input component. Receives current error state.
+</ParamField>
+
+<ParamField path="label" type="{ label?: string }">
+  Custom label content.
+</ParamField>
+
+<ParamField path="hint" type="{ hint?: string }">
+  Custom hint content.
+</ParamField>
+
+<ParamField path="description" type="{ description?: string }">
+  Custom description content.
+</ParamField>
+
+<ParamField path="help" type="{ help?: string }">
+  Custom help text content.
+</ParamField>
+
+<ParamField path="error" type="{ error?: boolean | string }">
+  Custom error message content.
+</ParamField>

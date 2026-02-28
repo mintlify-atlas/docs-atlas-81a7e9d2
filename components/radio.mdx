@@ -1,0 +1,40 @@
+---
+title: 'Radio'
+description: 'Individual radio button component. Use RadioGroup for multiple options.'
+icon: 'circle-dot'
+---
+
+<Note>
+  The Radio component doesn't exist as a standalone component in Nuxt UI. Instead, use the **RadioGroup** component which manages a group of radio options.
+</Note>
+
+## See Also
+
+<Card title="RadioGroup" icon="list-radio" href="/components/radio-group">
+  Use RadioGroup to create a set of radio buttons where users can select a single option.
+</Card>
+
+## Why RadioGroup?
+
+Radio buttons are designed to work together as a group where only one option can be selected at a time. The RadioGroup component handles this behavior automatically, including:
+
+- Managing the selected state across all radio buttons
+- Keyboard navigation between options
+- Proper accessibility attributes
+- Consistent styling and layout
+
+## Quick Example
+
+```vue
+<template>
+  <URadioGroup
+    v-model="selected"
+    legend="Select an option"
+    :items="['Option 1', 'Option 2', 'Option 3']"
+  />
+</template>
+
+<script setup>
+const selected = ref('Option 1')
+</script>
+```

@@ -1,0 +1,280 @@
+---
+title: 'Color Mode'
+description: 'Implement dark mode and color themes with @nuxtjs/color-mode integration'
+icon: 'moon'
+---
+
+## Overview
+
+Nuxt UI provides seamless dark mode support through the [@nuxtjs/color-mode](https://color-mode.nuxtjs.org/) module, which is automatically installed and configured.
+
+## Automatic Integration
+
+The color mode module is automatically registered by Nuxt UI with optimized settings:
+
+```typescript
+// Automatically configured by Nuxt UI
+{
+  colorMode: {
+    classSuffix: '',
+    disableTransition: true
+  }
+}
+```
+
+<Note>
+  Color mode is enabled by default. You can disable it by setting `colorMode: false` in your Nuxt UI configuration.
+</Note>
+
+## Using Color Mode
+
+### useColorMode Composable
+
+Access and control the color mode in your components:
+
+```vue
+<script setup>
+const colorMode = useColorMode()
+
+// Get current mode
+const isDark = computed(() => colorMode.value === 'dark')
+
+// Change mode
+function toggleDark() {
+  colorMode.preference = colorMode.preference === 'dark' ? 'light' : 'dark'
+}
+</script>
+
+<template>
+  <button @click="toggleDark">
+    Current mode: {{ colorMode.value }}
+  </button>
+</template>
+```
+
+### Available Properties
+
+- `colorMode.value` - Current active mode (`'light'`, `'dark'`, or `'system'`)
+- `colorMode.preference` - User's preference (can be set to change mode)
+- `colorMode.forced` - Force a specific mode
+
+## Color Mode Components
+
+Nuxt UI provides ready-to-use components for color mode switching:
+
+### ColorModeButton
+
+A button that toggles between light and dark modes:
+
+```vue
+<template>
+  <UColorModeButton />
+</template>
+```
+
+Customize the button appearance:
+
+```vue
+<template>
+  <UColorModeButton
+    color="neutral"
+    variant="ghost"
+    size="sm"
+  />
+</template>
+```
+
+### ColorModeSwitch
+
+A toggle switch for dark mode:
+
+```vue
+<template>
+  <UColorModeSwitch />
+</template>
+```
+
+### ColorModeSelect
+
+A dropdown to select from all available modes:
+
+```vue
+<template>
+  <UColorModeSelect />
+</template>
+```
+
+This allows users to choose between:
+- **Light** - Force light mode
+- **Dark** - Force dark mode  
+- **System** - Follow system preference
+
+## Locale Support
+
+Color mode components use the locale system for labels:
+
+```typescript
+// From en.ts locale file
+colorMode: {
+  dark: 'Dark',
+  light: 'Light',
+  switchToDark: 'Switch to dark mode',
+  switchToLight: 'Switch to light mode',
+  system: 'System'
+}
+```
+
+You can customize these labels for different languages. See the [Internationalization guide](/guides/internationalization) for more details.
+
+## Styling for Color Modes
+
+### Dark Mode Classes
+
+Use the `dark:` variant in your Tailwind classes:
+
+```vue
+<template>
+  <div class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
+    This content adapts to color mode
+  </div>
+</template>
+```
+
+### Semantic Color Tokens
+
+Nuxt UI provides semantic color tokens that automatically adapt:
+
+```vue
+<template>
+  <div class="bg-background text-foreground">
+    <h1 class="text-primary">Heading</h1>
+    <p class="text-muted">Description text</p>
+  </div>
+</template>
+```
+
+Common semantic tokens:
+- `bg-background` / `text-foreground` - Base colors
+- `bg-elevated` - Elevated surface
+- `text-muted` - Muted text
+- `text-primary` - Primary brand color
+
+<Note>
+  Using semantic tokens ensures your UI looks great in both light and dark modes without additional styling.
+</Note>
+
+## Custom Color Modes
+
+Add custom color modes beyond light and dark:
+
+```typescript nuxt.config.ts
+export default defineNuxtConfig({
+  modules: ['@nuxt/ui'],
+  
+  colorMode: {
+    classSuffix: '',
+    preference: 'system',
+    fallback: 'light',
+    dataValue: 'theme',
+    storageKey: 'nuxt-color-mode'
+  }
+})
+```
+
+## ColorModeImage and ColorModeAvatar
+
+Display different images based on color mode:
+
+### ColorModeImage
+
+```vue
+<template>
+  <UColorModeImage
+    light="/logo-light.png"
+    dark="/logo-dark.png"
+    alt="Logo"
+  />
+</template>
+```
+
+### ColorModeAvatar
+
+```vue
+<template>
+  <UColorModeAvatar
+    light="/avatar-light.png"
+    dark="/avatar-dark.png"
+    alt="User"
+  />
+</template>
+```
+
+## Disabling Transitions
+
+By default, Nuxt UI disables transitions during color mode changes to prevent flashing:
+
+```typescript
+{
+  colorMode: {
+    disableTransition: true
+  }
+}
+```
+
+To enable transitions, override this in your config:
+
+```typescript nuxt.config.ts
+export default defineNuxtConfig({
+  colorMode: {
+    disableTransition: false
+  }
+})
+```
+
+## SSR Considerations
+
+The color mode module handles SSR correctly:
+
+- Prevents flash of incorrect theme on page load
+- Syncs with `localStorage` for persistence
+- Respects system preferences
+
+<Warning>
+  The initial render always uses the fallback mode on the server. The correct mode is applied on the client after hydration.
+</Warning>
+
+## Force Color Mode
+
+Force a specific color mode for certain pages:
+
+```vue
+<script setup>
+definePageMeta({
+  colorMode: 'dark'
+})
+</script>
+```
+
+## Disabling Color Mode
+
+If you don't need color mode support, disable it:
+
+```typescript nuxt.config.ts
+export default defineNuxtConfig({
+  modules: ['@nuxt/ui'],
+  
+  ui: {
+    colorMode: false
+  }
+})
+```
+
+<Note>
+  When disabled, Nuxt UI provides a stub `useColorMode` composable that components like `DashboardSearch` can still use without errors.
+</Note>
+
+## Learn More
+
+- [@nuxtjs/color-mode Documentation](https://color-mode.nuxtjs.org/)
+- [ColorModeButton Component](/components/color-mode-button)
+- [Theme Customization](/theme/customization)

@@ -1,0 +1,469 @@
+---
+title: Migrating to v3
+description: Learn how to migrate from Nuxt UI v2 to v3.
+---
+
+## Overview
+
+Nuxt UI v3 is a complete rewrite built on top of [Reka UI](https://reka-ui.com/), [Tailwind CSS](https://tailwindcss.com/), and [Tailwind Variants](https://www.tailwind-variants.org/). This migration brings significant improvements in accessibility, theming, and developer experience.
+
+<Warning>
+  v3 is a major version with extensive breaking changes. Plan adequate time for migration and testing.
+</Warning>
+
+## Breaking Changes
+
+### Migration to Reka UI
+
+The biggest change in v3 is the migration from Headless UI to Reka UI for all component primitives.
+
+**Key Changes:**
+- All components now use Reka UI primitives for better accessibility
+- Component APIs have been updated to match Reka UI patterns
+- Some props and events have been renamed for consistency
+
+### Modal and Overlay Changes
+
+#### useOverlay API Changes
+
+The overlay system has been completely redesigned for programmatic control of modals and slideovers.
+
+**Before (v2):**
+```ts
+const modal = useModal()
+modal.open(MyComponent)
+```
+
+**After (v3):**
+```ts
+const modal = useOverlay(MyComponent)
+await modal.open({ props })
+```
+
+<Note>
+  The `.open()` method now returns a promise that resolves when the overlay closes.
+</Note>
+
+#### Prevent Close Renamed to Dismissible
+
+The `prevent-close` prop has been renamed to `dismissible` and its logic inverted.
+
+**Before (v2):**
+```vue
+<UModal :prevent-close="true" />
+```
+
+**After (v3):**
+```vue
+<UModal :dismissible="false" />
+```
+
+### Form Validation Changes
+
+#### Nested Form State
+
+Nested forms now include their state in the parent form's submit data.
+
+**Migration:**
+- Review nested form structures
+- Update submit handlers to account for nested form data
+
+#### Validation Schema Changes
+
+Form validation now uses a standard schema interface.
+
+**Before (v2):**
+```ts
+const schema = yup.object({
+  name: yup.string().required()
+})
+```
+
+**After (v3):**
+```ts
+import { z } from 'zod'
+
+const schema = z.object({
+  name: z.string().min(1)
+})
+```
+
+### Component Changes
+
+#### Devtools Removed
+
+The built-in devtools have been removed in favor of [Compodium](https://github.com/compodium/compodium).
+
+**Migration:**
+```bash
+npm install @compodium/vue-devtools
+```
+
+#### ColorPicker Migration
+
+ColorPicker now uses `colortranslator` instead of the `color` library.
+
+**Impact:**
+- Color format handling has changed
+- API for color manipulation is different
+- Review color-related code if using ColorPicker programmatically
+
+### Toast Changes
+
+#### Toast Events Renamed
+
+The `click` event has been renamed to `onClick` for consistency.
+
+**Before (v2):**
+```vue
+<UToast @click="handleClick" />
+```
+
+**After (v3):**
+```ts
+const toast = useToast()
+toast.add({
+  title: 'Hello',
+  onClick: () => handleClick()
+})
+```
+
+#### useToast No Longer Returns Promise
+
+The `add` method no longer returns a promise.
+
+**Before (v2):**
+```ts
+await toast.add({ title: 'Success' })
+```
+
+**After (v3):**
+```ts
+toast.add({ 
+  title: 'Success',
+  onClose: () => console.log('Closed')
+})
+```
+
+### Table Component
+
+#### Select Event Added
+
+The Table component now has a `@select` event for row selection.
+
+```vue
+<UTable 
+  v-model="selected"
+  :data="items" 
+  @select="(selected, item) => handleSelect(selected, item)"
+/>
+```
+
+### Theme System
+
+#### Tailwind Variants Integration
+
+The theme system now uses Tailwind Variants for better type safety and variant composition.
+
+**app.config.ts:**
+```ts
+export default defineAppConfig({
+  ui: {
+    button: {
+      base: 'font-medium rounded',
+      variants: {
+        color: {
+          primary: 'bg-primary text-white',
+          secondary: 'bg-gray-200 text-gray-900'
+        }
+      }
+    }
+  }
+})
+```
+
+#### Semantic Color Tokens
+
+v3 introduces semantic color tokens for better theme consistency.
+
+**Before (v2):**
+```vue
+<div class="bg-gray-100 text-gray-900" />
+```
+
+**After (v3):**
+```vue
+<div class="bg-elevated text-default" />
+```
+
+<Note>
+  Semantic tokens adapt automatically to light/dark mode and theme changes.
+</Note>
+
+### Alert and Toast Orientation
+
+The Alert and Toast components now have an `orientation` prop.
+
+```vue
+<UAlert orientation="horizontal" />
+<UToast orientation="vertical" />
+```
+
+## New Features
+
+### Tree Component
+
+A new Tree component for displaying hierarchical data.
+
+```vue
+<template>
+  <UTree :items="treeData" />
+</template>
+
+<script setup>
+const treeData = [
+  {
+    label: 'Parent',
+    children: [
+      { label: 'Child 1' },
+      { label: 'Child 2' }
+    ]
+  }
+]
+</script>
+```
+
+### InputNumber Component
+
+A new component for numeric input with increment/decrement controls.
+
+```vue
+<template>
+  <UInputNumber 
+    v-model="value" 
+    :min="0" 
+    :max="100" 
+    :step="5" 
+  />
+</template>
+```
+
+### PinInput Component
+
+A new component for PIN or OTP input.
+
+```vue
+<template>
+  <UPinInput v-model="pin" :length="6" />
+</template>
+```
+
+### Calendar Component
+
+A new Calendar component for date selection.
+
+```vue
+<template>
+  <UCalendar v-model="date" />
+</template>
+```
+
+### ColorPicker Component
+
+A redesigned color picker with better UX.
+
+```vue
+<template>
+  <UColorPicker v-model="color" />
+</template>
+```
+
+### Stepper Component
+
+A new component for multi-step workflows.
+
+```vue
+<template>
+  <UStepper v-model="currentStep" :items="steps" />
+</template>
+```
+
+### Timeline Component
+
+A new component for displaying chronological data.
+
+```vue
+<template>
+  <UTimeline :items="events" />
+</template>
+```
+
+### CheckboxGroup Component
+
+A new component for managing multiple checkboxes.
+
+```vue
+<template>
+  <UCheckboxGroup 
+    v-model="selected" 
+    :items="options" 
+  />
+</template>
+```
+
+### InputTags Component
+
+A new component for tag input.
+
+```vue
+<template>
+  <UInputTags v-model="tags" />
+</template>
+```
+
+### FileUpload Component
+
+A new component for file uploads with preview.
+
+```vue
+<template>
+  <UFileUpload 
+    v-model="files" 
+    accept="image/*" 
+    multiple 
+  />
+</template>
+```
+
+## Internationalization
+
+v3 includes built-in i18n support with multiple languages.
+
+```ts
+import { defineLocale } from '@nuxt/ui'
+
+export default defineNuxtConfig({
+  ui: {
+    locale: defineLocale('es')
+  }
+})
+```
+
+**Supported Languages:**
+- English (default)
+- Spanish
+- French
+- German
+- Italian
+- Japanese
+- Chinese
+- Korean
+- Arabic
+- And many more...
+
+### Custom Locale
+
+You can extend or create custom locales:
+
+```ts
+import { extendLocale } from '@nuxt/ui'
+
+const customLocale = extendLocale('en', {
+  button: {
+    submit: 'Send'
+  }
+})
+```
+
+## Accessibility Improvements
+
+### ARIA Attributes
+
+All components now include proper ARIA attributes:
+- `aria-label` and `aria-labelledby`
+- `aria-describedby` for form fields
+- `aria-invalid` for form validation
+- Proper `role` attributes
+
+### Keyboard Navigation
+
+Enhanced keyboard navigation for all interactive components:
+- Arrow keys for menus and dropdowns
+- Enter/Space for buttons and checkboxes
+- Escape for closing modals and overlays
+- Tab for focus management
+
+### Focus Management
+
+Improved focus management:
+- Focus trapping in modals
+- Proper focus restoration
+- Visible focus indicators
+
+## Migration Checklist
+
+<Steps>
+  <Step>
+    ### Update dependencies
+    - [ ] Update @nuxt/ui to v3
+    - [ ] Review and update any UI-related dependencies
+  </Step>
+  
+  <Step>
+    ### Update modal and overlay usage
+    - [ ] Replace useModal with useOverlay
+    - [ ] Update prevent-close to dismissible
+    - [ ] Handle promise-based overlay API
+  </Step>
+  
+  <Step>
+    ### Update form validation
+    - [ ] Migrate to zod or valibot
+    - [ ] Update schema definitions
+    - [ ] Test nested form behavior
+  </Step>
+  
+  <Step>
+    ### Update theme customization
+    - [ ] Migrate to Tailwind Variants format
+    - [ ] Update color tokens to semantic names
+    - [ ] Test light/dark mode
+  </Step>
+  
+  <Step>
+    ### Update component usage
+    - [ ] Review Toast event handlers
+    - [ ] Update ColorPicker if used
+    - [ ] Add orientation props where needed
+  </Step>
+  
+  <Step>
+    ### Test accessibility
+    - [ ] Test keyboard navigation
+    - [ ] Test screen reader compatibility
+    - [ ] Verify ARIA attributes
+  </Step>
+  
+  <Step>
+    ### Test application
+    - [ ] Run full test suite
+    - [ ] Test all forms
+    - [ ] Test all interactive components
+    - [ ] Verify responsive behavior
+  </Step>
+</Steps>
+
+## Resources
+
+- [Reka UI Documentation](https://reka-ui.com/)
+- [Tailwind Variants Documentation](https://www.tailwind-variants.org/)
+- [Nuxt UI v3 Release Notes](https://github.com/nuxt/ui/releases/tag/v3.0.0)
+- [GitHub Discussions](https://github.com/nuxt/ui/discussions)
+
+## Need Help?
+
+If you encounter issues during migration:
+
+- Check the [GitHub Discussions](https://github.com/nuxt/ui/discussions)
+- Review the [Changelog](https://github.com/nuxt/ui/blob/main/CHANGELOG.md)
+- Open an issue on [GitHub](https://github.com/nuxt/ui/issues)

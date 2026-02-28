@@ -1,0 +1,369 @@
+---
+title: 'Textarea'
+description: 'A multi-line text input component with auto-resize, icons, and form integration.'
+---
+
+## Overview
+
+The Textarea component provides a multi-line text input with support for auto-resizing, leading/trailing icons, different variants, and seamless integration with Form components.
+
+## Basic Usage
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const message = ref('')
+</script>
+
+<template>
+  <UTextarea v-model="message" placeholder="Enter your message..." />
+</template>
+```
+
+## Auto-resize
+
+```vue
+<template>
+  <!-- Auto-resize based on content -->
+  <UTextarea
+    v-model="message"
+    autoresize
+    placeholder="This will grow as you type"
+  />
+  
+  <!-- With max rows -->
+  <UTextarea
+    v-model="message"
+    autoresize
+    :rows="3"
+    :maxrows="10"
+    placeholder="Grows up to 10 rows"
+  />
+</template>
+```
+
+## With Icons
+
+```vue
+<template>
+  <!-- Leading icon -->
+  <UTextarea
+    leading-icon="i-heroicons-chat-bubble-left"
+    placeholder="Enter your comment..."
+  />
+  
+  <!-- Trailing icon -->
+  <UTextarea
+    trailing-icon="i-heroicons-check"
+    placeholder="Your bio"
+  />
+</template>
+```
+
+## Rows
+
+```vue
+<template>
+  <!-- Default 3 rows -->
+  <UTextarea placeholder="3 rows" />
+  
+  <!-- Custom rows -->
+  <UTextarea :rows="5" placeholder="5 rows" />
+  
+  <!-- Many rows -->
+  <UTextarea :rows="10" placeholder="10 rows" />
+</template>
+```
+
+## Colors
+
+```vue
+<template>
+  <UTextarea color="primary" placeholder="Primary" />
+  <UTextarea color="secondary" placeholder="Secondary" />
+  <UTextarea color="success" placeholder="Success" />
+  <UTextarea color="warning" placeholder="Warning" />
+  <UTextarea color="error" placeholder="Error" />
+  <UTextarea color="neutral" placeholder="Neutral" />
+</template>
+```
+
+## Variants
+
+```vue
+<template>
+  <UTextarea variant="outline" placeholder="Outline" />
+  <UTextarea variant="soft" placeholder="Soft" />
+  <UTextarea variant="ghost" placeholder="Ghost" />
+  <UTextarea variant="none" placeholder="None" />
+</template>
+```
+
+## Sizes
+
+```vue
+<template>
+  <UTextarea size="xs" placeholder="Extra Small" />
+  <UTextarea size="sm" placeholder="Small" />
+  <UTextarea size="md" placeholder="Medium" />
+  <UTextarea size="lg" placeholder="Large" />
+  <UTextarea size="xl" placeholder="Extra Large" />
+</template>
+```
+
+## States
+
+```vue
+<template>
+  <!-- Disabled -->
+  <UTextarea disabled placeholder="Disabled" />
+  
+  <!-- Required -->
+  <UTextarea required placeholder="Required field" />
+  
+  <!-- Highlighted -->
+  <UTextarea highlight placeholder="Highlighted" />
+  
+  <!-- Loading -->
+  <UTextarea loading placeholder="Loading..." />
+</template>
+```
+
+## Model Modifiers
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const trimmed = ref('')
+const nullable = ref(null)
+</script>
+
+<template>
+  <!-- Trim whitespace -->
+  <UTextarea v-model.trim="trimmed" />
+  
+  <!-- Nullable (empty = null) -->
+  <UTextarea v-model.nullable="nullable" />
+  
+  <!-- Optional (empty = undefined) -->
+  <UTextarea v-model.optional="optional" />
+  
+  <!-- Lazy (update on change, not input) -->
+  <UTextarea v-model.lazy="lazy" />
+</template>
+```
+
+## Autofocus
+
+```vue
+<template>
+  <!-- Immediate autofocus -->
+  <UTextarea autofocus placeholder="Focused on mount" />
+  
+  <!-- Delayed autofocus -->
+  <UTextarea autofocus :autofocus-delay="500" placeholder="Focused after 500ms" />
+</template>
+```
+
+## With Form
+
+```vue
+<script setup lang="ts">
+import { z } from 'zod'
+import { ref } from 'vue'
+
+const schema = z.object({
+  bio: z.string().min(10, 'Bio must be at least 10 characters'),
+  notes: z.string().max(500, 'Notes cannot exceed 500 characters')
+})
+
+const state = ref({
+  bio: '',
+  notes: ''
+})
+</script>
+
+<template>
+  <UForm :schema="schema" :state="state">
+    <UFormField label="Bio" name="bio">
+      <UTextarea
+        v-model="state.bio"
+        autoresize
+        placeholder="Tell us about yourself"
+      />
+    </UFormField>
+    
+    <UFormField label="Notes" name="notes">
+      <UTextarea
+        v-model="state.notes"
+        :rows="5"
+        placeholder="Additional notes"
+      />
+    </UFormField>
+  </UForm>
+</template>
+```
+
+## Character Count
+
+```vue
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+
+const message = ref('')
+const maxLength = 280
+const remaining = computed(() => maxLength - message.value.length)
+</script>
+
+<template>
+  <UFormField label="Message" :hint="`${remaining} characters remaining`">
+    <UTextarea
+      v-model="message"
+      :maxlength="maxLength"
+      placeholder="What's on your mind?"
+    />
+  </UFormField>
+</template>
+```
+
+## Props
+
+<ParamField path="modelValue" type="string | number | null">
+  The controlled value. Can be bound with v-model.
+</ParamField>
+
+<ParamField path="defaultValue" type="string | number | null">
+  The default value when initially rendered.
+</ParamField>
+
+<ParamField path="placeholder" type="string">
+  Placeholder text when the textarea is empty.
+</ParamField>
+
+<ParamField path="name" type="string">
+  The name attribute for the textarea.
+</ParamField>
+
+<ParamField path="id" type="string">
+  The id attribute for the textarea.
+</ParamField>
+
+<ParamField path="rows" type="number" default="3">
+  Number of visible text rows.
+</ParamField>
+
+<ParamField path="maxrows" type="number" default="0">
+  Maximum number of rows when autoresize is enabled (0 = unlimited).
+</ParamField>
+
+<ParamField path="autoresize" type="boolean">
+  Enable automatic height adjustment based on content.
+</ParamField>
+
+<ParamField path="autoresizeDelay" type="number" default="0">
+  Delay in milliseconds before initial auto-resize.
+</ParamField>
+
+<ParamField path="color" type="'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'neutral'" default="primary">
+  Color variant of the textarea.
+</ParamField>
+
+<ParamField path="variant" type="'outline' | 'soft' | 'ghost' | 'none'" default="outline">
+  Visual variant of the textarea.
+</ParamField>
+
+<ParamField path="size" type="'xs' | 'sm' | 'md' | 'lg' | 'xl'" default="md">
+  Size variant of the textarea.
+</ParamField>
+
+<ParamField path="leadingIcon" type="string">
+  Icon name to display at the start.
+</ParamField>
+
+<ParamField path="trailingIcon" type="string">
+  Icon name to display at the end.
+</ParamField>
+
+<ParamField path="avatar" type="AvatarProps">
+  Avatar configuration to display at the start.
+</ParamField>
+
+<ParamField path="loading" type="boolean">
+  Show loading indicator.
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  Disable the textarea.
+</ParamField>
+
+<ParamField path="required" type="boolean">
+  Mark the textarea as required.
+</ParamField>
+
+<ParamField path="highlight" type="boolean">
+  Highlight the ring color like a focus state.
+</ParamField>
+
+<ParamField path="fixed" type="boolean">
+  Keep the mobile text size on all breakpoints.
+</ParamField>
+
+<ParamField path="autofocus" type="boolean">
+  Automatically focus the textarea on mount.
+</ParamField>
+
+<ParamField path="autofocusDelay" type="number" default="0">
+  Delay in milliseconds before autofocus.
+</ParamField>
+
+<ParamField path="modelModifiers" type="{ trim?: boolean, lazy?: boolean, nullable?: boolean, optional?: boolean }">
+  Model modifiers for value transformation.
+</ParamField>
+
+<ParamField path="as" type="any" default="div">
+  The element or component this component should render as.
+</ParamField>
+
+<ParamField path="class" type="any">
+  Additional CSS classes.
+</ParamField>
+
+<ParamField path="ui" type="object">
+  UI customization object for styling slots.
+</ParamField>
+
+## Events
+
+<ParamField path="@update:modelValue" type="(value: string | number | null) => void">
+  Emitted when the textarea value changes.
+</ParamField>
+
+<ParamField path="@blur" type="(event: FocusEvent) => void">
+  Emitted when the textarea loses focus.
+</ParamField>
+
+<ParamField path="@change" type="(event: Event) => void">
+  Emitted when the textarea value is committed.
+</ParamField>
+
+## Slots
+
+<ParamField path="leading" type="{ ui: object }">
+  Custom content for the leading slot.
+</ParamField>
+
+<ParamField path="trailing" type="{ ui: object }">
+  Custom content for the trailing slot.
+</ParamField>
+
+<ParamField path="default" type="{ ui: object }">
+  Default slot (rarely used, textarea is the main element).
+</ParamField>
+
+## Exposed
+
+<ParamField path="textareaRef" type="Ref<HTMLTextAreaElement>">
+  Reference to the underlying textarea element.
+</ParamField>

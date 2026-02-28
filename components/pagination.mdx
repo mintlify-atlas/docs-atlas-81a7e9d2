@@ -1,0 +1,320 @@
+---
+title: Pagination
+description: A navigation component for paginating through large datasets.
+---
+
+## Usage
+
+The Pagination component allows users to navigate through pages of content. It supports customizable controls, icons, colors, and can render as links for SEO-friendly pagination.
+
+### Basic Example
+
+```vue
+<template>
+  <UPagination v-model="page" :total="100" />
+</template>
+
+<script setup>
+const page = ref(1)
+</script>
+```
+
+### Custom Items Per Page
+
+```vue
+<template>
+  <UPagination v-model="page" :total="250" :items-per-page="25" />
+</template>
+
+<script setup>
+const page = ref(1)
+</script>
+```
+
+### With Custom Styling
+
+```vue
+<template>
+  <UPagination 
+    v-model="page" 
+    :total="100"
+    color="primary"
+    variant="solid"
+    active-color="neutral"
+    active-variant="outline"
+  />
+</template>
+
+<script setup>
+const page = ref(1)
+</script>
+```
+
+### Without Edge Controls
+
+```vue
+<template>
+  <UPagination 
+    v-model="page" 
+    :total="100"
+    :show-edges="false"
+  />
+</template>
+
+<script setup>
+const page = ref(1)
+</script>
+```
+
+### Without All Controls
+
+```vue
+<template>
+  <UPagination 
+    v-model="page" 
+    :total="100"
+    :show-controls="false"
+  />
+</template>
+
+<script setup>
+const page = ref(1)
+</script>
+```
+
+### Custom Sibling Count
+
+```vue
+<template>
+  <UPagination 
+    v-model="page" 
+    :total="200"
+    :sibling-count="1"
+  />
+</template>
+
+<script setup>
+const page = ref(1)
+</script>
+```
+
+### As Links (SEO Friendly)
+
+```vue
+<template>
+  <UPagination 
+    v-model="page" 
+    :total="100"
+    :to="(page) => ({ query: { page } })"
+  />
+</template>
+
+<script setup>
+const page = ref(1)
+</script>
+```
+
+### Different Sizes
+
+```vue
+<template>
+  <div class="space-y-4">
+    <UPagination v-model="page" :total="100" size="xs" />
+    <UPagination v-model="page" :total="100" size="sm" />
+    <UPagination v-model="page" :total="100" size="md" />
+    <UPagination v-model="page" :total="100" size="lg" />
+    <UPagination v-model="page" :total="100" size="xl" />
+  </div>
+</template>
+
+<script setup>
+const page = ref(1)
+</script>
+```
+
+## API
+
+### Props
+
+<ParamField path="page" type="number">
+  The current page number (v-model).
+</ParamField>
+
+<ParamField path="total" type="number" default="0">
+  Total number of items.
+</ParamField>
+
+<ParamField path="itemsPerPage" type="number" default="10">
+  Number of items to display per page.
+</ParamField>
+
+<ParamField path="defaultPage" type="number">
+  The default page number when uncontrolled.
+</ParamField>
+
+<ParamField path="as" type="any" default="'div'">
+  The element or component this component should render as.
+</ParamField>
+
+<ParamField path="color" type="string" default="'neutral'">
+  The color of the pagination controls.
+</ParamField>
+
+<ParamField path="variant" type="string" default="'outline'">
+  The variant of the pagination controls.
+</ParamField>
+
+<ParamField path="activeColor" type="string" default="'primary'">
+  The color of the active pagination control.
+</ParamField>
+
+<ParamField path="activeVariant" type="string" default="'solid'">
+  The variant of the active pagination control.
+</ParamField>
+
+<ParamField path="size" type="string">
+  The size of the pagination controls. Options: `xs`, `sm`, `md`, `lg`, `xl`.
+</ParamField>
+
+<ParamField path="showControls" type="boolean" default="true">
+  Whether to show the first, previous, next, and last controls.
+</ParamField>
+
+<ParamField path="showEdges" type="boolean" default="false">
+  Whether to show the first and last page buttons.
+</ParamField>
+
+<ParamField path="siblingCount" type="number" default="2">
+  Number of page buttons to show on each side of the current page.
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  Whether the pagination is disabled.
+</ParamField>
+
+<ParamField path="firstIcon" type="string" default="appConfig.ui.icons.chevronDoubleLeft">
+  The icon to use for the first page control. Supports Iconify icons.
+</ParamField>
+
+<ParamField path="prevIcon" type="string" default="appConfig.ui.icons.chevronLeft">
+  The icon to use for the previous page control. Supports Iconify icons.
+</ParamField>
+
+<ParamField path="nextIcon" type="string" default="appConfig.ui.icons.chevronRight">
+  The icon to use for the next page control. Supports Iconify icons.
+</ParamField>
+
+<ParamField path="lastIcon" type="string" default="appConfig.ui.icons.chevronDoubleRight">
+  The icon to use for the last page control. Supports Iconify icons.
+</ParamField>
+
+<ParamField path="ellipsisIcon" type="string" default="appConfig.ui.icons.ellipsis">
+  The icon to use for the ellipsis control. Supports Iconify icons.
+</ParamField>
+
+<ParamField path="to" type="(page: number) => string | object">
+  A function to render page controls as links. Receives the page number and should return a navigation target.
+</ParamField>
+
+<ParamField path="class" type="any">
+  Additional CSS classes to apply to the root element.
+</ParamField>
+
+<ParamField path="ui" type="object">
+  Custom UI configuration for slots.
+</ParamField>
+
+### Emits
+
+<ParamField path="update:page" type="(page: number) => void">
+  Emitted when the page changes.
+</ParamField>
+
+## Slots
+
+### first
+
+Customize the first page button.
+
+```vue
+<template>
+  <UPagination v-model="page" :total="100">
+    <template #first>
+      <UButton icon="i-lucide-chevrons-left" />
+    </template>
+  </UPagination>
+</template>
+```
+
+### prev
+
+Customize the previous page button.
+
+```vue
+<template>
+  <UPagination v-model="page" :total="100">
+    <template #prev>
+      <UButton label="Previous" />
+    </template>
+  </UPagination>
+</template>
+```
+
+### next
+
+Customize the next page button.
+
+```vue
+<template>
+  <UPagination v-model="page" :total="100">
+    <template #next>
+      <UButton label="Next" />
+    </template>
+  </UPagination>
+</template>
+```
+
+### last
+
+Customize the last page button.
+
+```vue
+<template>
+  <UPagination v-model="page" :total="100">
+    <template #last>
+      <UButton icon="i-lucide-chevrons-right" />
+    </template>
+  </UPagination>
+</template>
+```
+
+### item
+
+Customize individual page number buttons.
+
+```vue
+<template>
+  <UPagination v-model="page" :total="100">
+    <template #item="{ item, index, page, pageCount }">
+      <UButton 
+        :label="String(item.value)"
+        :color="page === item.value ? 'primary' : 'neutral'"
+      />
+    </template>
+  </UPagination>
+</template>
+```
+
+### ellipsis
+
+Customize the ellipsis indicator.
+
+```vue
+<template>
+  <UPagination v-model="page" :total="100">
+    <template #ellipsis="{ ui }">
+      <span class="px-3">...</span>
+    </template>
+  </UPagination>
+</template>
+```

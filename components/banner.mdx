@@ -1,0 +1,183 @@
+---
+title: Banner
+description: A dismissible banner component for displaying important messages or announcements.
+---
+
+## Usage
+
+The Banner component is used to display important information or announcements at the top of a page.
+
+```vue
+<template>
+  <UBanner
+    id="announcement"
+    title="New feature available!"
+    icon="i-heroicons-megaphone"
+    close
+  />
+</template>
+```
+
+## With Actions
+
+Add action buttons to the banner.
+
+```vue
+<UBanner
+  id="announcement"
+  title="New feature available!"
+  icon="i-heroicons-megaphone"
+  :actions="[
+    { label: 'Learn more', to: '/docs' },
+    { label: 'Dismiss', color: 'neutral' }
+  ]"
+  close
+/>
+```
+
+## Colors
+
+Set the banner color with the `color` prop.
+
+```vue
+<UBanner
+  title="Success message"
+  color="success"
+  icon="i-heroicons-check-circle"
+  close
+/>
+
+<UBanner
+  title="Warning message"
+  color="warning"
+  icon="i-heroicons-exclamation-triangle"
+  close
+/>
+
+<UBanner
+  title="Error message"
+  color="error"
+  icon="i-heroicons-x-circle"
+  close
+/>
+```
+
+## Clickable
+
+Make the entire banner clickable by providing a `to` prop.
+
+```vue
+<UBanner
+  title="Click to learn more"
+  to="/docs"
+  icon="i-heroicons-information-circle"
+/>
+```
+
+## Persistence
+
+The banner can remember if it has been dismissed using the `id` prop. The dismissed state is saved to localStorage.
+
+```vue
+<UBanner
+  id="welcome-banner"
+  title="Welcome to our site!"
+  close
+/>
+```
+
+Without an `id` prop, the banner will reappear on page reload.
+
+## Slots
+
+Customize the banner content using slots.
+
+```vue
+<UBanner close>
+  <template #leading>
+    <UIcon name="i-heroicons-sparkles" />
+  </template>
+  
+  <template #title>
+    <span class="font-bold">Custom title content</span>
+  </template>
+  
+  <template #actions>
+    <UButton label="Custom action" size="xs" />
+  </template>
+</UBanner>
+```
+
+## Props
+
+<ParamField path="as" type="any" default="'div'">
+  The element or component this component should render as.
+</ParamField>
+
+<ParamField path="id" type="string">
+  A unique id saved to local storage to remember if the banner has been dismissed. Without an explicit id, the banner will not be persisted and will reappear on page reload.
+</ParamField>
+
+<ParamField path="icon" type="string">
+  The icon displayed next to the title.
+</ParamField>
+
+<ParamField path="title" type="string">
+  The title text to display in the banner.
+</ParamField>
+
+<ParamField path="actions" type="ButtonProps[]">
+  Display a list of actions next to the title.
+</ParamField>
+
+<ParamField path="to" type="string | RouteLocationRaw">
+  Make the banner clickable by providing a route.
+</ParamField>
+
+<ParamField path="target" type="string">
+  The target attribute for the link (e.g., '_blank').
+</ParamField>
+
+<ParamField path="color" type="string" default="'primary'">
+  The color theme of the banner.
+</ParamField>
+
+<ParamField path="close" type="boolean | ButtonProps" default="false">
+  Display a close button to dismiss the banner. Can be customized with ButtonProps.
+</ParamField>
+
+<ParamField path="closeIcon" type="string" default="appConfig.ui.icons.close">
+  The icon displayed in the close button.
+</ParamField>
+
+<ParamField path="class" type="any">
+  Custom class to apply to the root element.
+</ParamField>
+
+<ParamField path="ui" type="Partial<typeof theme>">
+  Override default theme classes.
+</ParamField>
+
+## Slots
+
+<ParamField path="leading" type="{ ui }">
+  Customize the leading content (typically an icon).
+</ParamField>
+
+<ParamField path="title">
+  Customize the title content.
+</ParamField>
+
+<ParamField path="actions">
+  Customize the actions content.
+</ParamField>
+
+<ParamField path="close" type="{ ui }">
+  Customize the close button.
+</ParamField>
+
+## Emits
+
+<ParamField path="close" type="() => void">
+  Emitted when the banner is closed.
+</ParamField>

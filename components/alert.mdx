@@ -1,0 +1,245 @@
+---
+title: Alert
+description: Display an alert message with optional actions and icon.
+icon: 'bell'
+---
+
+## Usage
+
+Use the `UAlert` component to display alert messages with various styles and configurations.
+
+```vue
+<template>
+  <UAlert
+    title="Success"
+    description="Your changes have been saved."
+    color="primary"
+    variant="solid"
+  />
+</template>
+```
+
+## Props
+
+### as
+- **Type:** `any`
+- **Default:** `'div'`
+
+The element or component this component should render as.
+
+### title
+- **Type:** `string`
+
+The title of the alert.
+
+### description
+- **Type:** `string`
+
+The description text of the alert.
+
+### icon
+- **Type:** `string` (Iconify icon name)
+
+The icon to display on the left side of the alert.
+
+```vue
+<UAlert
+  icon="i-heroicons-check-circle"
+  title="Success"
+  description="Operation completed successfully."
+/>
+```
+
+### avatar
+- **Type:** `AvatarProps`
+
+Display an avatar instead of an icon.
+
+```vue
+<UAlert
+  :avatar="{ src: '/avatar.jpg', alt: 'User' }"
+  title="New message"
+  description="You have a new message from John."
+/>
+```
+
+### color
+- **Type:** `string`
+- **Default:** `'primary'`
+
+The color theme of the alert. Available colors: `primary`, `neutral`, or any custom color from your theme.
+
+### variant
+- **Type:** `'solid' | 'outline' | 'soft' | 'subtle'`
+- **Default:** `'solid'`
+
+The visual style variant of the alert.
+
+```vue
+<UAlert variant="outline" title="Info" description="This is an outline alert." />
+<UAlert variant="soft" title="Warning" description="This is a soft alert." />
+<UAlert variant="subtle" title="Error" description="This is a subtle alert." />
+```
+
+### orientation
+- **Type:** `'vertical' | 'horizontal'`
+- **Default:** `'vertical'`
+
+The orientation between the content and the actions.
+
+### actions
+- **Type:** `ButtonProps[]`
+
+Display a list of action buttons. Actions appear under the title and description when `orientation` is `vertical`, or next to the close button when `orientation` is `horizontal`.
+
+```vue
+<UAlert
+  title="Confirmation Required"
+  description="Do you want to proceed with this action?"
+  :actions="[
+    { label: 'Confirm', color: 'primary' },
+    { label: 'Cancel', variant: 'ghost' }
+  ]"
+/>
+```
+
+### close
+- **Type:** `boolean | Omit<ButtonProps, LinkPropsKeys>`
+- **Default:** `false`
+
+Display a close button to dismiss the alert. When clicked, emits `update:open` event with `false`.
+
+```vue
+<script setup>
+const isOpen = ref(true)
+</script>
+
+<template>
+  <UAlert
+    v-if="isOpen"
+    title="Dismissible Alert"
+    close
+    @update:open="isOpen = $event"
+  />
+</template>
+```
+
+### closeIcon
+- **Type:** `string` (Iconify icon name)
+- **Default:** `appConfig.ui.icons.close`
+
+The icon displayed in the close button.
+
+### class
+- **Type:** `any`
+
+Additional CSS classes to apply to the component.
+
+### ui
+- **Type:** `object`
+
+Customize the component's styling. Available slots:
+- `root` - The root container
+- `wrapper` - The content wrapper
+- `title` - The title element
+- `description` - The description element
+- `icon` - The icon element
+- `avatar` - The avatar element
+- `avatarSize` - The avatar size
+- `actions` - The actions container
+- `close` - The close button
+
+## Events
+
+### update:open
+- **Type:** `(value: boolean) => void`
+
+Emitted when the close button is clicked.
+
+## Slots
+
+### leading
+- **Props:** `{ ui: Alert['ui'] }`
+
+Customize the leading icon or avatar.
+
+```vue
+<UAlert title="Custom Icon">
+  <template #leading>
+    <div class="i-heroicons-star size-5" />
+  </template>
+</UAlert>
+```
+
+### title
+
+Customize the title content.
+
+### description
+
+Customize the description content.
+
+### actions
+
+Customize the actions section.
+
+### close
+- **Props:** `{ ui: Alert['ui'] }`
+
+Customize the close button.
+
+## Examples
+
+### Basic Alert
+
+```vue
+<UAlert
+  title="Welcome!"
+  description="Thanks for signing up."
+/>
+```
+
+### Alert with Icon
+
+```vue
+<UAlert
+  icon="i-heroicons-information-circle"
+  title="Information"
+  description="Please read the documentation carefully."
+  color="primary"
+/>
+```
+
+### Alert with Actions
+
+```vue
+<UAlert
+  title="Update Available"
+  description="A new version of the app is available."
+  :actions="[
+    { label: 'Update Now', color: 'primary' },
+    { label: 'Later', variant: 'ghost' }
+  ]"
+/>
+```
+
+### Horizontal Layout
+
+```vue
+<UAlert
+  orientation="horizontal"
+  icon="i-heroicons-check-circle"
+  title="Success"
+  description="Your profile has been updated."
+  close
+/>
+```
+
+### Different Variants
+
+```vue
+<UAlert variant="solid" title="Solid" description="Solid variant alert" />
+<UAlert variant="outline" title="Outline" description="Outline variant alert" />
+<UAlert variant="soft" title="Soft" description="Soft variant alert" />
+<UAlert variant="subtle" title="Subtle" description="Subtle variant alert" />
+```

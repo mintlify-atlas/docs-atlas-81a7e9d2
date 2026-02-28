@@ -1,0 +1,416 @@
+---
+title: 'Select'
+description: 'A native select dropdown component with support for icons, avatars, grouping, and form integration.'
+---
+
+## Overview
+
+The Select component provides a customizable dropdown menu for selecting one or multiple items from a list, with support for icons, avatars, descriptions, and grouping.
+
+## Basic Usage
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const selected = ref(null)
+const items = [
+  'Apple',
+  'Banana',
+  'Cherry',
+  'Date',
+  'Elderberry'
+]
+</script>
+
+<template>
+  <USelect v-model="selected" :items="items" placeholder="Select a fruit" />
+</template>
+```
+
+## With Objects
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const selected = ref(null)
+const items = [
+  { value: 1, label: 'Wade Cooper', description: 'Software Engineer' },
+  { value: 2, label: 'Arlene Mccoy', description: 'Product Manager' },
+  { value: 3, label: 'Devon Webb', description: 'Designer' }
+]
+</script>
+
+<template>
+  <USelect
+    v-model="selected"
+    :items="items"
+    placeholder="Select a person"
+  />
+</template>
+```
+
+## With Icons and Avatars
+
+```vue
+<script setup lang="ts">
+const items = [
+  {
+    label: 'Profile',
+    icon: 'i-heroicons-user',
+    value: 'profile'
+  },
+  {
+    label: 'Settings',
+    icon: 'i-heroicons-cog',
+    value: 'settings'
+  },
+  {
+    label: 'Team',
+    avatar: { src: 'https://i.pravatar.cc/150?img=1' },
+    value: 'team'
+  }
+]
+</script>
+
+<template>
+  <USelect v-model="selected" :items="items" />
+</template>
+```
+
+## Multiple Selection
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const selected = ref([])
+const items = ['React', 'Vue', 'Angular', 'Svelte', 'Solid']
+</script>
+
+<template>
+  <USelect
+    v-model="selected"
+    :items="items"
+    multiple
+    placeholder="Select frameworks"
+  />
+</template>
+```
+
+## Grouped Items
+
+```vue
+<script setup lang="ts">
+const items = [
+  [
+    { type: 'label', label: 'Fruits' },
+    { label: 'Apple', value: 'apple' },
+    { label: 'Banana', value: 'banana' }
+  ],
+  [
+    { type: 'label', label: 'Vegetables' },
+    { label: 'Carrot', value: 'carrot' },
+    { label: 'Potato', value: 'potato' }
+  ]
+]
+</script>
+
+<template>
+  <USelect v-model="selected" :items="items" />
+</template>
+```
+
+## With Separators
+
+```vue
+<script setup lang="ts">
+const items = [
+  { label: 'Profile', value: 'profile' },
+  { label: 'Settings', value: 'settings' },
+  { type: 'separator' },
+  { label: 'Logout', value: 'logout' }
+]
+</script>
+
+<template>
+  <USelect v-model="selected" :items="items" />
+</template>
+```
+
+## Colors
+
+```vue
+<template>
+  <USelect :items="items" color="primary" placeholder="Primary" />
+  <USelect :items="items" color="secondary" placeholder="Secondary" />
+  <USelect :items="items" color="success" placeholder="Success" />
+  <USelect :items="items" color="warning" placeholder="Warning" />
+  <USelect :items="items" color="error" placeholder="Error" />
+  <USelect :items="items" color="neutral" placeholder="Neutral" />
+</template>
+```
+
+## Variants
+
+```vue
+<template>
+  <USelect :items="items" variant="outline" placeholder="Outline" />
+  <USelect :items="items" variant="soft" placeholder="Soft" />
+  <USelect :items="items" variant="ghost" placeholder="Ghost" />
+  <USelect :items="items" variant="none" placeholder="None" />
+</template>
+```
+
+## Sizes
+
+```vue
+<template>
+  <USelect :items="items" size="xs" placeholder="Extra Small" />
+  <USelect :items="items" size="sm" placeholder="Small" />
+  <USelect :items="items" size="md" placeholder="Medium" />
+  <USelect :items="items" size="lg" placeholder="Large" />
+  <USelect :items="items" size="xl" placeholder="Extra Large" />
+</template>
+```
+
+## States
+
+```vue
+<template>
+  <!-- Disabled -->
+  <USelect :items="items" disabled placeholder="Disabled" />
+  
+  <!-- Required -->
+  <USelect :items="items" required placeholder="Required" />
+  
+  <!-- Highlighted -->
+  <USelect :items="items" highlight placeholder="Highlighted" />
+  
+  <!-- Loading -->
+  <USelect :items="items" loading placeholder="Loading..." />
+</template>
+```
+
+## With Icons
+
+```vue
+<template>
+  <!-- Leading icon -->
+  <USelect
+    :items="items"
+    leading-icon="i-heroicons-user"
+    placeholder="Select user"
+  />
+  
+  <!-- Custom trailing icon -->
+  <USelect
+    :items="items"
+    trailing-icon="i-heroicons-chevron-up-down"
+    placeholder="Select option"
+  />
+</template>
+```
+
+## With Form
+
+```vue
+<script setup lang="ts">
+import { z } from 'zod'
+import { ref } from 'vue'
+
+const schema = z.object({
+  country: z.string().min(1, 'Please select a country'),
+  role: z.string().min(1, 'Please select a role')
+})
+
+const state = ref({
+  country: '',
+  role: ''
+})
+
+const countries = [
+  { value: 'us', label: 'United States' },
+  { value: 'ca', label: 'Canada' },
+  { value: 'mx', label: 'Mexico' }
+]
+
+const roles = [
+  { value: 'admin', label: 'Admin' },
+  { value: 'user', label: 'User' },
+  { value: 'guest', label: 'Guest' }
+]
+</script>
+
+<template>
+  <UForm :schema="schema" :state="state">
+    <UFormField label="Country" name="country">
+      <USelect v-model="state.country" :items="countries" />
+    </UFormField>
+    
+    <UFormField label="Role" name="role">
+      <USelect v-model="state.role" :items="roles" />
+    </UFormField>
+  </UForm>
+</template>
+```
+
+## Custom Slots
+
+```vue
+<template>
+  <USelect v-model="selected" :items="items">
+    <template #item="{ item }">
+      <div class="flex items-center gap-2">
+        <UBadge :color="item.color">{{ item.status }}</UBadge>
+        <span>{{ item.label }}</span>
+      </div>
+    </template>
+  </USelect>
+</template>
+```
+
+## Props
+
+<ParamField path="modelValue" type="any">
+  The controlled value. Can be bound with v-model.
+</ParamField>
+
+<ParamField path="defaultValue" type="any">
+  The default value when initially rendered.
+</ParamField>
+
+<ParamField path="items" type="array">
+  Array of items or nested arrays for grouped items.
+</ParamField>
+
+<ParamField path="valueKey" type="string" default="value">
+  Field to use as the value when items are objects.
+</ParamField>
+
+<ParamField path="labelKey" type="string" default="label">
+  Field to use as the label when items are objects.
+</ParamField>
+
+<ParamField path="descriptionKey" type="string" default="description">
+  Field to use as the description when items are objects.
+</ParamField>
+
+<ParamField path="placeholder" type="string">
+  Placeholder text when no item is selected.
+</ParamField>
+
+<ParamField path="multiple" type="boolean">
+  Allow multiple items to be selected.
+</ParamField>
+
+<ParamField path="color" type="string" default="primary">
+  Color variant.
+</ParamField>
+
+<ParamField path="variant" type="string" default="outline">
+  Visual variant.
+</ParamField>
+
+<ParamField path="size" type="string" default="md">
+  Size variant.
+</ParamField>
+
+<ParamField path="leadingIcon" type="string">
+  Icon displayed at the start.
+</ParamField>
+
+<ParamField path="trailingIcon" type="string">
+  Icon displayed at the end (chevron by default).
+</ParamField>
+
+<ParamField path="selectedIcon" type="string">
+  Icon shown for selected items.
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  Disable the select.
+</ParamField>
+
+<ParamField path="required" type="boolean">
+  Mark as required.
+</ParamField>
+
+<ParamField path="highlight" type="boolean">
+  Highlight the ring color.
+</ParamField>
+
+<ParamField path="autofocus" type="boolean">
+  Automatically focus on mount.
+</ParamField>
+
+<ParamField path="autofocusDelay" type="number" default="0">
+  Delay before autofocus.
+</ParamField>
+
+<ParamField path="portal" type="boolean | string | HTMLElement" default="true">
+  Render the menu in a portal.
+</ParamField>
+
+<ParamField path="content" type="object">
+  Content props (side, sideOffset, etc.).
+</ParamField>
+
+<ParamField path="arrow" type="boolean | object">
+  Display an arrow alongside the menu.
+</ParamField>
+
+## Events
+
+<ParamField path="@update:modelValue" type="(value: any) => void">
+  Emitted when the selected value changes.
+</ParamField>
+
+<ParamField path="@change" type="(event: Event) => void">
+  Emitted when the value is committed.
+</ParamField>
+
+<ParamField path="@blur" type="(event: FocusEvent) => void">
+  Emitted when focus is lost.
+</ParamField>
+
+<ParamField path="@focus" type="(event: FocusEvent) => void">
+  Emitted when focused.
+</ParamField>
+
+## Slots
+
+<ParamField path="leading" type="{ modelValue: any, open: boolean, ui: object }">
+  Custom leading content.
+</ParamField>
+
+<ParamField path="default" type="{ modelValue: any, open: boolean, ui: object }">
+  Custom trigger content.
+</ParamField>
+
+<ParamField path="trailing" type="{ modelValue: any, open: boolean, ui: object }">
+  Custom trailing content.
+</ParamField>
+
+<ParamField path="item" type="{ item: any, index: number, ui: object }">
+  Custom item rendering.
+</ParamField>
+
+<ParamField path="item-leading" type="{ item: any, index: number, ui: object }">
+  Custom item leading content.
+</ParamField>
+
+<ParamField path="item-trailing" type="{ item: any, index: number, ui: object }">
+  Custom item trailing content.
+</ParamField>
+
+## Exposed
+
+<ParamField path="triggerRef" type="Ref<HTMLButtonElement>">
+  Reference to the trigger button.
+</ParamField>
+
+<ParamField path="viewportRef" type="Ref<HTMLElement>">
+  Reference to the viewport element.
+</ParamField>

@@ -1,122 +1,212 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "Nuxt UI",
+  "theme": "palm",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#00DC82"
   },
-  "favicon": "/favicon.svg",
+  "navbar": {
+    "primary": {
+      "type": "github",
+      "href": "https://github.com/nuxt/ui"
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/nuxt/ui"
+    }
+  },
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Documentation",
         "groups": [
           {
-            "group": "Getting started",
+            "group": "Getting Started",
             "pages": [
-              "index",
+              "introduction",
               "quickstart",
-              "development"
+              "installation/nuxt",
+              "installation/vue"
             ]
           },
           {
-            "group": "Customization",
+            "group": "Theme",
             "pages": [
-              "essentials/settings",
-              "essentials/navigation"
+              "theme/design-system",
+              "theme/css-variables",
+              "theme/components",
+              "theme/customization"
             ]
           },
           {
-            "group": "Writing content",
+            "group": "Guides",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
+              "guides/icons",
+              "guides/fonts",
+              "guides/color-mode",
+              "guides/internationalization",
+              "guides/forms-validation",
+              "guides/ssr"
             ]
           },
           {
-            "group": "AI tools",
+            "group": "Migration",
             "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+              "migration/v4",
+              "migration/v3"
             ]
           }
         ]
       },
       {
-        "tab": "API reference",
+        "tab": "Components",
         "groups": [
           {
-            "group": "API documentation",
+            "group": "Overview",
             "pages": [
-              "api-reference/introduction"
+              "components/index"
             ]
           },
           {
-            "group": "Endpoint examples",
+            "group": "Layout",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "components/app",
+              "components/container",
+              "components/card",
+              "components/separator"
+            ]
+          },
+          {
+            "group": "Navigation",
+            "pages": [
+              "components/breadcrumb",
+              "components/pagination",
+              "components/tabs"
+            ]
+          },
+          {
+            "group": "Forms",
+            "pages": [
+              "components/form",
+              "components/form-field",
+              "components/input",
+              "components/input-menu",
+              "components/textarea",
+              "components/select",
+              "components/select-menu",
+              "components/checkbox",
+              "components/checkbox-group",
+              "components/radio",
+              "components/radio-group",
+              "components/toggle",
+              "components/range-calendar",
+              "components/calendar",
+              "components/color-picker"
+            ]
+          },
+          {
+            "group": "Buttons",
+            "pages": [
+              "components/button",
+              "components/button-group"
+            ]
+          },
+          {
+            "group": "Data Display",
+            "pages": [
+              "components/table",
+              "components/avatar",
+              "components/avatar-group",
+              "components/badge",
+              "components/chip",
+              "components/kbd",
+              "components/progress"
+            ]
+          },
+          {
+            "group": "Overlays",
+            "pages": [
+              "components/modal",
+              "components/sheet",
+              "components/drawer",
+              "components/popover",
+              "components/tooltip",
+              "components/context-menu",
+              "components/dropdown-menu",
+              "components/command-palette"
+            ]
+          },
+          {
+            "group": "Feedback",
+            "pages": [
+              "components/alert",
+              "components/toast",
+              "components/skeleton"
+            ]
+          },
+          {
+            "group": "Disclosure",
+            "pages": [
+              "components/accordion",
+              "components/collapsible"
+            ]
+          },
+          {
+            "group": "Content",
+            "pages": [
+              "components/carousel",
+              "components/banner"
+            ]
+          },
+          {
+            "group": "Dashboard",
+            "pages": [
+              "components/dashboard-navbar",
+              "components/dashboard-sidebar",
+              "components/dashboard-panel",
+              "components/dashboard-toolbar",
+              "components/dashboard-search"
+            ]
+          },
+          {
+            "group": "Special",
+            "pages": [
+              "components/auth-form",
+              "components/editor",
+              "components/chat-messages"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Composables",
+        "groups": [
+          {
+            "group": "Utilities",
+            "pages": [
+              "composables/overview",
+              "composables/use-toast",
+              "composables/use-shortcuts",
+              "composables/use-locale",
+              "composables/use-color-mode"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Resources",
+        "groups": [
+          {
+            "group": "Community",
+            "pages": [
+              "resources/templates",
+              "resources/contributing",
+              "resources/changelog"
             ]
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
-  },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
-  "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
-      }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
-    }
-  },
-  "contextual": {
-    "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
-  },
-  "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
-    }
+    ]
   }
 }

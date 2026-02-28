@@ -1,0 +1,574 @@
+---
+title: 'Command Palette'
+description: 'A searchable command interface with keyboard navigation and fuzzy search'
+icon: 'command'
+---
+
+## Overview
+
+The Command Palette component provides a powerful command/search interface with fuzzy search, keyboard navigation, and virtualization support. Ideal for command menus, search interfaces, and quick actions.
+
+## Basic Usage
+
+```vue
+<template>
+  <UCommandPalette v-model:open="isOpen" :groups="commandGroups">
+    <template #default>
+      <UButton>Open Command Palette</UButton>
+    </template>
+  </UCommandPalette>
+</template>
+
+<script setup>
+const isOpen = ref(false)
+
+const commandGroups = [
+  {
+    id: 'actions',
+    label: 'Actions',
+    items: [
+      { label: 'New File', icon: 'i-lucide-file-plus', onSelect: () => console.log('New file') },
+      { label: 'Open File', icon: 'i-lucide-folder-open', onSelect: () => console.log('Open file') },
+      { label: 'Save', icon: 'i-lucide-save', onSelect: () => console.log('Save') }
+    ]
+  },
+  {
+    id: 'navigation',
+    label: 'Navigation',
+    items: [
+      { label: 'Go to Dashboard', icon: 'i-lucide-layout-dashboard' },
+      { label: 'Go to Settings', icon: 'i-lucide-settings' }
+    ]
+  }
+]
+</script>
+```
+
+## Props
+
+<ParamField path="groups" type="CommandPaletteGroup[]">
+  Array of command groups to display. See Group Properties below.
+</ParamField>
+
+<ParamField path="size" type="'xs' | 'sm' | 'md' | 'lg' | 'xl'" default="'md'">
+  The size of the command palette.
+</ParamField>
+
+<ParamField path="icon" type="string" default="appConfig.ui.icons.search">
+  The icon displayed in the input. Accepts Iconify icon names.
+</ParamField>
+
+<ParamField path="trailingIcon" type="string">
+  The icon displayed on the right side of the input.
+</ParamField>
+
+<ParamField path="selectedIcon" type="string" default="appConfig.ui.icons.check">
+  The icon displayed when an item is selected.
+</ParamField>
+
+<ParamField path="childrenIcon" type="string" default="appConfig.ui.icons.chevronRight">
+  The icon displayed when an item has children.
+</ParamField>
+
+<ParamField path="placeholder" type="string" default="t('commandPalette.placeholder')">
+  The placeholder text for the input.
+</ParamField>
+
+<ParamField path="autofocus" type="boolean" default="true">
+  Automatically focus the input when component is mounted.
+</ParamField>
+
+<ParamField path="close" type="boolean | ButtonProps" default="false">
+  Display a close button in the input. Can be configured with button props: `{ size: 'md', color: 'neutral', variant: 'ghost' }`
+</ParamField>
+
+<ParamField path="closeIcon" type="string" default="appConfig.ui.icons.close">
+  The icon displayed in the close button.
+</ParamField>
+
+<ParamField path="back" type="boolean | ButtonProps" default="true">
+  Display a button to navigate back in history. Can be configured with button props.
+</ParamField>
+
+<ParamField path="backIcon" type="string" default="appConfig.ui.icons.arrowLeft">
+  The icon displayed in the back button.
+</ParamField>
+
+<ParamField path="input" type="boolean | InputProps" default="true">
+  Configure the input or hide it with `false`.
+</ParamField>
+
+<ParamField path="loading" type="boolean">
+  Show loading state in the input.
+</ParamField>
+
+<ParamField path="loadingIcon" type="string" default="appConfig.ui.icons.loading">
+  The icon displayed when loading.
+</ParamField>
+
+<ParamField path="fuse" type="UseFuseOptions">
+  Options for fuzzy search via useFuse. Default includes:
+  ```ts
+  {
+    fuseOptions: {
+      ignoreLocation: true,
+      threshold: 0.1,
+      keys: ['label', 'suffix']
+    },
+    resultLimit: 12,
+    matchAllWhenSearchEmpty: true
+  }
+  ```
+</ParamField>
+
+<ParamField path="virtualize" type="boolean | object" default="false">
+  Enable virtualization for large lists. Can be configured with `{ overscan: 12, estimateSize: 32 }`
+</ParamField>
+
+<ParamField path="modelValue" type="any | any[]">
+  Selected value(s) (v-model).
+</ParamField>
+
+<ParamField path="searchTerm" type="string">
+  Search query (v-model:searchTerm).
+</ParamField>
+
+<ParamField path="multiple" type="boolean">
+  Allow multiple selections.
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  Disable the command palette.
+</ParamField>
+
+<ParamField path="valueKey" type="string">
+  Key to use as value instead of the entire object.
+</ParamField>
+
+<ParamField path="labelKey" type="string" default="'label'">
+  The key used to get the label from items.
+</ParamField>
+
+<ParamField path="descriptionKey" type="string" default="'description'">
+  The key used to get the description from items.
+</ParamField>
+
+<ParamField path="preserveGroupOrder" type="boolean" default="false">
+  Whether to preserve group order when filtering.
+</ParamField>
+
+<ParamField path="highlightOnHover" type="boolean" default="true">
+  Highlight items on hover.
+</ParamField>
+
+<ParamField path="selectionBehavior" type="'toggle' | 'replace'">
+  Behavior when selecting items.
+</ParamField>
+
+<ParamField path="by" type="string | ((a: any, b: any) => boolean)">
+  Custom comparison function for value matching.
+</ParamField>
+
+<ParamField path="as" type="any" default="'div'">
+  The element or component this component should render as.
+</ParamField>
+
+<ParamField path="class" type="any">
+  CSS class for styling.
+</ParamField>
+
+<ParamField path="ui" type="object">
+  Theme customization object for component slots.
+</ParamField>
+
+## Events
+
+<ParamField path="update:modelValue" type="(value: any | any[]) => void">
+  Emitted when the selected value changes.
+</ParamField>
+
+<ParamField path="update:searchTerm" type="(term: string) => void">
+  Emitted when the search term changes.
+</ParamField>
+
+<ParamField path="update:open" type="(open: boolean) => void">
+  Emitted when triggered via the close button.
+</ParamField>
+
+## Slots
+
+<ParamField path="empty" type="{ searchTerm?: string }">
+  Content displayed when no items match the search.
+</ParamField>
+
+<ParamField path="footer" type="{ ui: object }">
+  Footer content at the bottom of the palette.
+</ParamField>
+
+<ParamField path="back" type="{ ui: object }">
+  Customize the back button.
+</ParamField>
+
+<ParamField path="close" type="{ ui: object }">
+  Customize the close button.
+</ParamField>
+
+<ParamField path="item" type="{ item: CommandPaletteItem, index: number, ui: object }">
+  Customize item rendering.
+</ParamField>
+
+<ParamField path="item-leading" type="{ item: CommandPaletteItem, index: number, ui: object }">
+  Customize the leading section of items.
+</ParamField>
+
+<ParamField path="item-label" type="{ item: CommandPaletteItem, index: number, ui: object }">
+  Customize the label section of items.
+</ParamField>
+
+<ParamField path="item-description" type="{ item: CommandPaletteItem, index: number, ui: object }">
+  Customize the description section of items.
+</ParamField>
+
+<ParamField path="item-trailing" type="{ item: CommandPaletteItem, index: number, ui: object }">
+  Customize the trailing section of items.
+</ParamField>
+
+## Group Properties
+
+<ParamField path="id" type="string" required>
+  Unique identifier for the group.
+</ParamField>
+
+<ParamField path="label" type="string">
+  Display label for the group.
+</ParamField>
+
+<ParamField path="items" type="CommandPaletteItem[]">
+  Array of items in this group.
+</ParamField>
+
+<ParamField path="ignoreFilter" type="boolean" default="false">
+  When `true`, items will not be filtered by fuzzy search. Useful for custom filtering.
+</ParamField>
+
+<ParamField path="postFilter" type="(searchTerm: string, items: CommandPaletteItem[]) => CommandPaletteItem[]">
+  Custom filter function applied after fuzzy search.
+</ParamField>
+
+<ParamField path="highlightedIcon" type="string">
+  Icon displayed for highlighted items in this group.
+</ParamField>
+
+<ParamField path="slot" type="string">
+  Custom slot name for items in this group.
+</ParamField>
+
+## Item Properties
+
+<ParamField path="label" type="string">
+  The text label for the item.
+</ParamField>
+
+<ParamField path="prefix" type="string">
+  Text displayed before the label.
+</ParamField>
+
+<ParamField path="suffix" type="string">
+  Text displayed after the label.
+</ParamField>
+
+<ParamField path="description" type="string">
+  Description text shown below the label.
+</ParamField>
+
+<ParamField path="icon" type="string">
+  Iconify icon name to display.
+</ParamField>
+
+<ParamField path="avatar" type="AvatarProps">
+  Avatar to display instead of an icon.
+</ParamField>
+
+<ParamField path="chip" type="ChipProps">
+  Chip/badge to display.
+</ParamField>
+
+<ParamField path="kbds" type="KbdProps['value'][] | KbdProps[]">
+  Keyboard shortcuts to display.
+</ParamField>
+
+<ParamField path="active" type="boolean">
+  Manually mark item as active.
+</ParamField>
+
+<ParamField path="loading" type="boolean">
+  Show loading state for the item.
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  Disable the item.
+</ParamField>
+
+<ParamField path="slot" type="string">
+  Custom slot name for this item.
+</ParamField>
+
+<ParamField path="placeholder" type="string">
+  Placeholder to display when the item has children.
+</ParamField>
+
+<ParamField path="children" type="CommandPaletteItem[]">
+  Nested child items.
+</ParamField>
+
+<ParamField path="onSelect" type="(e: Event) => void">
+  Callback fired when the item is selected.
+</ParamField>
+
+## Examples
+
+### With Keyboard Shortcuts
+
+```vue
+<template>
+  <UCommandPalette v-model:open="isOpen" :groups="groups">
+    <template #default>
+      <UButton>Open Commands</UButton>
+    </template>
+  </UCommandPalette>
+</template>
+
+<script setup>
+const isOpen = ref(false)
+
+const groups = [
+  {
+    id: 'file',
+    label: 'File',
+    items: [
+      { label: 'New', icon: 'i-lucide-file-plus', kbds: ['meta', 'N'] },
+      { label: 'Open', icon: 'i-lucide-folder-open', kbds: ['meta', 'O'] },
+      { label: 'Save', icon: 'i-lucide-save', kbds: ['meta', 'S'] }
+    ]
+  }
+]
+</script>
+```
+
+### With Nested Navigation
+
+```vue
+<template>
+  <UCommandPalette :groups="groups" />
+</template>
+
+<script setup>
+const groups = [
+  {
+    id: 'navigation',
+    label: 'Quick Navigation',
+    items: [
+      {
+        label: 'Settings',
+        icon: 'i-lucide-settings',
+        placeholder: 'Search settings...',
+        children: [
+          { label: 'Profile', icon: 'i-lucide-user' },
+          { label: 'Security', icon: 'i-lucide-shield' },
+          { label: 'Notifications', icon: 'i-lucide-bell' }
+        ]
+      },
+      {
+        label: 'Projects',
+        icon: 'i-lucide-folder',
+        placeholder: 'Search projects...',
+        children: [
+          { label: 'Project Alpha', avatar: { text: 'A' } },
+          { label: 'Project Beta', avatar: { text: 'B' } }
+        ]
+      }
+    ]
+  }
+]
+</script>
+```
+
+### With Custom Filtering
+
+```vue
+<template>
+  <UCommandPalette :groups="groups" />
+</template>
+
+<script setup>
+const recentItems = ref([
+  { label: 'index.vue', icon: 'i-lucide-file' },
+  { label: 'app.config.ts', icon: 'i-lucide-file' }
+])
+
+const groups = computed(() => [
+  {
+    id: 'recent',
+    label: 'Recent',
+    ignoreFilter: true,
+    items: recentItems.value
+  },
+  {
+    id: 'files',
+    label: 'All Files',
+    items: [
+      { label: 'components/Button.vue', icon: 'i-lucide-file' },
+      { label: 'pages/index.vue', icon: 'i-lucide-file' },
+      // ... more files
+    ]
+  }
+])
+</script>
+```
+
+### With Virtualization
+
+```vue
+<template>
+  <UCommandPalette 
+    :groups="groups" 
+    :virtualize="{ overscan: 10, estimateSize: 40 }"
+  />
+</template>
+
+<script setup>
+const groups = [
+  {
+    id: 'all',
+    items: Array.from({ length: 10000 }, (_, i) => ({
+      label: `Item ${i + 1}`,
+      icon: 'i-lucide-file'
+    }))
+  }
+]
+</script>
+```
+
+### With Multiple Selection
+
+```vue
+<template>
+  <UCommandPalette 
+    v-model="selected"
+    multiple
+    :groups="groups"
+  />
+</template>
+
+<script setup>
+const selected = ref([])
+
+const groups = [
+  {
+    id: 'users',
+    label: 'Select Users',
+    items: [
+      { label: 'Alice', avatar: { text: 'A' } },
+      { label: 'Bob', avatar: { text: 'B' } },
+      { label: 'Charlie', avatar: { text: 'C' } }
+    ]
+  }
+]
+</script>
+```
+
+### With Custom Empty State
+
+```vue
+<template>
+  <UCommandPalette :groups="groups">
+    <template #empty="{ searchTerm }">
+      <div class="p-8 text-center">
+        <p class="text-muted">No results for "{{ searchTerm }}"</p>
+        <UButton @click="handleCreateNew" size="sm" class="mt-4">
+          Create "{{ searchTerm }}"
+        </UButton>
+      </div>
+    </template>
+  </UCommandPalette>
+</template>
+```
+
+### With Footer Actions
+
+```vue
+<template>
+  <UCommandPalette :groups="groups">
+    <template #footer>
+      <div class="flex items-center justify-between p-2 border-t">
+        <span class="text-sm text-muted">{{ results.length }} results</span>
+        <div class="flex gap-2">
+          <UKbd>↑</UKbd>
+          <UKbd>↓</UKbd>
+          <span class="text-sm text-muted">to navigate</span>
+        </div>
+      </div>
+    </template>
+  </UCommandPalette>
+</template>
+```
+
+### Global Command Palette
+
+```vue
+<template>
+  <div>
+    <UCommandPalette 
+      v-model:open="isOpen" 
+      :groups="groups"
+      :input="{ placeholder: 'Type a command or search...' }"
+      close
+    />
+    
+    <!-- Global keyboard shortcut -->
+    <div @keydown.meta.k.prevent="isOpen = true">
+      <!-- Your app content -->
+    </div>
+  </div>
+</template>
+
+<script setup>
+const isOpen = ref(false)
+
+// Listen for Cmd/Ctrl+K globally
+onMounted(() => {
+  const handleKeydown = (e: KeyboardEvent) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      e.preventDefault()
+      isOpen.value = true
+    }
+  }
+  window.addEventListener('keydown', handleKeydown)
+  onUnmounted(() => window.removeEventListener('keydown', handleKeydown))
+})
+</script>
+```
+
+## Fuzzy Search
+
+The Command Palette uses [Fuse.js](https://fusejs.io/) for fuzzy searching. You can customize the search behavior:
+
+```vue
+<UCommandPalette 
+  :fuse="{
+    fuseOptions: {
+      threshold: 0.3,
+      keys: ['label', 'description', 'suffix'],
+      ignoreLocation: true
+    },
+    resultLimit: 20
+  }"
+  :groups="groups"
+/>
+```
+
+## Related Components
+
+- [Dropdown Menu](/components/dropdown-menu) - For simple action menus
+- [Input](/components/input) - For basic search inputs
+- [Listbox](https://reka-ui.com/docs/components/listbox) - Reka UI Listbox documentation

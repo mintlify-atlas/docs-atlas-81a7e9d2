@@ -1,0 +1,153 @@
+---
+title: Editor
+description: A rich text editor component powered by TipTap with support for markdown, HTML, and JSON content.
+---
+
+## Overview
+
+The `Editor` component provides a powerful rich text editing experience powered by [TipTap](https://tiptap.dev/). It supports multiple content formats (HTML, Markdown, JSON), extensions, custom toolbars, and integrates seamlessly with forms.
+
+## Basic usage
+
+```vue
+<template>
+  <UEditor v-model="content" placeholder="Start typing..." />
+</template>
+
+<script setup lang="ts">
+const content = ref('')
+</script>
+```
+
+## With toolbar
+
+```vue
+<template>
+  <div>
+    <UEditorToolbar v-model="editor" />
+    <UEditor v-model="content" @update:editor="editor = $event" />
+  </div>
+</template>
+
+<script setup lang="ts">
+import type { Editor } from '@tiptap/core'
+
+const content = ref('')
+const editor = ref<Editor>()
+</script>
+```
+
+## Markdown mode
+
+```vue
+<template>
+  <UEditor
+    v-model="content"
+    markdown
+    placeholder="Write markdown..."
+  />
+</template>
+
+<script setup lang="ts">
+const content = ref('# Hello World\n\nThis is **markdown** content.')
+</script>
+```
+
+## Props
+
+<ParamField path="modelValue" type="string">
+  The editor content (HTML, Markdown, or JSON string).
+</ParamField>
+
+<ParamField path="starterKit" type="boolean | object" default="true">
+  Include TipTap's StarterKit extensions (heading, bold, italic, etc.).
+</ParamField>
+
+<ParamField path="placeholder" type="string | PlaceholderOptions">
+  Placeholder text or configuration. Can be `'firstLine'` or `'everyLine'`.
+</ParamField>
+
+<ParamField path="markdown" type="boolean | object" default="false">
+  Enable markdown support. Input and output will be in Markdown format.
+</ParamField>
+
+<ParamField path="image" type="boolean | object" default="false">
+  Enable image support for drag & drop and paste.
+</ParamField>
+
+<ParamField path="mention" type="boolean | MentionOptions" default="false">
+  Enable @mentions with autocomplete.
+</ParamField>
+
+<ParamField path="extensions" type="Extension[]">
+  Additional TipTap extensions to load.
+</ParamField>
+
+<ParamField path="editable" type="boolean" default="true">
+  Whether the editor is editable.
+</ParamField>
+
+<ParamField path="autofocus" type="boolean | 'start' | 'end'" default="false">
+  Auto-focus the editor on mount.
+</ParamField>
+
+## JSON content
+
+The Editor can work with JSON content for more structured data:
+
+```vue
+<template>
+  <UEditor
+    v-model="jsonContent"
+    :content="initialContent"
+  />
+</template>
+
+<script setup lang="ts">
+const jsonContent = ref('')
+
+const initialContent = {
+  type: 'doc',
+  content: [
+    {
+      type: 'paragraph',
+      content: [{ type: 'text', text: 'Hello World' }]
+    }
+  ]
+}
+</script>
+```
+
+## Custom extensions
+
+Add custom TipTap extensions:
+
+```vue
+<template>
+  <UEditor v-model="content" :extensions="extensions" />
+</template>
+
+<script setup lang="ts">
+import { Color } from '@tiptap/extension-color'
+import { TextStyle } from '@tiptap/extension-text-style'
+import { Highlight } from '@tiptap/extension-highlight'
+
+const content = ref('')
+const extensions = [Color, TextStyle, Highlight]
+</script>
+```
+
+## Events
+
+<ParamField path="update:modelValue" type="(value: string) => void">
+  Emitted when content changes.
+</ParamField>
+
+<ParamField path="update:editor" type="(editor: Editor) => void">
+  Emitted with the editor instance when created.
+</ParamField>
+
+## Related components
+
+- [Textarea](/components/textarea)
+- [Form](/components/form)

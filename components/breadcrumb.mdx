@@ -1,0 +1,261 @@
+---
+title: Breadcrumb
+description: A navigation component that displays the current location within the site hierarchy.
+---
+
+## Usage
+
+The Breadcrumb component provides navigational context by showing the user's location within the site's hierarchy. It supports icons, avatars, and custom separators.
+
+### Basic Example
+
+```vue
+<template>
+  <UBreadcrumb :items="items" />
+</template>
+
+<script setup>
+const items = [
+  { label: 'Home', to: '/' },
+  { label: 'Products', to: '/products' },
+  { label: 'Electronics', to: '/products/electronics' },
+  { label: 'Laptop' }
+]
+</script>
+```
+
+### With Icons
+
+```vue
+<template>
+  <UBreadcrumb :items="items" />
+</template>
+
+<script setup>
+const items = [
+  { label: 'Home', icon: 'i-lucide-home', to: '/' },
+  { label: 'Settings', icon: 'i-lucide-settings', to: '/settings' },
+  { label: 'Profile', icon: 'i-lucide-user' }
+]
+</script>
+```
+
+### With Avatars
+
+```vue
+<template>
+  <UBreadcrumb :items="items" />
+</template>
+
+<script setup>
+const items = [
+  { label: 'Home', to: '/' },
+  { label: 'Team', to: '/team' },
+  { 
+    label: 'John Doe',
+    avatar: { src: 'https://avatar.vercel.sh/johndoe' }
+  }
+]
+</script>
+```
+
+### Custom Separator
+
+```vue
+<template>
+  <UBreadcrumb :items="items" separator-icon="i-lucide-chevron-right" />
+</template>
+
+<script setup>
+const items = [
+  { label: 'Home', to: '/' },
+  { label: 'Products', to: '/products' },
+  { label: 'Details' }
+]
+</script>
+```
+
+### Active State
+
+```vue
+<template>
+  <UBreadcrumb :items="items" />
+</template>
+
+<script setup>
+const items = [
+  { label: 'Home', to: '/' },
+  { label: 'Products', to: '/products', active: true },
+  { label: 'Details' }
+]
+</script>
+```
+
+## API
+
+### Props
+
+<ParamField path="items" type="BreadcrumbItem[]">
+  Array of breadcrumb items to display.
+</ParamField>
+
+<ParamField path="as" type="any" default="'nav'">
+  The element or component this component should render as.
+</ParamField>
+
+<ParamField path="separatorIcon" type="string" default="appConfig.ui.icons.chevronRight">
+  The icon to use as a separator. Supports Iconify icons.
+</ParamField>
+
+<ParamField path="labelKey" type="string" default="'label'">
+  The key used to get the label from the item.
+</ParamField>
+
+<ParamField path="class" type="any">
+  Additional CSS classes to apply to the root element.
+</ParamField>
+
+<ParamField path="ui" type="object">
+  Custom UI configuration for slots.
+</ParamField>
+
+### BreadcrumbItem
+
+<ParamField path="label" type="string">
+  The text label for the breadcrumb item.
+</ParamField>
+
+<ParamField path="icon" type="string">
+  An Iconify icon name to display before the label.
+</ParamField>
+
+<ParamField path="avatar" type="AvatarProps">
+  Avatar configuration to display before the label.
+</ParamField>
+
+<ParamField path="to" type="string | object">
+  Navigation target. Can be a URL string or route location object.
+</ParamField>
+
+<ParamField path="href" type="string">
+  External link URL.
+</ParamField>
+
+<ParamField path="active" type="boolean">
+  Whether this item is active. The last item is automatically considered active.
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  Whether the item is disabled.
+</ParamField>
+
+<ParamField path="slot" type="string">
+  Custom slot name for this item.
+</ParamField>
+
+<ParamField path="class" type="any">
+  Additional CSS classes for the item.
+</ParamField>
+
+<ParamField path="ui" type="object">
+  Custom UI configuration for this item's slots.
+</ParamField>
+
+## Slots
+
+### item
+
+Customize the entire item content.
+
+```vue
+<template>
+  <UBreadcrumb :items="items">
+    <template #item="{ item, index, active, ui }">
+      <span :class="{ 'font-bold': active }">
+        {{ item.label }}
+      </span>
+    </template>
+  </UBreadcrumb>
+</template>
+```
+
+### item-leading
+
+Customize the leading icon or avatar.
+
+```vue
+<template>
+  <UBreadcrumb :items="items">
+    <template #item-leading="{ item, index, active, ui }">
+      <UIcon :name="item.icon" :class="{ 'text-primary': active }" />
+    </template>
+  </UBreadcrumb>
+</template>
+```
+
+### item-label
+
+Customize just the label portion.
+
+```vue
+<template>
+  <UBreadcrumb :items="items">
+    <template #item-label="{ item, index, active }">
+      <span class="uppercase">{{ item.label }}</span>
+    </template>
+  </UBreadcrumb>
+</template>
+```
+
+### item-trailing
+
+Add content after the label.
+
+```vue
+<template>
+  <UBreadcrumb :items="items">
+    <template #item-trailing="{ item, index, active }">
+      <UBadge v-if="item.badge" :label="item.badge" />
+    </template>
+  </UBreadcrumb>
+</template>
+```
+
+### separator
+
+Customize the separator between items.
+
+```vue
+<template>
+  <UBreadcrumb :items="items">
+    <template #separator="{ ui }">
+      <span class="mx-2">/</span>
+    </template>
+  </UBreadcrumb>
+</template>
+```
+
+### Dynamic Slots
+
+You can use dynamic slots based on the `slot` property of items:
+
+```vue
+<template>
+  <UBreadcrumb :items="items">
+    <template #home-leading="{ item, index, active, ui }">
+      <UIcon name="i-lucide-home" />
+    </template>
+    <template #home-label="{ item, index, active }">
+      Home
+    </template>
+  </UBreadcrumb>
+</template>
+
+<script setup>
+const items = [
+  { slot: 'home', to: '/' },
+  { label: 'Products', to: '/products' },
+  { label: 'Details' }
+]
+</script>
+```

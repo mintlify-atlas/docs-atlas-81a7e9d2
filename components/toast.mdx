@@ -1,0 +1,432 @@
+---
+title: Toast
+description: Display temporary notification messages with the Toast component and useToast composable.
+icon: 'message-square'
+---
+
+## Usage
+
+The Toast component is typically used with the `useToast` composable to display temporary notifications.
+
+```vue
+<script setup>
+const toast = useToast()
+
+function showToast() {
+  toast.add({
+    title: 'Success',
+    description: 'Your changes have been saved.',
+    color: 'primary'
+  })
+}
+</script>
+
+<template>
+  <button @click="showToast">Show Toast</button>
+</template>
+```
+
+## useToast Composable
+
+The `useToast` composable provides methods to manage toast notifications.
+
+### add(toast)
+
+Add a new toast notification.
+
+**Parameters:**
+- `toast` - Partial toast configuration object
+
+**Returns:** The created toast object with generated `id`
+
+```vue
+<script setup>
+const toast = useToast()
+
+const notifyUser = () => {
+  toast.add({
+    title: 'Hello!',
+    description: 'This is a toast notification.',
+    duration: 5000
+  })
+}
+</script>
+```
+
+### update(id, toast)
+
+Update an existing toast by ID.
+
+**Parameters:**
+- `id` - The toast ID (string or number)
+- `toast` - Partial toast configuration to update
+
+```vue
+<script setup>
+const toast = useToast()
+
+const showProgress = () => {
+  const id = toast.add({
+    title: 'Processing...',
+    description: 'Please wait'
+  }).id
+
+  setTimeout(() => {
+    toast.update(id, {
+      title: 'Complete!',
+      description: 'Processing finished',
+      color: 'green'
+    })
+  }, 3000)
+}
+</script>
+```
+
+### remove(id)
+
+Remove a toast by ID.
+
+**Parameters:**
+- `id` - The toast ID (string or number)
+
+```vue
+<script setup>
+const toast = useToast()
+
+const id = toast.add({ title: 'Temporary' }).id
+
+setTimeout(() => {
+  toast.remove(id)
+}, 2000)
+</script>
+```
+
+### clear()
+
+Remove all toasts.
+
+```vue
+<script setup>
+const toast = useToast()
+
+const clearAll = () => {
+  toast.clear()
+}
+</script>
+```
+
+### toasts
+
+Reactive array of current toast objects.
+
+```vue
+<script setup>
+const toast = useToast()
+
+const activeToasts = computed(() => toast.toasts.value.length)
+</script>
+```
+
+## Toast Props
+
+### as
+- **Type:** `any`
+- **Default:** `'li'`
+
+The element or component this component should render as.
+
+### title
+- **Type:** `string | VNode | (() => VNode)`
+
+The title of the toast. Supports strings, VNodes, or functions returning VNodes.
+
+```vue
+toast.add({
+  title: 'Simple Title'
+})
+
+// With function
+toast.add({
+  title: () => h('span', { class: 'font-bold' }, 'Custom Title')
+})
+```
+
+### description
+- **Type:** `string | VNode | (() => VNode)`
+
+The description text of the toast.
+
+### icon
+- **Type:** `string` (Iconify icon name)
+
+The icon to display on the left side.
+
+```vue
+toast.add({
+  icon: 'i-heroicons-check-circle',
+  title: 'Success',
+  description: 'Operation completed'
+})
+```
+
+### avatar
+- **Type:** `AvatarProps`
+
+Display an avatar instead of an icon.
+
+```vue
+toast.add({
+  avatar: { src: '/user.jpg', alt: 'User' },
+  title: 'New Message',
+  description: 'You have a new message'
+})
+```
+
+### color
+- **Type:** `string`
+- **Default:** `'primary'`
+
+The color theme of the toast.
+
+### orientation
+- **Type:** `'vertical' | 'horizontal'`
+- **Default:** `'vertical'`
+
+The orientation between the content and actions.
+
+### close
+- **Type:** `boolean | Omit<ButtonProps, LinkPropsKeys>`
+- **Default:** `true`
+
+Display a close button to dismiss the toast.
+
+```vue
+toast.add({
+  title: 'No Close Button',
+  close: false
+})
+```
+
+### closeIcon
+- **Type:** `string` (Iconify icon name)
+- **Default:** `appConfig.ui.icons.close`
+
+The icon displayed in the close button.
+
+### actions
+- **Type:** `ButtonProps[]`
+
+Display action buttons. Actions appear under the title and description when `orientation` is `vertical`, or next to the close button when `orientation` is `horizontal`.
+
+```vue
+toast.add({
+  title: 'Action Required',
+  description: 'Please confirm your choice',
+  actions: [
+    { label: 'Confirm', color: 'primary', onClick: () => console.log('Confirmed') },
+    { label: 'Cancel', variant: 'ghost' }
+  ]
+})
+```
+
+### progress
+- **Type:** `boolean | Pick<ProgressProps, 'color' | 'ui'>`
+- **Default:** `true`
+
+Display a progress bar showing the toast's remaining duration.
+
+```vue
+toast.add({
+  title: 'Auto-closing',
+  duration: 5000,
+  progress: true
+})
+
+// Custom progress color
+toast.add({
+  title: 'Custom Progress',
+  progress: { color: 'green' }
+})
+```
+
+### duration
+- **Type:** `number`
+
+Duration in milliseconds before the toast auto-closes.
+
+```vue
+toast.add({
+  title: 'Quick Message',
+  duration: 2000 // 2 seconds
+})
+```
+
+### defaultOpen
+- **Type:** `boolean`
+
+Initial open state.
+
+### open
+- **Type:** `boolean`
+
+Controlled open state.
+
+### type
+- **Type:** `'foreground' | 'background'`
+
+Toast type from Reka UI.
+
+### class
+- **Type:** `any`
+
+Additional CSS classes.
+
+### ui
+- **Type:** `object`
+
+Customize styling. Available slots:
+- `root` - The root container
+- `wrapper` - The content wrapper
+- `title` - The title element
+- `description` - The description element
+- `icon` - The icon element
+- `avatar` - The avatar element
+- `avatarSize` - The avatar size
+- `actions` - The actions container
+- `progress` - The progress bar
+- `close` - The close button
+
+## Events
+
+Inherits all events from Reka UI's `ToastRoot`.
+
+## Slots
+
+### leading
+- **Props:** `{ ui: Toast['ui'] }`
+
+Customize the leading icon or avatar.
+
+### title
+
+Customize the title content.
+
+### description
+
+Customize the description content.
+
+### actions
+
+Customize the actions section.
+
+### close
+- **Props:** `{ ui: Toast['ui'] }`
+
+Customize the close button.
+
+## Examples
+
+### Basic Toast
+
+```vue
+<script setup>
+const toast = useToast()
+
+const notify = () => {
+  toast.add({
+    title: 'Notification',
+    description: 'This is a basic toast message'
+  })
+}
+</script>
+```
+
+### Success Toast
+
+```vue
+toast.add({
+  icon: 'i-heroicons-check-circle',
+  title: 'Success!',
+  description: 'Your changes have been saved',
+  color: 'green'
+})
+```
+
+### Error Toast
+
+```vue
+toast.add({
+  icon: 'i-heroicons-x-circle',
+  title: 'Error',
+  description: 'Something went wrong',
+  color: 'red',
+  duration: 5000
+})
+```
+
+### Toast with Actions
+
+```vue
+toast.add({
+  title: 'Confirm Action',
+  description: 'Are you sure you want to delete this item?',
+  actions: [
+    {
+      label: 'Delete',
+      color: 'red',
+      onClick: () => {
+        console.log('Deleting...')
+      }
+    },
+    {
+      label: 'Cancel',
+      variant: 'ghost'
+    }
+  ]
+})
+```
+
+### Persistent Toast
+
+```vue
+const persistentToast = toast.add({
+  title: 'Important',
+  description: 'This toast will not auto-close',
+  duration: Infinity,
+  progress: false
+})
+
+// Later, manually remove it
+toast.remove(persistentToast.id)
+```
+
+### Loading Toast with Update
+
+```vue
+const loadingToast = toast.add({
+  title: 'Loading...',
+  description: 'Processing your request',
+  icon: 'i-heroicons-arrow-path',
+  duration: Infinity
+})
+
+try {
+  await someAsyncOperation()
+  
+  toast.update(loadingToast.id, {
+    icon: 'i-heroicons-check-circle',
+    title: 'Success!',
+    description: 'Operation completed',
+    color: 'green',
+    duration: 3000
+  })
+} catch (error) {
+  toast.update(loadingToast.id, {
+    icon: 'i-heroicons-x-circle',
+    title: 'Error',
+    description: error.message,
+    color: 'red',
+    duration: 5000
+  })
+}
+```

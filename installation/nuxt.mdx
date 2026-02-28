@@ -1,0 +1,285 @@
+---
+title: "Nuxt Installation"
+description: "Complete guide to installing and configuring Nuxt UI in your Nuxt application"
+---
+
+# Nuxt Installation
+
+Install and configure Nuxt UI in your Nuxt 4+ application.
+
+## Prerequisites
+
+- Node.js `^20.19.0` or `>=22.12.0`
+- Nuxt `>=4.0.0`
+
+## Installation
+
+<Steps>
+  <Step title="Install the Package">
+    Install Nuxt UI and Tailwind CSS:
+    
+    <CodeGroup>
+      ```bash npm
+      npm install @nuxt/ui tailwindcss
+      ```
+      
+      ```bash pnpm
+      pnpm add @nuxt/ui tailwindcss
+      ```
+      
+      ```bash yarn
+      yarn add @nuxt/ui tailwindcss
+      ```
+      
+      ```bash bun
+      bun add @nuxt/ui tailwindcss
+      ```
+    </CodeGroup>
+  </Step>
+  
+  <Step title="Add the Module">
+    Add the Nuxt UI module to your `nuxt.config.ts`:
+    
+    ```ts nuxt.config.ts
+    export default defineNuxtConfig({
+      modules: ['@nuxt/ui']
+    })
+    ```
+  </Step>
+  
+  <Step title="Import CSS">
+    Import Tailwind CSS and Nuxt UI in your main CSS file:
+    
+    ```css assets/css/main.css
+    @import "tailwindcss";
+    @import "@nuxt/ui";
+    ```
+  </Step>
+</Steps>
+
+## Module Configuration
+
+Customize Nuxt UI by adding options to your `nuxt.config.ts`:
+
+```ts nuxt.config.ts
+export default defineNuxtConfig({
+  modules: ['@nuxt/ui'],
+  ui: {
+    // Module options
+    prefix: 'U',
+    fonts: true,
+    colorMode: true,
+    theme: {
+      colors: ['primary', 'secondary', 'success', 'info', 'warning', 'error'],
+      transitions: true,
+      defaultVariants: {
+        color: 'primary',
+        size: 'md'
+      }
+    }
+  }
+})
+```
+
+## Configuration Options
+
+### prefix
+
+Customize the component prefix (default: `U`).
+
+```ts nuxt.config.ts
+export default defineNuxtConfig({
+  ui: {
+    prefix: 'UI' // Components will be <UIButton>, <UICard>, etc.
+  }
+})
+```
+
+<Note>
+  Changing the prefix affects all auto-imported components.
+</Note>
+
+### fonts
+
+Enable or disable the `@nuxt/fonts` module (default: `true`).
+
+```ts nuxt.config.ts
+export default defineNuxtConfig({
+  ui: {
+    fonts: false // Disable automatic font optimization
+  }
+})
+```
+
+### colorMode
+
+Enable or disable the `@nuxtjs/color-mode` module (default: `true`).
+
+```ts nuxt.config.ts
+export default defineNuxtConfig({
+  ui: {
+    colorMode: false // Disable dark mode support
+  }
+})
+```
+
+### theme.colors
+
+Define available color aliases for components (default: `['primary', 'secondary', 'success', 'info', 'warning', 'error']`).
+
+```ts nuxt.config.ts
+export default defineNuxtConfig({
+  ui: {
+    theme: {
+      colors: ['primary', 'secondary', 'custom']
+    }
+  }
+})
+```
+
+### theme.transitions
+
+Enable or disable component transitions (default: `true`).
+
+```ts nuxt.config.ts
+export default defineNuxtConfig({
+  ui: {
+    theme: {
+      transitions: false // Disable all transitions
+    }
+  }
+})
+```
+
+### theme.defaultVariants
+
+Set default variants for all components.
+
+```ts nuxt.config.ts
+export default defineNuxtConfig({
+  ui: {
+    theme: {
+      defaultVariants: {
+        color: 'secondary', // Default color for all components
+        size: 'lg'          // Default size for all components
+      }
+    }
+  }
+})
+```
+
+### theme.prefix
+
+Add a prefix to Tailwind CSS utility classes.
+
+```ts nuxt.config.ts
+export default defineNuxtConfig({
+  ui: {
+    theme: {
+      prefix: 'tw' // Utility classes become tw:text-center, tw:bg-primary, etc.
+    }
+  }
+})
+```
+
+### mdc
+
+Force the import of prose components even if `@nuxtjs/mdc` is not installed (default: `false`).
+
+```ts nuxt.config.ts
+export default defineNuxtConfig({
+  ui: {
+    mdc: true
+  }
+})
+```
+
+### content
+
+Force the import of content & prose components even if `@nuxt/content` is not installed (default: `false`).
+
+```ts nuxt.config.ts
+export default defineNuxtConfig({
+  ui: {
+    content: true
+  }
+})
+```
+
+### experimental.componentDetection
+
+Enable automatic component detection for tree-shaking. Only generates theme files for components actually used in your app.
+
+```ts nuxt.config.ts
+export default defineNuxtConfig({
+  ui: {
+    experimental: {
+      componentDetection: true // Enable automatic detection
+    }
+  }
+})
+```
+
+You can also specify additional components to include (useful for dynamic components):
+
+```ts nuxt.config.ts
+export default defineNuxtConfig({
+  ui: {
+    experimental: {
+      componentDetection: ['Modal', 'Dropdown'] // Always include these components
+    }
+  }
+})
+```
+
+## Auto-Imports
+
+Nuxt UI automatically imports:
+
+- **Components**: All UI components are auto-imported with your configured prefix
+- **Composables**: Utility composables like `useToast`, `useModal`, etc.
+- **Types**: TypeScript types for all components and composables
+
+## Integrated Modules
+
+Nuxt UI automatically installs and configures these modules:
+
+- **@nuxt/icon**: Icon support with 200,000+ icons
+- **@nuxt/fonts**: Automatic font optimization (if `fonts: true`)
+- **@nuxtjs/color-mode**: Dark mode support (if `colorMode: true`)
+
+## Content & MDC Integration
+
+If you're using `@nuxt/content` or `@nuxtjs/mdc`, Nuxt UI automatically configures prose components and syntax highlighting:
+
+```ts nuxt.config.ts
+export default defineNuxtConfig({
+  modules: ['@nuxt/ui', '@nuxt/content']
+})
+```
+
+This enables:
+
+- Prose components (`ProseCard`, `ProseCodeGroup`, `ProseSteps`, etc.)
+- Syntax highlighting with Material Theme
+- MDC component mapping
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Component Library" icon="grid" href="/components">
+    Explore all available components.
+  </Card>
+  
+  <Card title="Theming" icon="paintbrush" href="/theming">
+    Customize component styles and create your design system.
+  </Card>
+  
+  <Card title="Composables" icon="code" href="/composables">
+    Learn about utility composables and hooks.
+  </Card>
+  
+  <Card title="Templates" icon="rocket" href="https://ui.nuxt.com/templates">
+    Start with a pre-built template.
+  </Card>
+</CardGroup>

@@ -1,0 +1,300 @@
+---
+title: Progress
+description: Display progress indicators for tasks and loading states.
+---
+
+## Usage
+
+The Progress component displays a visual indicator of progress for tasks, uploads, or any operation that takes time.
+
+```vue
+<template>
+  <UProgress v-model="value" />
+</template>
+```
+
+## Props
+
+<ParamField path="as" type="any" default="'div'">
+  The element or component this component should render as.
+</ParamField>
+
+<ParamField path="modelValue" type="number | null">
+  The current progress value. Set to `null` for indeterminate state.
+</ParamField>
+
+<ParamField path="max" type="number | Array<any>">
+  The maximum progress value. Can be a number for standard progress, or an array for stepped progress bars.
+</ParamField>
+
+<ParamField path="status" type="boolean">
+  Display the current progress value as a percentage.
+</ParamField>
+
+<ParamField path="inverted" type="boolean" default="false">
+  Whether the progress is visually inverted (fills from opposite direction).
+</ParamField>
+
+<ParamField path="size" type="'xs' | 'sm' | 'md' | 'lg'" default="'md'">
+  The size of the progress bar.
+</ParamField>
+
+<ParamField path="color" type="string" default="'primary'">
+  The color variant of the progress bar.
+</ParamField>
+
+<ParamField path="orientation" type="'horizontal' | 'vertical'" default="'horizontal'">
+  The orientation of the progress bar.
+</ParamField>
+
+<ParamField path="animation" type="string" default="'carousel'">
+  The animation style for indeterminate progress.
+</ParamField>
+
+<ParamField path="getValueLabel" type="(value: number, max: number) => string">
+  Custom function to format the value label.
+</ParamField>
+
+<ParamField path="getValueText" type="(value: number, max: number) => string">
+  Custom function to format the value text for accessibility.
+</ParamField>
+
+<ParamField path="class" type="any">
+  Additional CSS classes to apply.
+</ParamField>
+
+<ParamField path="ui" type="object">
+  UI customization object for styling progress slots.
+</ParamField>
+
+## Models (v-model)
+
+<ParamField path="v-model" type="number | null">
+  The current progress value. Use `null` for indeterminate state.
+</ParamField>
+
+## Slots
+
+<ParamField path="status" type="{ percent?: number }">
+  Custom content to display instead of the default percentage.
+</ParamField>
+
+<ParamField path="step-{index}" type="{ step: any }">
+  Custom content for each step when using stepped progress. Replace `{index}` with the step number.
+</ParamField>
+
+## Examples
+
+### Basic Progress
+
+```vue
+<script setup>
+const progress = ref(45)
+</script>
+
+<template>
+  <UProgress v-model="progress" />
+</template>
+```
+
+### With Status Display
+
+```vue
+<template>
+  <UProgress v-model="65" :status="true" />
+</template>
+```
+
+### Indeterminate State
+
+Use `null` or omit the value for an animated indeterminate progress:
+
+```vue
+<template>
+  <UProgress :model-value="null" />
+</template>
+```
+
+### Sizes
+
+```vue
+<template>
+  <div class="space-y-4">
+    <UProgress v-model="50" size="xs" />
+    <UProgress v-model="50" size="sm" />
+    <UProgress v-model="50" size="md" />
+    <UProgress v-model="50" size="lg" />
+  </div>
+</template>
+```
+
+### Colors
+
+```vue
+<template>
+  <div class="space-y-4">
+    <UProgress v-model="50" color="primary" />
+    <UProgress v-model="50" color="success" />
+    <UProgress v-model="50" color="warning" />
+    <UProgress v-model="50" color="error" />
+  </div>
+</template>
+```
+
+### Vertical Orientation
+
+```vue
+<template>
+  <div style="height: 200px">
+    <UProgress v-model="75" orientation="vertical" />
+  </div>
+</template>
+```
+
+### Stepped Progress
+
+Use an array for `max` to create a stepped progress indicator:
+
+```vue
+<script setup>
+const currentStep = ref(1)
+const steps = ['Step 1', 'Step 2', 'Step 3', 'Step 4']
+</script>
+
+<template>
+  <UProgress v-model="currentStep" :max="steps" />
+</template>
+```
+
+### Custom Step Content
+
+```vue
+<script setup>
+const currentStep = ref(2)
+const steps = [
+  { label: 'Account', icon: 'i-heroicons-user' },
+  { label: 'Profile', icon: 'i-heroicons-document' },
+  { label: 'Finish', icon: 'i-heroicons-check' }
+]
+</script>
+
+<template>
+  <UProgress v-model="currentStep" :max="steps">
+    <template v-for="(step, index) in steps" :key="index" #[`step-${index}`]="{ step }">
+      <div class="flex flex-col items-center">
+        <UIcon :name="step.icon" />
+        <span class="text-xs mt-1">{{ step.label }}</span>
+      </div>
+    </template>
+  </UProgress>
+</template>
+```
+
+### Custom Status Display
+
+```vue
+<script setup>
+const progress = ref(75)
+</script>
+
+<template>
+  <UProgress v-model="progress" :status="true">
+    <template #status="{ percent }">
+      <span class="font-bold">{{ percent }}% Complete</span>
+    </template>
+  </UProgress>
+</template>
+```
+
+### File Upload Example
+
+```vue
+<script setup>
+const uploadProgress = ref(0)
+
+function simulateUpload() {
+  uploadProgress.value = 0
+  const interval = setInterval(() => {
+    uploadProgress.value += 10
+    if (uploadProgress.value >= 100) {
+      clearInterval(interval)
+    }
+  }, 500)
+}
+</script>
+
+<template>
+  <div>
+    <UProgress 
+      v-model="uploadProgress" 
+      :max="100" 
+      :status="true" 
+      color="success"
+    />
+    <UButton @click="simulateUpload" label="Start Upload" />
+  </div>
+</template>
+```
+
+### Inverted Progress
+
+```vue
+<template>
+  <div class="space-y-4">
+    <UProgress v-model="60" label="Normal" />
+    <UProgress v-model="60" label="Inverted" :inverted="true" />
+  </div>
+</template>
+```
+
+### Different Animations
+
+```vue
+<template>
+  <div class="space-y-4">
+    <UProgress :model-value="null" animation="carousel" />
+    <UProgress :model-value="null" animation="pulse" />
+    <UProgress :model-value="null" animation="swing" />
+  </div>
+</template>
+```
+
+### Loading States
+
+```vue
+<script setup>
+const loading = ref(true)
+
+function startTask() {
+  loading.value = true
+  setTimeout(() => {
+    loading.value = false
+  }, 3000)
+}
+</script>
+
+<template>
+  <div>
+    <UProgress v-if="loading" :model-value="null" />
+    <div v-else>Task complete!</div>
+    <UButton @click="startTask" label="Start Task" />
+  </div>
+</template>
+```
+
+## Accessibility
+
+The Progress component is built on Reka UI's ProgressRoot, which provides:
+
+- Proper ARIA attributes (`role="progressbar"`, `aria-valuenow`, `aria-valuemin`, `aria-valuemax`)
+- Accessible value text via `getValueText` prop
+- Keyboard navigation support
+- Screen reader announcements
+
+## Notes
+
+- When `modelValue` is `null`, the progress bar displays an animated indeterminate state
+- Progress values are automatically clamped between 0 and max
+- Stepped progress shows the current step highlighted with custom styling
+- The component automatically handles RTL layouts for horizontal orientation
+- Vertical progress bars require a height to be set on the container

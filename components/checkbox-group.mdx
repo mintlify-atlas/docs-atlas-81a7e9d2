@@ -1,0 +1,353 @@
+---
+title: 'CheckboxGroup'
+description: 'A group of checkboxes that allows users to select multiple options.'
+icon: 'list-check'
+---
+
+## Usage
+
+The CheckboxGroup component allows users to select multiple values from a set of options.
+
+```vue
+<template>
+  <UCheckboxGroup
+    v-model="selected"
+    legend="Select your interests"
+    :items="items"
+  />
+</template>
+
+<script setup>
+const selected = ref([])
+const items = [
+  { value: 'design', label: 'Design' },
+  { value: 'development', label: 'Development' },
+  { value: 'marketing', label: 'Marketing' }
+]
+</script>
+```
+
+## With Descriptions
+
+Add descriptions to provide more context for each option:
+
+```vue
+<template>
+  <UCheckboxGroup
+    v-model="selected"
+    legend="Choose features"
+    :items="items"
+  />
+</template>
+
+<script setup>
+const selected = ref([])
+const items = [
+  {
+    value: 'notifications',
+    label: 'Email Notifications',
+    description: 'Receive email updates about your account'
+  },
+  {
+    value: 'newsletter',
+    label: 'Newsletter',
+    description: 'Weekly digest of new features and updates'
+  },
+  {
+    value: 'marketing',
+    label: 'Marketing Emails',
+    description: 'Promotional content and special offers'
+  }
+]
+</script>
+```
+
+## Simple Values
+
+You can also use simple string or number values:
+
+```vue
+<template>
+  <UCheckboxGroup
+    v-model="selected"
+    legend="Select options"
+    :items="['Option 1', 'Option 2', 'Option 3']"
+  />
+</template>
+
+<script setup>
+const selected = ref([])
+</script>
+```
+
+## Horizontal Layout
+
+```vue
+<template>
+  <UCheckboxGroup
+    v-model="selected"
+    legend="Select options"
+    :items="items"
+    orientation="horizontal"
+  />
+</template>
+
+<script setup>
+const selected = ref([])
+const items = ['Option 1', 'Option 2', 'Option 3']
+</script>
+```
+
+## Sizes
+
+```vue
+<template>
+  <div class="space-y-8">
+    <UCheckboxGroup
+      v-model="selected"
+      legend="Small"
+      :items="items"
+      size="sm"
+    />
+    <UCheckboxGroup
+      v-model="selected"
+      legend="Medium"
+      :items="items"
+      size="md"
+    />
+    <UCheckboxGroup
+      v-model="selected"
+      legend="Large"
+      :items="items"
+      size="lg"
+    />
+  </div>
+</template>
+
+<script setup>
+const selected = ref([])
+const items = ['Option 1', 'Option 2', 'Option 3']
+</script>
+```
+
+## Colors
+
+```vue
+<template>
+  <UCheckboxGroup
+    v-model="selected"
+    legend="Select options"
+    :items="items"
+    color="success"
+  />
+</template>
+
+<script setup>
+const selected = ref([])
+const items = ['Option 1', 'Option 2', 'Option 3']
+</script>
+```
+
+## Variants
+
+```vue
+<template>
+  <div class="space-y-8">
+    <UCheckboxGroup
+      v-model="selected"
+      legend="List variant"
+      :items="items"
+      variant="list"
+    />
+    <UCheckboxGroup
+      v-model="selected"
+      legend="Default variant"
+      :items="items"
+    />
+  </div>
+</template>
+
+<script setup>
+const selected = ref([])
+const items = ['Option 1', 'Option 2', 'Option 3']
+</script>
+```
+
+## Disabled Items
+
+```vue
+<template>
+  <UCheckboxGroup
+    v-model="selected"
+    legend="Select options"
+    :items="items"
+  />
+</template>
+
+<script setup>
+const selected = ref([])
+const items = [
+  { value: '1', label: 'Option 1' },
+  { value: '2', label: 'Option 2 (disabled)', disabled: true },
+  { value: '3', label: 'Option 3' }
+]
+</script>
+```
+
+## Custom Keys
+
+Use custom keys for value, label, and description fields:
+
+```vue
+<template>
+  <UCheckboxGroup
+    v-model="selected"
+    legend="Select options"
+    :items="items"
+    value-key="id"
+    label-key="name"
+    description-key="info"
+  />
+</template>
+
+<script setup>
+const selected = ref([])
+const items = [
+  { id: '1', name: 'Option 1', info: 'First option' },
+  { id: '2', name: 'Option 2', info: 'Second option' },
+  { id: '3', name: 'Option 3', info: 'Third option' }
+]
+</script>
+```
+
+## Slots
+
+```vue
+<template>
+  <UCheckboxGroup v-model="selected" :items="items">
+    <template #legend>
+      <span class="font-bold">Custom Legend</span>
+    </template>
+    <template #label="{ item }">
+      <span class="uppercase">{{ item.label }}</span>
+    </template>
+    <template #description="{ item }">
+      <em>{{ item.description }}</em>
+    </template>
+  </UCheckboxGroup>
+</template>
+
+<script setup>
+const selected = ref([])
+const items = [
+  { value: '1', label: 'Option 1', description: 'Description 1' },
+  { value: '2', label: 'Option 2', description: 'Description 2' }
+]
+</script>
+```
+
+## Props
+
+<ParamField path="modelValue" type="array">
+  The controlled value of the checkbox group. Can be bound with `v-model`.
+</ParamField>
+
+<ParamField path="defaultValue" type="array">
+  The value of the checkbox group when initially rendered.
+</ParamField>
+
+<ParamField path="items" type="array">
+  Array of items to render as checkboxes. Can be strings, numbers, or objects.
+</ParamField>
+
+<ParamField path="legend" type="string">
+  The legend text for the checkbox group fieldset.
+</ParamField>
+
+<ParamField path="valueKey" type="string" default="value">
+  When items is an array of objects, select the field to use as the value.
+</ParamField>
+
+<ParamField path="labelKey" type="string" default="label">
+  When items is an array of objects, select the field to use as the label.
+</ParamField>
+
+<ParamField path="descriptionKey" type="string" default="description">
+  When items is an array of objects, select the field to use as the description.
+</ParamField>
+
+<ParamField path="size" type="string" default="md">
+  The size of the checkboxes. Options: `sm`, `md`, `lg`.
+</ParamField>
+
+<ParamField path="variant" type="string" default="list">
+  The visual variant of the checkboxes.
+</ParamField>
+
+<ParamField path="color" type="string">
+  The color theme of the checkboxes.
+</ParamField>
+
+<ParamField path="orientation" type="string" default="vertical">
+  The orientation the checkboxes are laid out. Options: `vertical`, `horizontal`.
+</ParamField>
+
+<ParamField path="indicator" type="string" default="start">
+  Position of the checkbox indicator. Options: `start`, `end`.
+</ParamField>
+
+<ParamField path="icon" type="string">
+  The icon displayed when checked.
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  When `true`, prevents user interaction with all checkboxes.
+</ParamField>
+
+<ParamField path="required" type="boolean">
+  When `true`, indicates that at least one checkbox must be checked.
+</ParamField>
+
+<ParamField path="name" type="string">
+  The name of the checkbox group for form submission.
+</ParamField>
+
+<ParamField path="loop" type="boolean">
+  When `true`, keyboard navigation will loop from last to first item.
+</ParamField>
+
+<ParamField path="as" type="any" default="div">
+  The element or component this component should render as.
+</ParamField>
+
+<ParamField path="class" type="any">
+  Additional CSS classes to apply to the root element.
+</ParamField>
+
+<ParamField path="ui" type="object">
+  UI customization object for styling different parts of the checkbox group.
+</ParamField>
+
+## Events
+
+<ParamField path="@change" type="(event: Event) => void">
+  Emitted when any checkbox in the group changes.
+</ParamField>
+
+<ParamField path="@update:modelValue" type="(value: array) => void">
+  Emitted when the selected values change.
+</ParamField>
+
+## Slots
+
+<ParamField path="legend" type="{}">
+  Customize the legend content.
+</ParamField>
+
+<ParamField path="label" type="{ item: object }">
+  Customize the label content for each checkbox.
+</ParamField>
+
+<ParamField path="description" type="{ item: object }">
+  Customize the description content for each checkbox.
+</ParamField>

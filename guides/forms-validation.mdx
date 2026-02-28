@@ -1,0 +1,439 @@
+---
+title: 'Forms & Validation'
+description: 'Build type-safe forms with validation using Zod, Yup, Valibot, Joi, and Superstruct'
+icon: 'shield-check'
+---
+
+## Overview
+
+Nuxt UI provides a powerful form system with built-in validation support. The `Form` component works with multiple validation libraries through the Standard Schema specification.
+
+## Supported Validation Libraries
+
+Nuxt UI supports these validation libraries as peer dependencies:
+
+- **Zod** - `zod` v3.24+ or v4.0+
+- **Valibot** - `valibot` v1.0+
+- **Yup** - `yup` v1.7+
+- **Joi** - `joi` v18.0+
+- **Superstruct** - `superstruct` v2.0+
+
+<Note>
+  All validation libraries implement the [Standard Schema](https://github.com/standard-schema/standard-schema) specification, allowing Nuxt UI to work with any of them interchangeably.
+</Note>
+
+## Installation
+
+Install your preferred validation library:
+
+<CodeGroup>
+```bash Zod
+npm install zod
+```
+
+```bash Valibot
+npm install valibot
+```
+
+```bash Yup
+npm install yup
+```
+
+```bash Joi
+npm install joi
+```
+
+```bash Superstruct
+npm install superstruct
+```
+</CodeGroup>
+
+## Basic Form
+
+Create a form with schema validation:
+
+```vue
+<script setup lang="ts">
+import { z } from 'zod'
+
+const schema = z.object({
+  email: z.string().email('Invalid email address'),
+  password: z.string().min(8, 'Must be at least 8 characters')
+})
+
+const state = reactive({
+  email: '',
+  password: ''
+})
+
+async function onSubmit(event) {
+  console.log('Form submitted:', event.data)
+}
+</script>
+
+<template>
+  <UForm :schema="schema" :state="state" @submit="onSubmit">
+    <UFormField name="email" label="Email">
+      <UInput v-model="state.email" type="email" />
+    </UFormField>
+    
+    <UFormField name="password" label="Password">
+      <UInput v-model="state.password" type="password" />
+    </UFormField>
+    
+    <UButton type="submit">Submit</UButton>
+  </UForm>
+</template>
+```
+
+## Validation Schema
+
+### Zod Example
+
+```typescript
+import { z } from 'zod'
+
+const schema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  email: z.string().email('Invalid email'),
+  age: z.number().min(18, 'Must be 18 or older'),
+  website: z.string().url().optional(),
+  terms: z.boolean().refine(val => val === true, {
+    message: 'You must accept the terms'
+  })
+})
+```
+
+### Valibot Example
+
+```typescript
+import * as v from 'valibot'
+
+const schema = v.object({
+  name: v.pipe(v.string(), v.minLength(1, 'Name is required')),
+  email: v.pipe(v.string(), v.email('Invalid email')),
+  age: v.pipe(v.number(), v.minValue(18, 'Must be 18 or older')),
+  website: v.optional(v.pipe(v.string(), v.url())),
+  terms: v.pipe(
+    v.boolean(),
+    v.check(val => val === true, 'You must accept the terms')
+  )
+})
+```
+
+### Yup Example
+
+```typescript
+import * as yup from 'yup'
+
+const schema = yup.object({
+  name: yup.string().required('Name is required'),
+  email: yup.string().email('Invalid email').required(),
+  age: yup.number().min(18, 'Must be 18 or older').required(),
+  website: yup.string().url(),
+  terms: yup.boolean().oneOf([true], 'You must accept the terms')
+})
+```
+
+## Form Component
+
+### Props
+
+The `Form` component accepts:
+
+- `schema` - Validation schema (Zod, Valibot, Yup, etc.)
+- `state` - Reactive object containing form values
+- `validateOn` - When to validate (`['input', 'blur', 'change']`)
+- `validateOnInputDelay` - Debounce delay for input validation (default: `300ms`)
+- `disabled` - Disable all form inputs
+- `loading` - Show loading state
+- `transform` - Apply schema transformations on submit
+
+### Events
+
+- `@submit` - Fired on successful validation
+- `@error` - Fired on validation errors
+
+## FormField Component
+
+Wrap inputs with `FormField` for automatic error handling:
+
+```vue
+<UFormField
+  name="email"
+  label="Email Address"
+  description="We'll never share your email"
+  help="Enter a valid email address"
+>
+  <UInput v-model="state.email" />
+</UFormField>
+```
+
+### FormField Props
+
+- `name` - Field name (must match schema key)
+- `label` - Field label
+- `description` - Help text shown below input
+- `help` - Additional help text
+- `hint` - Hint text shown next to label
+- `required` - Show required indicator
+- `size` - Field size (`xs`, `sm`, `md`, `lg`, `xl`)
+
+## Validation Timing
+
+Control when validation occurs:
+
+```vue
+<UForm
+  :schema="schema"
+  :state="state"
+  :validate-on="['blur', 'change']"
+  :validate-on-input-delay="500"
+>
+  <!-- Form fields -->
+</UForm>
+```
+
+<Steps>
+  <Step title="blur">
+    Validate when input loses focus
+  </Step>
+  
+  <Step title="input">
+    Validate while typing (with debounce)
+  </Step>
+  
+  <Step title="change">
+    Validate when value changes
+  </Step>
+</Steps>
+
+## Form API
+
+Access form methods using refs:
+
+```vue
+<script setup>
+const form = ref()
+
+// Programmatic validation
+async function validateField() {
+  await form.value.validate({ name: 'email' })
+}
+
+// Get errors
+function getErrors() {
+  return form.value.getErrors()
+}
+
+// Set custom errors
+function setCustomError() {
+  form.value.setErrors([
+    { name: 'email', message: 'Email already exists' }
+  ])
+}
+
+// Clear errors
+function clearErrors() {
+  form.value.clear()
+}
+
+// Submit programmatically
+async function submitForm() {
+  await form.value.submit()
+}
+</script>
+
+<template>
+  <UForm ref="form" :schema="schema" :state="state">
+    <!-- Form fields -->
+  </UForm>
+</template>
+```
+
+### Available Methods
+
+- `validate(options?)` - Validate form or specific fields
+- `getErrors(name?)` - Get all errors or errors for specific field
+- `setErrors(errors, name?)` - Set custom errors
+- `clear(name?)` - Clear all errors or specific field errors
+- `submit()` - Submit form programmatically
+
+## Custom Validation
+
+Add custom validation logic:
+
+```vue
+<script setup>
+const schema = z.object({
+  username: z.string()
+})
+
+const state = reactive({
+  username: ''
+})
+
+async function customValidation(state) {
+  const errors = []
+  
+  // Check username availability
+  const isAvailable = await checkUsername(state.username)
+  if (!isAvailable) {
+    errors.push({
+      name: 'username',
+      message: 'Username is already taken'
+    })
+  }
+  
+  return errors
+}
+</script>
+
+<template>
+  <UForm
+    :schema="schema"
+    :state="state"
+    :validate="customValidation"
+  >
+    <UFormField name="username" label="Username">
+      <UInput v-model="state.username" />
+    </UFormField>
+  </UForm>
+</template>
+```
+
+## Nested Forms
+
+Create nested form structures:
+
+```vue
+<script setup>
+const schema = z.object({
+  user: z.object({
+    name: z.string(),
+    email: z.string().email()
+  }),
+  address: z.object({
+    street: z.string(),
+    city: z.string()
+  })
+})
+
+const state = reactive({
+  user: { name: '', email: '' },
+  address: { street: '', city: '' }
+})
+</script>
+
+<template>
+  <UForm :schema="schema" :state="state">
+    <!-- Parent form fields -->
+    <UFormField name="user.name" label="Name">
+      <UInput v-model="state.user.name" />
+    </UFormField>
+    
+    <!-- Nested form for address -->
+    <UForm nested name="address" :schema="schema.shape.address">
+      <UFormField name="street" label="Street">
+        <UInput v-model="state.address.street" />
+      </UFormField>
+      
+      <UFormField name="city" label="City">
+        <UInput v-model="state.address.city" />
+      </UFormField>
+    </UForm>
+  </UForm>
+</template>
+```
+
+## Loading State
+
+Handle form submission loading:
+
+```vue
+<script setup>
+const form = ref()
+
+async function onSubmit(event) {
+  // Form automatically shows loading during async submit
+  await new Promise(resolve => setTimeout(resolve, 2000))
+  console.log('Data:', event.data)
+}
+</script>
+
+<template>
+  <UForm ref="form" :schema="schema" :state="state" @submit="onSubmit">
+    <template #default="{ loading }">
+      <UFormField name="email">
+        <UInput v-model="state.email" :disabled="loading" />
+      </UFormField>
+      
+      <UButton type="submit" :loading="loading">
+        Submit
+      </UButton>
+    </template>
+  </UForm>
+</template>
+```
+
+## Error Handling
+
+Display validation errors:
+
+```vue
+<template>
+  <UForm :schema="schema" :state="state" @error="onError">
+    <template #default="{ errors }">
+      <!-- Errors are automatically shown in FormField -->
+      <UFormField name="email" label="Email">
+        <UInput v-model="state.email" />
+      </UFormField>
+      
+      <!-- Or display all errors manually -->
+      <div v-if="errors.length">
+        <UAlert
+          v-for="error in errors"
+          :key="error.name"
+          :title="error.message"
+          color="error"
+        />
+      </div>
+    </template>
+  </UForm>
+</template>
+```
+
+<Warning>
+  Form validation runs on submit by default. Use `validateOn` prop to validate on input, blur, or change events.
+</Warning>
+
+## Best Practices
+
+<Steps>
+  <Step title="Use TypeScript">
+    Get full type inference from your schema:
+    ```typescript
+    type FormData = z.infer<typeof schema>
+    ```
+  </Step>
+  
+  <Step title="Debounce input validation">
+    Set appropriate `validateOnInputDelay` to avoid excessive validation calls.
+  </Step>
+  
+  <Step title="Provide helpful errors">
+    Write clear, actionable error messages in your schema.
+  </Step>
+  
+  <Step title="Handle async validation">
+    Use custom `validate` function for server-side checks.
+  </Step>
+</Steps>
+
+## Learn More
+
+- [Form Component](/components/form)
+- [FormField Component](/components/form-field)
+- [Zod Documentation](https://zod.dev/)
+- [Valibot Documentation](https://valibot.dev/)
+- [Standard Schema Specification](https://github.com/standard-schema/standard-schema)
