@@ -82,7 +82,8 @@
             "pages": [
               "components/breadcrumb",
               "components/pagination",
-              "components/tabs"
+              "components/tabs",
+              "components/link"
             ]
           },
           {
@@ -99,7 +100,9 @@
               "components/checkbox-group",
               "components/radio",
               "components/radio-group",
-              "components/toggle",
+              "components/switch",
+              "components/slider",
+              "components/pin-input",
               "components/range-calendar",
               "components/calendar",
               "components/color-picker"
@@ -128,6 +131,7 @@
             "group": "Overlays",
             "pages": [
               "components/modal",
+              "components/slideover",
               "components/sheet",
               "components/drawer",
               "components/popover",
@@ -142,7 +146,8 @@
             "pages": [
               "components/alert",
               "components/toast",
-              "components/skeleton"
+              "components/skeleton",
+              "components/empty"
             ]
           },
           {

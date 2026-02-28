@@ -1,0 +1,58 @@
+---
+title: Empty
+description: A component for displaying empty states with customizable content.
+---
+
+## Overview
+
+The `Empty` component displays a message and optional actions when there is no content to show, such as empty lists, search results, or data tables.
+
+## Basic usage
+
+```vue
+<template>
+  <UEmpty
+    icon="i-lucide-inbox"
+    title="No messages"
+    description="You don't have any messages yet."
+  />
+</template>
+```
+
+## With action
+
+```vue
+<template>
+  <UEmpty
+    icon="i-lucide-file-text"
+    title="No documents"
+    description="Get started by creating a new document."
+  >
+    <UButton @click="createDocument">Create Document</UButton>
+  </UEmpty>
+</template>
+```
+
+## Props
+
+<ParamField path="icon" type="string">
+  Icon to display in the empty state.
+</ParamField>
+
+<ParamField path="title" type="string">
+  Title text.
+</ParamField>
+
+<ParamField path="description" type="string">
+  Description text.
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="slot">
+  Content to display below the description (typically action buttons).
+</ParamField>
+
+<ParamField path="icon" type="slot">
+  Custom icon content.
+</ParamField>

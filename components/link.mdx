@@ -1,0 +1,76 @@
+---
+title: Link
+description: A link component with router integration and external link handling.
+---
+
+## Overview
+
+The `Link` component provides navigation with automatic handling of internal routes and external URLs. It integrates with Vue Router and Nuxt's router.
+
+## Basic usage
+
+```vue
+<template>
+  <ULink to="/about">About</ULink>
+</template>
+```
+
+## External link
+
+```vue
+<template>
+  <ULink href="https://nuxt.com" target="_blank">
+    Visit Nuxt
+  </ULink>
+</template>
+```
+
+## With icon
+
+```vue
+<template>
+  <ULink to="/docs" icon="i-lucide-book-open">
+    Documentation
+  </ULink>
+</template>
+```
+
+## As button style
+
+```vue
+<template>
+  <ULink to="/signup" variant="solid" color="primary">
+    Get Started
+  </ULink>
+</template>
+```
+
+## Props
+
+<ParamField path="to" type="string | RouteLocationRaw">
+  Internal route location (Vue Router).
+</ParamField>
+
+<ParamField path="href" type="string">
+  External URL or internal path.
+</ParamField>
+
+<ParamField path="target" type="string">
+  Link target attribute.
+</ParamField>
+
+<ParamField path="rel" type="string">
+  Link rel attribute. Auto-set to `noopener noreferrer` for external links.
+</ParamField>
+
+<ParamField path="icon" type="string">
+  Icon to display with the link.
+</ParamField>
+
+<ParamField path="inactive" type="boolean">
+  Disable active state styling.
+</ParamField>
+
+<ParamField path="exact" type="boolean">
+  Only apply active state for exact matches.
+</ParamField>

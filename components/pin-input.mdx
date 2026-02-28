@@ -1,0 +1,80 @@
+---
+title: PinInput
+description: An input component for entering PIN codes and OTP values.
+---
+
+## Overview
+
+The `PinInput` component provides a set of input fields for entering PIN codes, OTP (one-time password) values, or verification codes.
+
+## Basic usage
+
+```vue
+<template>
+  <UPinInput v-model="pin" :length="4" />
+</template>
+
+<script setup lang="ts">
+const pin = ref('')
+</script>
+```
+
+## OTP mode
+
+```vue
+<template>
+  <UPinInput v-model="otp" :length="6" otp />
+</template>
+
+<script setup lang="ts">
+const otp = ref('')
+</script>
+```
+
+## With placeholder
+
+```vue
+<template>
+  <UPinInput v-model="pin" :length="4" placeholder="0" />
+</template>
+```
+
+## Props
+
+<ParamField path="modelValue" type="string">
+  The value of the PIN input.
+</ParamField>
+
+<ParamField path="length" type="number" default="4">
+  Number of input fields.
+</ParamField>
+
+<ParamField path="otp" type="boolean" default="false">
+  Enable OTP mode with auto-submit on completion.
+</ParamField>
+
+<ParamField path="type" type="'text' | 'number'" default="'text'">
+  Input type for each field.
+</ParamField>
+
+<ParamField path="placeholder" type="string">
+  Placeholder for each input field.
+</ParamField>
+
+<ParamField path="mask" type="boolean">
+  Mask the input values.
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  Disable all inputs.
+</ParamField>
+
+## Events
+
+<ParamField path="update:modelValue" type="(value: string) => void">
+  Emitted when the PIN value changes.
+</ParamField>
+
+<ParamField path="complete" type="(value: string) => void">
+  Emitted when all fields are filled.
+</ParamField>

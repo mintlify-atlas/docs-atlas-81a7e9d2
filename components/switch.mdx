@@ -1,0 +1,114 @@
+---
+title: Switch
+description: A toggle switch component for binary state control.
+---
+
+## Overview
+
+The `Switch` component is a toggle control that allows users to switch between checked and unchecked states. Built on Reka UI's Switch primitive.
+
+## Basic usage
+
+```vue
+<template>
+  <USwitch v-model="enabled" />
+</template>
+
+<script setup lang="ts">
+const enabled = ref(false)
+</script>
+```
+
+## With label
+
+```vue
+<template>
+  <USwitch v-model="notifications" label="Enable notifications" />
+</template>
+```
+
+## With description
+
+```vue
+<template>
+  <USwitch
+    v-model="enabled"
+    label="Marketing emails"
+    description="Receive emails about new products and features"
+  />
+</template>
+```
+
+## With icons
+
+```vue
+<template>
+  <USwitch
+    v-model="enabled"
+    checked-icon="i-lucide-check"
+    unchecked-icon="i-lucide-x"
+  />
+</template>
+```
+
+## Props
+
+<ParamField path="modelValue" type="boolean">
+  The controlled state of the switch.
+</ParamField>
+
+<ParamField path="color" type="string" default="'primary'">
+  The color of the switch.
+</ParamField>
+
+<ParamField path="size" type="'xs' | 'sm' | 'md' | 'lg' | 'xl'" default="'md'">
+  The size of the switch.
+</ParamField>
+
+<ParamField path="label" type="string">
+  Label text displayed next to the switch.
+</ParamField>
+
+<ParamField path="description" type="string">
+  Description text displayed below the label.
+</ParamField>
+
+<ParamField path="checkedIcon" type="string">
+  Icon to display when switch is checked.
+</ParamField>
+
+<ParamField path="uncheckedIcon" type="string">
+  Icon to display when switch is unchecked.
+</ParamField>
+
+<ParamField path="loading" type="boolean">
+  Show loading state.
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  Disable the switch.
+</ParamField>
+
+<ParamField path="required" type="boolean">
+  Mark as required for forms.
+</ParamField>
+
+## Events
+
+<ParamField path="update:modelValue" type="(value: boolean) => void">
+  Emitted when the switch state changes.
+</ParamField>
+
+<ParamField path="change" type="(event: Event) => void">
+  Emitted when the switch is toggled.
+</ParamField>
+
+## Slots
+
+<ParamField path="label" type="slot">
+  Custom label content.
+</ParamField>
+
+<ParamField path="description" type="slot">
+  Custom description content.
+</ParamField>

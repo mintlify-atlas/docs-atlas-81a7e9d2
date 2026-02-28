@@ -1,0 +1,63 @@
+---
+title: Slideover
+description: A panel that slides in from the edge of the screen.
+---
+
+## Overview
+
+The `Slideover` component is a panel that slides in from the edge of the screen, useful for navigation menus, forms, or additional content without navigating away from the current page.
+
+## Basic usage
+
+```vue
+<template>
+  <div>
+    <UButton @click="isOpen = true">Open Slideover</UButton>
+    
+    <USlideover v-model="isOpen">
+      <div class="p-6">
+        <h2>Slideover Content</h2>
+        <p>This is the slideover panel content.</p>
+      </div>
+    </USlideover>
+  </div>
+</template>
+
+<script setup lang="ts">
+const isOpen = ref(false)
+</script>
+```
+
+## From different sides
+
+```vue
+<template>
+  <USlideover v-model="isOpen" side="left">
+    <div class="p-6">Content from left</div>
+  </USlideover>
+</template>
+```
+
+## Props
+
+<ParamField path="modelValue" type="boolean">
+  Control the slideover open state.
+</ParamField>
+
+<ParamField path="side" type="'left' | 'right' | 'top' | 'bottom'" default="'right'">
+  Which side the slideover appears from.
+</ParamField>
+
+<ParamField path="overlay" type="boolean" default="true">
+  Show overlay backdrop.
+</ParamField>
+
+<ParamField path="dismissible" type="boolean" default="true">
+  Allow closing by clicking outside or pressing escape.
+</ParamField>
+
+## Events
+
+<ParamField path="update:modelValue" type="(value: boolean) => void">
+  Emitted when the slideover is opened or closed.
+</ParamField>

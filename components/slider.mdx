@@ -1,0 +1,108 @@
+---
+title: Slider
+description: A slider component for selecting numeric values from a range.
+---
+
+## Overview
+
+The `Slider` component allows users to select a value or range of values by moving a slider thumb along a track. Built on Reka UI's Slider primitive.
+
+## Basic usage
+
+```vue
+<template>
+  <USlider v-model="value" :min="0" :max="100" />
+</template>
+
+<script setup lang="ts">
+const value = ref(50)
+</script>
+```
+
+## Range slider
+
+```vue
+<template>
+  <USlider v-model="range" :min="0" :max="100" />
+</template>
+
+<script setup lang="ts">
+const range = ref([25, 75])
+</script>
+```
+
+## With tooltip
+
+```vue
+<template>
+  <USlider v-model="value" tooltip />
+</template>
+```
+
+## Vertical orientation
+
+```vue
+<template>
+  <USlider v-model="value" orientation="vertical" />
+</template>
+```
+
+## With step
+
+```vue
+<template>
+  <USlider v-model="value" :min="0" :max="100" :step="10" />
+</template>
+```
+
+## Props
+
+<ParamField path="modelValue" type="number | number[]">
+  The controlled value of the slider. Can be a single number or array for range.
+</ParamField>
+
+<ParamField path="min" type="number" default="0">
+  The minimum value.
+</ParamField>
+
+<ParamField path="max" type="number" default="100">
+  The maximum value.
+</ParamField>
+
+<ParamField path="step" type="number" default="1">
+  The increment between values.
+</ParamField>
+
+<ParamField path="orientation" type="'horizontal' | 'vertical'" default="'horizontal'">
+  The orientation of the slider.
+</ParamField>
+
+<ParamField path="color" type="string" default="'primary'">
+  The color of the slider.
+</ParamField>
+
+<ParamField path="size" type="'xs' | 'sm' | 'md' | 'lg' | 'xl'" default="'md'">
+  The size of the slider.
+</ParamField>
+
+<ParamField path="tooltip" type="boolean | TooltipProps" default="false">
+  Show tooltip with current value on thumbs.
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  Disable the slider.
+</ParamField>
+
+<ParamField path="inverted" type="boolean">
+  Invert the slider direction.
+</ParamField>
+
+## Events
+
+<ParamField path="update:modelValue" type="(value: number | number[]) => void">
+  Emitted when the slider value changes.
+</ParamField>
+
+<ParamField path="change" type="(event: Event) => void">
+  Emitted when the slider is changed.
+</ParamField>
